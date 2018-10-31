@@ -1,0 +1,10 @@
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Place apache config file
+      template:
+        src: ../ansible_templates/000-default.conf.j2
+        dest: "{{ dataspectsSystem_path_on_host }}/000-default.conf"
+      tags:
+        - compile_apache_configuration

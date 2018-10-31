@@ -1,0 +1,10 @@
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Create dataspectsSystem_path_on_host
+      file:
+        path: "{{ dataspectsSystem_path_on_host }}"
+        state: directory
+      tags:
+        - create_dataspectsSystem_path_on_host

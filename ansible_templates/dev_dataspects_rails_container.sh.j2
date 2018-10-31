@@ -1,0 +1,16 @@
+sudo docker run \
+  --name dataspects_rails \
+  --network dataspects_net \
+  --ip {{ dataspects_net_ipam_subnet }}.9 \
+  --publish 3000:3000 \
+  --env SIDEKIQ_UI_USERNAME=none \
+  --env SIDEKIQ_UI_PASSWORD=none \
+  --env API_KEY=none \
+  --env REDIS_URL=redis://{{ dataspects_net_ipam_subnet }}.13:6379/12 \
+  --volume /media/lex/LEXSAMSUNG-64GB/dataspectsSystem/docker_image_factory/dataspects/:/usr/src/docker_image_factory/dataspects/ \
+  --volume {{ dataspectsSystem_path_on_host }}/:/usr/src/workspace/ \
+  --workdir /usr/src/docker_image_factory/dataspects/dataspects_api \
+  --rm \
+  -it \
+    dataspects/dataspects:{{ dataspects_version }} \
+      rails server -e development

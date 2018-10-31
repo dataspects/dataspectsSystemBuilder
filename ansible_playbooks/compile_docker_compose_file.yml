@@ -1,0 +1,12 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Compile docker-compose file
+      template:
+        src: ../ansible_templates/{{ dockerComposeFileTemplate }}.j2
+        dest: "{{ dataspectsSystem_path_on_host }}/docker-compose.yml"
+      tags:
+        - compile_docker_compose_file

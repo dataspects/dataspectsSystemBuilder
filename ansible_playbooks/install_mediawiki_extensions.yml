@@ -1,0 +1,117 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+  - name: Git clone mediawiki extensions
+    shell: "git clone {{ item.repo }} {{ item.name }}"
+    args:
+      chdir: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/extensions"
+    become: true
+    with_items: "{{ mediawiki_extensions }}"
+    when: item.repo is defined
+    tags:
+      - install_mediawiki_extensions
+
+  - name: Register mediawiki extensions in LocalSettings.php
+    lineinfile:
+      path: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/LocalSettings.php"
+      line: "{{ item.localsettings }}"
+    with_items: "{{ mediawiki_extensions }}"
+    become: true
+    tags:
+      - install_mediawiki_extensions
+
+  - name: Configure mediawiki extensions in LocalSettings.php
+    lineinfile:
+      path: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/LocalSettings.php"
+      line: "{{ item.1 }}"
+      insertafter: "{{ item.0.localsettings }}"
+    with_subelements:
+      - "{{ mediawiki_extensions }}"
+      - configs
+    become: true
+    when: item.configs is defined
+    tags:
+      - install_mediawiki_extensions
+
+  ###########################################################################################
+  # VisualEditor
+  - name: Install VisualEditor 1
+    # https://www.mediawiki.org/wiki/Extension:VisualEditor#Download
+    shell: "git clone https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor.git"
+    args:
+      chdir: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/extensions"
+    become: true
+    tags:
+      - install_mediawiki_extension_VISUALEDITOR
+
+  - name: Install VisualEditor 2
+    # https://www.mediawiki.org/wiki/Extension:VisualEditor#Download
+    shell: "git checkout REL1_31"
+    args:
+      chdir: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/extensions/VisualEditor"
+    become: true
+    tags:
+      - install_mediawiki_extension_VISUALEDITOR
+
+  - name: Install VisualEditor 3
+    # https://www.mediawiki.org/wiki/Extension:VisualEditor#Download
+    shell: "git submodule update --init"
+    args:
+      chdir: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/extensions/VisualEditor"
+    become: true
+    tags:
+      - install_mediawiki_extension_VISUALEDITOR
+
+  - name: Install VisualEditor 4
+    lineinfile:
+      path: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/LocalSettings.php"
+      line: "{{ item }}"
+    with_items:
+      - "wfLoadExtension( 'VisualEditor' );"
+      - "$wgDefaultUserOptions['visualeditor-enable'] = 1;"
+      - "$wgHiddenPrefs[] = 'visualeditor-enable';"
+      - "$wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://{{ dataspects_net_ipam_subnet }}.88:8000',);"
+    become: true
+    tags:
+      - install_mediawiki_extension_VISUALEDITOR
+
+  - name: Install Semanticmediawiki 1
+    shell: docker exec {{ dataspectsSystem_label }}_apache bash -c "cd w; composer require mediawiki/semantic-media-wiki '~3.0' --update-no-dev"
+    become: true
+    tags:
+      - install_mediawiki_extension_SEMANTICMEDIAWIKI
+
+  - name: Install Semanticmediawiki 2
+    lineinfile:
+      path: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/LocalSettings.php"
+      line: "{{ item }}"
+    with_items:
+      - "enableSemantics( 'localhost:20201' );"
+    become: true
+    tags:
+      - install_mediawiki_extension_SEMANTICMEDIAWIKI
+
+  - name: Install Semanticmediawiki 3
+    shell: docker exec {{ dataspectsSystem_label }}_apache bash -c "cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies"
+    become: true
+    tags:
+      - install_mediawiki_extension_SEMANTICMEDIAWIKI
+
+  - name: Install Semantic Result Formats 1
+    shell: docker exec {{ dataspectsSystem_label }}_apache bash -c "cd w; composer require mediawiki/semantic-result-formats '3.0.*' --update-no-dev"
+    become: true
+    tags:
+      - install_mediawiki_extension_SEMANTICRESULTFORMATS
+
+  - name: Install Semantic Result Formats 2
+    lineinfile:
+      path: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/LocalSettings.php"
+      line: "{{ item }}"
+    with_items:
+      - "enableSemantics( 'SemanticResultFormats' );"
+    become: true
+    tags:
+      - install_mediawiki_extension_SEMANTICRESULTFORMATS

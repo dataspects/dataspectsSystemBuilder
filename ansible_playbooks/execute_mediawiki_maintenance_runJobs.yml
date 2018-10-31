@@ -1,0 +1,12 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    # [[IsOperationType::RunDockerContainer]]
+    - name: execute_mediawiki_maintenance_runJobs
+      shell: docker exec {{ dataspectsSystem_label }}_apache bash -c "php w/maintenance/runJobs.php && php w/extensions/SemanticMediaWiki/maintenance/rebuildData.php"
+      become: true
+      tags:
+        - execute_mediawiki_maintenance_runJobs

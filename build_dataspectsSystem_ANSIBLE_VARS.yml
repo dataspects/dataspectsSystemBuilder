@@ -1,0 +1,57 @@
+---
+
+dataspects_version: 181030a
+dataspectsSystem_path_on_host: /home/lex/dataspectsStandardSystem
+#TODO: dataspectsSystem_label could be implicit from dataspectsSystem_path_on_host
+dataspectsSystem_label: dss0
+dockerComposeFileTemplate: docker-compose_full_system.yml
+dataspects_net_ipam_subnet: 172.20.0
+ports:
+  apache_http: 80
+  kibana: 5601
+  parsoid: 8000
+mediawiki_version: REL1_31
+mediawiki_name: dataspects Standard Semanticmediawiki
+mediawiki_admin_user_password: mwadminpassword
+mediawiki_extensions:
+  - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageForms.git
+    name: PageForms
+    localsettings: wfLoadExtension( 'PageForms' );
+    configs: []
+  - repo: https://github.com/wikimedia/mediawiki-extensions-DisplayTitle.git
+    name: DisplayTitle
+    localsettings: wfLoadExtension( 'DisplayTitle' );
+    configs:
+      - $wgRestrictDisplayTitle = false;
+  - name: ParserFunctions
+    localsettings: wfLoadExtension( 'ParserFunctions' );
+    configs:
+      - $wgPFEnableStringFunctions = true;
+  - repo: https://github.com/wikimedia/mediawiki-extensions-HeaderTabs.git
+    name: HeaderTabs
+    localsettings: wfLoadExtension( 'HeaderTabs' );
+    configs: []
+  - repo: https://github.com/wikimedia/mediawiki-extensions-Variables.git
+    name: Variables
+    localsettings: wfLoadExtension( 'Variables' );
+    configs: []
+  - repo: https://github.com/wikimedia/mediawiki-extensions-Scribunto.git
+    name: Scribunto
+    localsettings: wfLoadExtension( 'Scribunto' );
+    configs:
+      - $wgScribuntoDefaultEngine = 'luastandalone';
+  - repo: https://github.com/dataspects/MWExtension-DataspectsSearch.git
+    name: DataspectsSearch
+    localsettings: wfLoadExtension( 'DataspectsSearch' );
+    configs: []
+  - repo: https://github.com/wikimedia/mediawiki-extensions-Arrays.git
+    name: Arrays
+    localsettings: require_once "$IP/extensions/Arrays/Arrays.php";
+    configs: []
+  - repo: https://github.com/wikimedia/mediawiki-extensions-MyVariables.git
+    name: MyVariables
+    localsettings: require_once "$IP/extensions/MyVariables/MyVariables.php";
+    configs: []
+  - name: CategoryTree
+    localsettings: wfLoadExtension( 'CategoryTree' );
+    configs: []

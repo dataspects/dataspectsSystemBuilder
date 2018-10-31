@@ -1,0 +1,73 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Synchronize mediawiki core from git_repositories/ into volume
+      synchronize:
+        src: ../mediawiki/
+        dest: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data"
+      become: true
+      tags:
+        - install_mediawiki
+
+    - name: Checkout required mediawiki version
+      shell: "git checkout {{ mediawiki_version }}"
+      args:
+        chdir: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data"
+      become: true
+      tags:
+        - install_mediawiki
+
+    - name: Install extensions and skins
+      shell: "git submodule update --init --recursive"
+      args:
+        chdir: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data"
+      become: true
+      tags:
+        - install_mediawiki
+
+    # [[IsOperationType::FileSystemOperation]]
+    - name: Set permissions on mediawiki root
+      file:
+        path: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data"
+        owner: www-data
+        recurse: yes
+      become: true
+      tags:
+        - install_mediawiki
+
+    # [[IsOperationType::VendorPackageOperation]]
+    - name: Run composer inside container
+      shell: docker exec {{ dataspectsSystem_label }}_apache bash -c "cd /var/www/html/w && composer install"
+      become: true
+      tags:
+        - install_mediawiki
+
+    # [[IsOperationType::FileSystemOperation]]
+    - name: Place mediawiki install script
+      template:
+        src: ../ansible_templates/install_mediawiki.sh.j2
+        dest: "/var/lib/docker/volumes/{{ dataspectsSystem_label }}_mediawiki_root/_data/install.sh"
+        owner: www-data
+        mode: 0777
+      become: true
+      tags:
+        - install_mediawiki
+
+    # [[IsOperationType::VendorPackageOperation]]
+    - name: Install mediawiki inside container
+      shell: "docker exec {{ dataspectsSystem_label }}_apache bash -c 'cd /var/www/html/w && ./install.sh'"
+      become: true
+      tags:
+        - install_mediawiki
+
+    # [[IsOperationType::VendorPackageOperation]]
+    - name: Change admin user password
+      shell: docker exec {{ dataspectsSystem_label }}_apache bash
+               -c "cd /var/www/html/w/maintenance &&
+                   php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
+      become: true
+      tags:
+        - install_mediawiki

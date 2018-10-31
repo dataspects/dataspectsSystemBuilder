@@ -1,0 +1,111 @@
+---
+version: '3.5'
+networks:
+  dataspects_net:
+    name: dataspects_net
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: "{{ dataspects_net_ipam_subnet }}.0/16"
+services:
+  # https://www.elastic.co/guide/en/elasticsearch/reference/6.3/docker.html#docker-prod-cluster-composefile
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.1
+    container_name: {{ dataspectsSystem_label }}_elasticsearch
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.7"
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - {{ dataspectsSystem_label }}_elasticsearch_data:/usr/share/elasticsearch/data
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.3.1
+    container_name: {{ dataspectsSystem_label }}_kibana
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.17"
+    ports:
+      - 5601:{{ ports.kibana }}
+    environment:
+      - SERVER_NAME=dataspects.kibana
+      - ELASTICSEARCH_URL=http://{{ dataspects_net_ipam_subnet }}.7:9200
+  tika:
+    # https://wiki.apache.org/tika/TikaJAXRS#Using_prebuilt_Docker_image
+    image: logicalspark/docker-tikaserver
+    container_name: {{ dataspectsSystem_label }}_tika
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.8"
+    ports:
+      - 9998:9998
+  redis:
+    image: redis:3.2.12
+    container_name: {{ dataspectsSystem_label }}_redis
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.13"
+    ports:
+      - 6379:6379
+  redis_commander:
+    image: rediscommander/redis-commander
+    container_name: {{ dataspectsSystem_label }}_redis_commander
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.22"
+    ports:
+      - 8081:8081
+    environment:
+      - REDIS_HOSTS="{{ dataspects_net_ipam_subnet }}.13"
+  mariadb:
+    image: mariadb:10.3.6
+    container_name: {{ dataspectsSystem_label }}_mariadb
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.5"
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=asdasdasd
+    volumes:
+      - {{ dataspectsSystem_label }}_mysql_data:/var/lib/mysql
+  apache:
+    image: dataspects/apache_http_server7.2:{{ dataspects_version }}
+    container_name: {{ dataspectsSystem_label }}_apache
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.6"
+    ports:
+      - 80:{{ ports.apache_http }}
+    volumes:
+      - {{ dataspectsSystem_label }}_mediawiki_root:/var/www/html/w
+      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+  memcached:
+    image: memcached
+    container_name: {{ dataspectsSystem_label }}_memcached
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.99"
+    ports:
+      - 11211:11211
+  parsoid:
+    # https://hub.docker.com/r/benhutchins/parsoid/
+    image: benhutchins/parsoid
+    container_name: {{ dataspectsSystem_label }}_parsoid
+    networks:
+      dataspects_net:
+        ipv4_address: "{{ dataspects_net_ipam_subnet }}.88"
+    ports:
+      - 8000:{{ ports.parsoid }}
+    # volumes:
+    #   - ./data:/data
+    #     Set uri: 'http://{{ dataspects_net_ipam_subnet }}.6/w/api.php' in ./data/config.yaml
+volumes:
+  {{ dataspectsSystem_label }}_elasticsearch_data:
+    name: {{ dataspectsSystem_label }}_elasticsearch_data
+  {{ dataspectsSystem_label }}_mysql_data:
+    name: {{ dataspectsSystem_label }}_mysql_data
+  {{ dataspectsSystem_label }}_mediawiki_root:
+    name: {{ dataspectsSystem_label }}_mediawiki_root

@@ -1,0 +1,12 @@
+php maintenance/install.php \
+  --dbname=wikidb \
+  --dbserver="{{ dataspects_net_ipam_subnet }}.5" \
+  --installdbuser=root \
+  --installdbpass=asdasdasd \
+  --dbuser=grabber \
+  --dbpass=grabber \
+  --server="http://localhost:{{ ports.apache_http }}" \
+  --scriptpath=/w \
+  --lang=en \
+  --pass=asdasdasd \
+"{{ mediawiki_name }}" "Admin"
