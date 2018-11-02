@@ -6,14 +6,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: <PASSWORD>
   php-fpm:
-    image: dataspects/php-fpm:7.2.11
+    image: dataspects/docker-php-fpm:latest
     links:
       - db
     volumes:
       - ./html:/var/www/html
     user: "${UID}:${GID}"
   web:
-    image: dataspects/nginx:1.15.5
+    image: dataspects/docker-nginx:latest
     ports:
       - "80:80"
     volumes:
