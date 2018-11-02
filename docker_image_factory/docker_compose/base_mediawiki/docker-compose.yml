@@ -5,19 +5,23 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: <PASSWORD>
+    volumes:
+      - mariadb_data:/var/lib/mysql
   php-fpm:
     image: dataspects/docker-php-fpm:latest
     links:
       - db
     volumes:
-      - ./html:/var/www/html
+      - web_html:/var/www/html
     user: "${UID}:${GID}"
   web:
     image: dataspects/docker-nginx:latest
     ports:
       - "80:80"
     volumes:
-      - ./html:/var/www/html
+      - web_html:/var/www/html
     links:
       - php-fpm
-
+volumes:
+  mariadb_data:
+  web_html:
