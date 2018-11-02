@@ -1,0 +1,23 @@
+version: "3"
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: <PASSWORD>
+  php-fpm:
+    image: dataspects/php-fpm:7.2.11
+    links:
+      - db
+    volumes:
+      - ./html:/var/www/html
+    user: "${UID}:${GID}"
+  web:
+    image: dataspects/nginx:1.15.5
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/var/www/html
+    links:
+      - php-fpm
+
