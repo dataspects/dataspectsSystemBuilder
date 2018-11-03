@@ -1,0 +1,74 @@
+version: "3"
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: <PASSWORD>
+    volumes:
+      - mariadb_data:/var/lib/mysql
+  php-fpm:
+    image: dataspects/docker-php-fpm:latest
+    links:
+      - db
+    volumes:
+      - web_html:/var/www/html
+    user: "${UID}:${GID}"
+  web:
+    image: dataspects/docker-nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - web_html:/var/www/html
+    links:
+      - php-fpm
+  parsoid:
+    image: dataspects/docker-parsoid:latest
+    ports:
+      - "8000:8000"
+    links:
+      - web
+    environment:
+      PARSOID_DOMAIN_localhost: http://web/api.php
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    container_name: elasticsearch2
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+volumes:
+  mariadb_data:
+  web_html:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+networks:
+  esnet:
