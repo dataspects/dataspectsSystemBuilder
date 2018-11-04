@@ -10,9 +10,9 @@ ANSIBLETAGS=(
   # install_mediawiki_extension_VISUALEDITOR
   # install_mediawiki_extension_SEMANTICMEDIAWIKI
   # install_mediawiki_extension_SEMANTICRESULTFORMATS
-  place_run_containers_manually_scripts
-  # place_system_profiles
-  # inject_dataspectsSystemCoreOntology
+  # place_run_containers_manually_scripts
+  place_system_profiles
+  inject_dataspectsSystemCoreOntology
   # extract_dataspectsSystemCoreOntology
   # execute_mediawiki_maintenance_runJobs
   # reset_elasticsearch_index
@@ -33,9 +33,8 @@ time ansible-playbook \
       ansible_playbooks/place_run_containers_manually_scripts.yml \
       ansible_playbooks/place_system_profiles.yml \
       ansible_playbooks/inject_dataspectsSystemCoreOntology_into_mediawiki.yml \
-      ansible_playbooks/extract_dataspectsSystemCoreOntology_from_mediawiki.yml \
       ansible_playbooks/execute_mediawiki_maintenance_runJobs.yml \
       ansible_playbooks/reset_elasticsearch_index.yml \
       ansible_playbooks/place_dataspects_search_config_files.yml \
-    # ansible_playbooks/index_dataspectsStandardSystem.yml \
-    # ansible_playbooks/index_dataspectsSystemSoftware.yml
+    # ../ProvisionDSAsDSCookbook/ansible_playbooks/index_dataspectsStandardSystem.yml \
+    # ../ProvisionDSAsDSCookbook/ansible_playbooks/index_dataspectsSystemSoftware.yml

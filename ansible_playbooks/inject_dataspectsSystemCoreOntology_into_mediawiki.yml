@@ -4,6 +4,17 @@
   gather_facts: False
   tasks:
 
+    - name: Clone dataspectsSystemCoreOntology, dataspects_lib, dataspects_api
+      git:
+        repo: "git@github.com:dataspects/{{ item }}.git"
+        dest: "{{ dataspectsSystem_path_on_host }}/workspace/{{ item }}"
+      with_items:
+        - dataspects_lib
+        - dataspects_api
+        - dataspectsSystemCoreOntology
+      tags:
+        - inject_dataspectsSystemCoreOntology
+
     - name: inject_dataspectsSystemCoreOntology_into_mediawiki.rb
       template:
         src: ../scripts/inject_dataspectsSystemCoreOntology_into_mediawiki.rb
@@ -15,9 +26,8 @@
     # [[IsOperationType::RunDockerContainer]]
     - name: Inject dataspectsSystemCoreOntology into mediawiki
       shell: docker run \
-              --volume {{ dataspectsSystem_path_on_host }}/dataspects_lib:/usr/src/dataspects_lib \
-              --volume {{ dataspectsSystem_path_on_host }}/workspace:/usr/src/workspace \
-              --workdir /usr/src/dataspects_lib \
+              --volume {{ dataspectsSystem_path_on_host }}/workspace/:/usr/src/workspace \
+              --workdir /usr/src/workspace/dataspects_lib \
               --network dataspectsstandardsystem_default \
               --ip 172.21.0.99 \
               --rm \
@@ -29,15 +39,3 @@
       become: true
       tags:
         - inject_dataspectsSystemCoreOntology
-
-# sudo docker run \
-#   --network dataspects_net \
-#   --ip 172.20.0.12 \
-#   --volume /media/lex/LEXSAMSUNG-64GB/dataspectsSystem/docker_image_factory/dataspects/:/usr/src/docker_image_factory/dataspects/ \
-#   --volume /home/lex/dataspectsStandardSystem/:/usr/src/workspace/ \
-#   --workdir /usr/src/docker_image_factory/dataspects/dataspects_lib \
-#   --rm \
-#     dataspects/dataspects:181029a \
-#       bundle exec bin/dataspects \
-#         --profile /usr/src/workspace/standard_system_profiles.yml \
-#           manage /usr/src/workspace/inject_dataspectsSystemCoreOntology_into_mediawiki.rb
