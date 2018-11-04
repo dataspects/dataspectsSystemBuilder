@@ -80,7 +80,7 @@ services:
     ports:
       - 80:{{ ports.apache_http }}
     volumes:
-      - {{ dataspectsSystem_label }}_mediawiki_root:/var/www/html/w
+      - {{ dataspectsSystem_label }}_mediawiki_root:/var/www/html/w/w
       - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
   memcached:
     image: memcached

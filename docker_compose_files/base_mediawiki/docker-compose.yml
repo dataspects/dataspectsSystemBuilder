@@ -9,25 +9,19 @@ services:
       - mariadb_data:/var/lib/mysql
   php-fpm:
     image: dataspects/docker-php-fpm:latest
-    links:
-      - db
     volumes:
-      - web_html:/var/www/html
+      - mediawiki_root:/var/www/html/w
     user: "${UID}:${GID}"
   web:
     image: dataspects/docker-nginx:latest
     ports:
       - "80:80"
     volumes:
-      - web_html:/var/www/html
-    links:
-      - php-fpm
+      - mediawiki_root:/var/www/html/w
   parsoid:
     image: dataspects/docker-parsoid:latest
     ports:
       - "8000:8000"
-    links:
-      - web
     environment:
       PARSOID_DOMAIN_localhost: http://web/api.php
   elasticsearch:
@@ -65,7 +59,9 @@ services:
       - esnet
 volumes:
   mariadb_data:
-  web_html:
+    driver: local
+  mediawiki_root:
+    driver: local
   esdata1:
     driver: local
   esdata2:

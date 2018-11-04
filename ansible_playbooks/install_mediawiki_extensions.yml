@@ -95,7 +95,7 @@
       - install_mediawiki_extension_SEMANTICMEDIAWIKI
 
   - name: Install Semanticmediawiki 3
-    shell: docker exec {{ dataspectsSystem_label }}_apache bash -c "cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies"
+    shell: docker exec {{ dataspectsSystem_label }}_apache bash -c "cd /var/www/html/w/w && php maintenance/update.php --skip-external-dependencies"
     become: true
     tags:
       - install_mediawiki_extension_SEMANTICMEDIAWIKI

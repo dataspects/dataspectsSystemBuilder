@@ -4,10 +4,9 @@ dataspects_version: 181030a
 dataspectsSystem_path_on_host: /home/lex/dataspectsStandardSystem
 #TODO: dataspectsSystem_label could be implicit from dataspectsSystem_path_on_host
 dataspectsSystem_label: dss0
-dockerComposeFileTemplate: docker-compose_full_system.yml
-dataspects_net_ipam_subnet: 172.20.0
+dockerComposeFileType: base_mediawiki
 ports:
-  apache_http: 80
+  nginx_http: 80
   kibana: 5601
   parsoid: 8000
 mediawiki_version: REL1_31
@@ -54,4 +53,8 @@ mediawiki_extensions:
     configs: []
   - name: CategoryTree
     localsettings: wfLoadExtension( 'CategoryTree' );
+    configs: []
+  - name: SyntaxHighlight_GeSHi
+    localsettings: wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+    # chmod a+x /path/to/extensions/SyntaxHighlight_GeSHi/pygments/pygmentize
     configs: []

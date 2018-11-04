@@ -87,7 +87,7 @@ sudo docker run \
   --network myNetwork0 \
   --ip $newApacheContainerIP \
   --publish $newApacheContainerPortOnHost:80 \
-  --volume $newmediawikiRootDirectoryOnHost:/var/www/html/m \
+  --volume $newmediawikiRootDirectoryOnHost:/var/www/html/w/m \
   --volume $newmediawikiApacheVirtualHostFileOnHost:/etc/apache2/sites-available/000-default.conf \
   --name $newApacheContainerName \
   --detach \

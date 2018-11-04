@@ -1,13 +1,13 @@
 <VirtualHost *:80>
-  DocumentRoot /var/www/html
+  DocumentRoot /var/www/html/w
 
-  <Directory /var/www/html>
+  <Directory /var/www/html/w>
     RewriteEngine On
     Options FollowSymLinks
     AllowOverride None
     Order allow,deny
     Allow from all
-    RewriteRule ^/?wiki(/.*)?$ /var/www/html/w/index.php [L]
+    RewriteRule ^/?wiki(/.*)?$ /var/www/html/w/w/index.php [L]
   </Directory>
 
   ErrorLog ${APACHE_LOG_DIR}/error.log
