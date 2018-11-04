@@ -57,6 +57,11 @@ services:
       - esdata2:/usr/share/elasticsearch/data
     networks:
       - esnet
+  redis:
+    image: redis:3.2.12
+    container_name: redis
+    ports:
+      - 6379:6379
 volumes:
   mariadb_data:
     driver: local

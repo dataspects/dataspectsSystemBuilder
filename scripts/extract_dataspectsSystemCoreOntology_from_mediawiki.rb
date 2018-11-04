@@ -5,14 +5,14 @@ oOntologyRepo = Dataspects::OntologyRepository.new(
 )
 
 #
-oSMW = Dataspects::Semanticmediawiki.new(
+oSMW = Dataspects::SemanticMediaWiki.new(
   @oProfiles,
-  "dataspectsSystemCookbookWiki",
+  "dataspectsStandardSystemSemanticMediaWiki",
   @hOptions
 )
 
 oPages = Dataspects::Facet.new
-oPages.from_oSEMANTICmediawiki(oSMW)
+oPages.from_oSEMANTICMEDIAWIKI(oSMW)
 # oPages.from_sRECENTCHANGES("24h")
 # oPages.from_mASK_QUERIES("[[Checkliste_Dienstplanung_Assistenzärzte_(AN)]]") do |sSMWPageName|
 oPages.from_mCATEGORIES("Entity") do |sSMWPageName|

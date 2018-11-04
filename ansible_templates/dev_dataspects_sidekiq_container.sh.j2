@@ -1,12 +1,13 @@
-sudo docker run \
+docker run \
   --name dataspects_sidekiq \
-  --network dataspects_net \
-  --ip {{ dataspects_net_ipam_subnet }}.18 \
-  --env REDIS_URL=redis://{{ dataspects_net_ipam_subnet }}.13:6379/12 \
+  --env REDIS_URL=redis://redis:6379/12 \
   --rm \
   -it \
-  --volume /media/lex/LEXSAMSUNG-64GB/dataspectsSystem/docker_image_factory/dataspects/:/usr/src/docker_image_factory/dataspects/ \
-  --volume {{ dataspectsSystem_path_on_host }}/:/usr/src/workspace/ \
-  --workdir /usr/src/docker_image_factory/dataspects/dataspects_api \
+  --volume $(pwd)/dataspects_lib:/usr/src/dataspects_lib \
+  --volume $(pwd)/dataspects_api:/usr/src/dataspects_api \
+  --workdir /usr/src/dataspects_api \
     dataspects/dataspects:{{ dataspects_version }} \
       sidekiq -e development
+
+#FIXME: REDIS_URL cannot include Docker service name
+#       but needs Docker container IP? (Not the case for rails?!)

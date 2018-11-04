@@ -1,9 +1,10 @@
 ---
 dataspectsSystemESCluster:
-  elasticsearch_cluster_url: "http://{{ dataspects_net_ipam_subnet }}.7:9200"
-dataspectsStandardSystemSemanticmediawiki:
-  mw_http_script_path_url: "http://{{ dataspects_net_ipam_subnet }}.6/w"
+  elasticsearch_cluster_url: "http://elasticsearch:9200"
+dataspectsStandardSystemSemanticMediaWiki:
+  #FIXME: How to use Docker service names in URL?
+  mw_http_script_path_url: "http://172.21.0.4/w"
   mw_user_name: Admin
-  mw_user_password: mwadminpassword
+  mw_user_password: adminpass
 dataspectsSystemTIKAServer:
-  tika_server_url: 'http://{{ dataspects_net_ipam_subnet }}.8:9998'
+  tika_server_url: 'http://tika:9998'

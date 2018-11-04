@@ -7,4 +7,4 @@
         path: "{{ dataspectsSystem_path_on_host }}"
         state: directory
       tags:
-        - create_dataspectsSystem_path_on_host
+        - create_dataspectsSystem_instance_path_on_host

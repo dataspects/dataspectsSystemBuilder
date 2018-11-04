@@ -7,7 +7,7 @@
     - name: place_dataspects_search_config_files
       template:
         src: ../scripts/inject_dataspectsSystemCoreOntology_into_mediawiki.rb
-        dest: "{{ dataspectsSystem_path_on_host }}/inject_dataspectsSystemCoreOntology_into_mediawiki.rb"
+        dest: "{{ dataspectsSystem_path_on_host }}/workspace/inject_dataspectsSystemCoreOntology_into_mediawiki.rb"
         mode: 0777
       tags:
         - inject_dataspectsSystemCoreOntology
@@ -15,15 +15,16 @@
     # [[IsOperationType::RunDockerContainer]]
     - name: Inject dataspectsSystemCoreOntology into mediawiki
       shell: docker run \
-              --network dataspects_net \
-              --ip {{ dataspects_net_ipam_subnet }}.12 \
-              --volume {{ dataspectsSystem_path_on_host }}/:/usr/src/system_instance_root/ \
-              --workdir /tmp/dataspects_lib \
+              --volume {{ dataspectsSystem_path_on_host }}/dataspects_lib:/usr/src/dataspects_lib \
+              --volume {{ dataspectsSystem_path_on_host }}/workspace:/usr/src/workspace \
+              --workdir /usr/src/dataspects_lib \
+              --network dataspectsstandardsystem_default \
+              --ip 172.21.0.99 \
               --rm \
                 dataspects/dataspects:{{ dataspects_version }} \
                   bundle exec bin/dataspects \
-                    --profile /usr/src/system_instance_root/standard_system_profiles.yml \
-                      manage /usr/src/system_instance_root/inject_dataspectsSystemCoreOntology_into_mediawiki.rb
+                    --profile /usr/src/workspace/standard_system_profiles.yml \
+                      manage /usr/src/workspace/inject_dataspectsSystemCoreOntology_into_mediawiki.rb
       ignore_errors: yes
       become: true
       tags:
