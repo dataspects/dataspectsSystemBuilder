@@ -4,12 +4,12 @@ ANSIBLETAGS=(
   create_dataspectsSystem_path_on_host
   copy_docker_compose_file
   run_docker_compose
-  # place_run_containers_manually_scripts
   install_mediawiki
-  # install_mediawiki_extensions
-  # install_mediawiki_extension_VISUALEDITOR
-  # install_mediawiki_extension_SEMANTICMEDIAWIKI
-  # install_mediawiki_extension_SEMANTICRESULTFORMATS
+  install_mediawiki_extensions
+  install_mediawiki_extension_VISUALEDITOR
+  install_mediawiki_extension_SEMANTICMEDIAWIKI
+  install_mediawiki_extension_SEMANTICRESULTFORMATS
+  # place_run_containers_manually_scripts
   # place_system_profiles
   # inject_dataspectsSystemCoreOntology
   # extract_dataspectsSystemCoreOntology
