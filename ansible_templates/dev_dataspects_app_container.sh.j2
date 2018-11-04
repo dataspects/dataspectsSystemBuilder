@@ -1,5 +1,7 @@
 docker run \
   --name dataspects_app \
+  --network dataspectsstandardsystem_default \
+  --ip 172.21.0.98 \
   --volume $(pwd)/dataspects_lib:/usr/src/dataspects_lib \
   --volume $(pwd)/dataspects_api:/usr/src/dataspects_api \
   --workdir /usr/src/dataspects_lib \

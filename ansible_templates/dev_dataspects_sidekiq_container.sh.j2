@@ -1,5 +1,7 @@
 docker run \
   --name dataspects_sidekiq \
+  --network dataspectsstandardsystem_default \
+  --ip 172.21.0.96 \
   --env REDIS_URL=redis://redis:6379/12 \
   --rm \
   -it \
