@@ -1,14 +1,15 @@
 #!/bin/bash
 
 ANSIBLETAGS=(
-  create_dataspectsSystem_path_on_host
-  copy_docker_compose_file
-  run_docker_compose
-  install_mediawiki
-  install_mediawiki_extensions
-  install_mediawiki_extension_VISUALEDITOR
-  install_mediawiki_extension_SEMANTICMEDIAWIKI
-  install_mediawiki_extension_SEMANTICRESULTFORMATS
+  # create_dataspectsSystem_path_on_host
+  # copy_docker_compose_file
+  # run_docker_compose
+  # install_mediawiki
+  install_bluespice_pro
+  # install_mediawiki_extensions
+  # install_mediawiki_extension_VISUALEDITOR
+  # install_mediawiki_extension_SEMANTICMEDIAWIKI
+  # install_mediawiki_extension_SEMANTICRESULTFORMATS
   # place_run_containers_manually_scripts
   # place_system_profiles
   # inject_dataspectsSystemCoreOntology
@@ -28,6 +29,7 @@ time ansible-playbook \
       ansible_playbooks/run_docker_compose.yml \
       ansible_playbooks/place_run_containers_manually_scripts.yml \
       ansible_playbooks/install_mediawiki.yml \
+      ansible_playbooks/install_bluespice_pro.yml \
       ansible_playbooks/install_mediawiki_extensions.yml \
       ansible_playbooks/place_system_profiles.yml \
       ansible_playbooks/inject_dataspectsSystemCoreOntology_into_mediawiki.yml \

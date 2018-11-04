@@ -1,0 +1,62 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Copy BlueSpice Pro core to volume
+      synchronize:
+        src: ../bluespice/
+        dest: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
+      become: true
+      tags:
+        - install_bluespice_pro
+
+    # [[IsOperationType::FileSystemOperation]]
+    - name: Place mediawiki install script
+      template:
+        src: ../ansible_templates/install_mediawiki.sh.j2
+        dest: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data/install.sh"
+        mode: 0777
+      become: true
+      tags:
+        - install_bluespice_pro
+
+    # [[IsOperationType::VendorPackageOperation]]
+    - name: Install BlueSpice inside container
+      shell: "docker exec dataspectsstandardsystem_php-fpm_1 bash -c 'cd /var/www/html/w && ./install.sh'"
+      tags:
+        - install_bluespice_pro
+
+    - name: Run maintenance/update.php
+      shell: docker exec dataspectsstandardsystem_php-fpm_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
+      become: true
+      tags:
+        - install_bluespice_pro
+
+    - name: Change admin user password
+      shell: docker exec dataspectsstandardsystem_php-fpm_1 bash
+               -c "cd /var/www/html/w/maintenance &&
+                   php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
+      become: true
+      tags:
+        - install_bluespice_pro
+
+    - name: Register VisualEditor in LocalSettings.php
+      lineinfile:
+        path: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data/LocalSettings.php"
+        line: "{{ item }}"
+      with_items:
+        - "wfLoadExtension( 'VisualEditor' );"
+        - "$wgDefaultUserOptions['visualeditor-enable'] = 1;"
+        - "$wgHiddenPrefs[] = 'visualeditor-enable';"
+        - "$wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://parsoid:8000');"
+      become: true
+      tags:
+        - install_bluespice_pro
+
+
+# ~/mediawiki/w/extensions/BlueSpiceExtendedSearch$ sudo vi extension.json
+# vagrant@dataspects-full-on-single-machine:~/mediawiki/w/extensions/BlueSpiceExtendedSearch/docs$ vi README.md
+
+# sysctl -w vm.max_map_count=262144 on VM????

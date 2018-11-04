@@ -4,7 +4,7 @@
   gather_facts: False
   tasks:
 
-    - name: Synchronize mediawiki core from git_repositories/ into volume
+    - name: Copy mediawiki core to volume
       synchronize:
         src: ../mediawiki/
         dest: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"

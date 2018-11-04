@@ -11,7 +11,7 @@ ports:
   parsoid: 8000
 mediawiki_version: REL1_31
 mediawiki_name: dataspects Standard Semanticmediawiki
-mediawiki_admin_user_password: mwadminpassword
+mediawiki_admin_user_password: adminpass
 mediawiki_extensions:
   - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageForms.git
     name: PageForms
