@@ -11,7 +11,6 @@ services:
     image: dataspects/docker-php-fpm:latest
     volumes:
       - mediawiki_root:/var/www/html/w
-    user: "${UID}:${GID}"
   web:
     image: dataspects/docker-nginx:latest
     ports:
