@@ -10,13 +10,7 @@ ANSIBLETAGS=(
   install_mediawiki_extension_VISUALEDITOR
   install_mediawiki_extension_SEMANTICMEDIAWIKI
   install_mediawiki_extension_SEMANTICRESULTFORMATS
-  place_run_containers_manually_scripts
-  place_system_profiles
-  # inject_dataspectsSystemCoreOntology
-  # extract_dataspectsSystemCoreOntology
-  # execute_mediawiki_maintenance_runJobs
-  # reset_elasticsearch_index
-  # place_dataspects_search_config_files
+  execute_mediawiki_maintenance_runJobs
 )
 
 time ansible-playbook \
