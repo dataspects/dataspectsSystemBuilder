@@ -3,6 +3,13 @@
   gather_facts: False
   tasks:
 
+    - name: Create dataspectsSystem_path_on_host/workspace folder
+      file:
+        path: "{{ dataspectsSystem_path_on_host }}/workspace"
+        state: directory
+      tags:
+        - place_system_profiles
+
     - name: Place scripts
       template:
         src: ../ansible_templates/standard_system_profiles.yml.j2
