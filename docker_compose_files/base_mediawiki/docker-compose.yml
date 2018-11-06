@@ -61,10 +61,18 @@ services:
     container_name: redis
     ports:
       - 6379:6379
+  tomcat:
+    image: dataspects/docker-tomcat:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - tomcat_root:/usr/local/tomcat/webapps
 volumes:
   mariadb_data:
     driver: local
   mediawiki_root:
+    driver: local
+  tomcat_root:
     driver: local
   esdata1:
     driver: local
