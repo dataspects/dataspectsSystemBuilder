@@ -7,12 +7,8 @@ services:
       MYSQL_ROOT_PASSWORD: <PASSWORD>
     volumes:
       - mariadb_data:/var/lib/mysql
-  php-fpm:
-    image: dataspects/docker-php-fpm:latest
-    volumes:
-      - mediawiki_root:/var/www/html/w
   web:
-    image: dataspects/docker-nginx:latest
+    image: dataspects/docker-apache-php:latest
     ports:
       - "80:80"
     volumes:
