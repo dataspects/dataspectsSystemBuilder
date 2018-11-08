@@ -75,6 +75,15 @@
       tags:
         - install_mediawiki
 
+    - name: Configure LocalSettings.php
+      lineinfile:
+        path: /var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data/LocalSettings.php
+        line: $wgArticlePath = '/wiki/$1';
+        insertafter: $wgScriptPath = '/w';
+      become: true
+      tags:
+        - install_mediawiki
+
     # [[IsOperationType::VendorPackageOperation]]
     - name: Change admin user password
       shell: docker exec {{ web_container_name }} bash
