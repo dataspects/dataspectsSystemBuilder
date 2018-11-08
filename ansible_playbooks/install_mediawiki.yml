@@ -10,7 +10,7 @@
         dest: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
       become: true
       tags:
-        - install_mediawiki
+        - install_mediawiki2
 
     - name: Checkout required mediawiki version
       shell: "git checkout {{ mediawiki_version }}"
@@ -18,7 +18,7 @@
         chdir: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
       become: true
       tags:
-        - install_mediawiki
+        - install_mediawiki2
 
     - name: Install extensions and skins
       shell: "git submodule update --init --recursive"
@@ -26,7 +26,7 @@
         chdir: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
       become: true
       tags:
-        - install_mediawiki
+        - install_mediawiki2
 
     # # [[IsOperationType::FileSystemOperation]]
     # - name: Set permissions on mediawiki root
@@ -49,13 +49,13 @@
         - install_mediawiki
 
     - name: Install composer locally
-      shell: docker exec dataspectsstandardsystem_php-fpm_1 bash -c "cd /var/www/html/w && ./install_composer.sh"
+      shell: docker exec {{ web_container_name }} bash -c "cd /var/www/html/w && ./install_composer.sh"
       tags:
         - install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Run composer inside container
-      shell: docker exec dataspectsstandardsystem_php-fpm_1 bash -c "cd /var/www/html/w && php composer.phar install"
+      shell: docker exec {{ web_container_name }} bash -c "cd /var/www/html/w && php composer.phar install"
       tags:
         - install_mediawiki
 
@@ -71,13 +71,13 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install mediawiki inside container
-      shell: "docker exec dataspectsstandardsystem_php-fpm_1 bash -c 'cd /var/www/html/w && ./install.sh'"
+      shell: "docker exec {{ web_container_name }} bash -c 'cd /var/www/html/w && ./install.sh'"
       tags:
         - install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Change admin user password
-      shell: docker exec dataspectsstandardsystem_php-fpm_1 bash
+      shell: docker exec {{ web_container_name }} bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: true

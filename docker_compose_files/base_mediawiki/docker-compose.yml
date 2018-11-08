@@ -7,12 +7,8 @@ services:
       MYSQL_ROOT_PASSWORD: <PASSWORD>
     volumes:
       - mariadb_data:/var/lib/mysql
-  php-fpm:
-    image: dataspects/docker-php-fpm:latest
-    volumes:
-      - mediawiki_root:/var/www/html/w
   web:
-    image: dataspects/docker-nginx:latest
+    image: dataspects/docker-apache-php:latest
     ports:
       - "80:80"
     volumes:
@@ -57,14 +53,22 @@ services:
     networks:
       - esnet
   redis:
-    image: redis:3.2.12
+    image: redis:4.0.11-alpine
     container_name: redis
     ports:
       - 6379:6379
+  tomcat:
+    image: dataspects/docker-tomcat:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - tomcat_root:/usr/local/tomcat/webapps
 volumes:
   mariadb_data:
     driver: local
   mediawiki_root:
+    driver: local
+  tomcat_root:
     driver: local
   esdata1:
     driver: local
