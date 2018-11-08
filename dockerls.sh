@@ -1,5 +1,5 @@
 clear;
-sudo docker container ls -a;
-sudo docker volume ls; 
-sudo docker network ls;
-sudo docker image ls;
+docker container ls -a;
+docker volume ls; 
+docker network ls;
+docker image ls;

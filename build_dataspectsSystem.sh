@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ANSIBLETAGS=(
-  create_dataspectsSystem_instance_path_on_host
-  copy_docker_compose_file
-  run_docker_compose
+  # create_dataspectsSystem_instance_path_on_host
+  # copy_docker_compose_file
+  # run_docker_compose
   install_mediawiki
   # install_bluespice_pro
   install_mediawiki_extensions
