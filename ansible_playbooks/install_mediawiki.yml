@@ -78,8 +78,11 @@
     - name: Configure LocalSettings.php
       lineinfile:
         path: /var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data/LocalSettings.php
-        line: $wgArticlePath = '/wiki/$1';
-        insertafter: $wgScriptPath = '/w';
+        line: {{ item }}
+        # insertafter: $wgScriptPath = '/w';
+      with_items:
+        - $wgArticlePath = '/wiki/$1';
+        - $wgFileExtensions[] = 'pdf';
       become: true
       tags:
         - install_mediawiki
