@@ -5,9 +5,9 @@
   tasks:
 
     - name: Run docker-compose
-      shell: export GID="$(id -g $(whoami))"; export UID; docker-compose \
+      shell: docker-compose \
                --file {{ dataspectsSystem_path_on_host }}/docker-compose.yml \
-                 up
-                     --detach
+                 up \
+                   --detach
       tags:
         - run_docker_compose

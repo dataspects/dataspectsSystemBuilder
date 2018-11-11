@@ -10,7 +10,7 @@
         dest: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
       become: true
       tags:
-        - install_mediawiki2
+        - install_mediawiki
 
     - name: Checkout required mediawiki version
       shell: "git checkout {{ mediawiki_version }}"
@@ -18,7 +18,7 @@
         chdir: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
       become: true
       tags:
-        - install_mediawiki2
+        - install_mediawiki
 
     - name: Install extensions and skins
       shell: "git submodule update --init --recursive"
@@ -26,7 +26,7 @@
         chdir: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
       become: true
       tags:
-        - install_mediawiki2
+        - install_mediawiki
 
     # # [[IsOperationType::FileSystemOperation]]
     # - name: Set permissions on mediawiki root
@@ -78,7 +78,7 @@
     - name: Configure LocalSettings.php
       lineinfile:
         path: /var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data/LocalSettings.php
-        line: {{ item }}
+        line: "{{ item }}"
         # insertafter: $wgScriptPath = '/w';
       with_items:
         - $wgArticlePath = '/wiki/$1';

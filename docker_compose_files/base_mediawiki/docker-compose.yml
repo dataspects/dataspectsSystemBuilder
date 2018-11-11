@@ -63,6 +63,11 @@ services:
       - 8080:8080
     volumes:
       - tomcat_root:/usr/local/tomcat/webapps
+  tika:
+    # https://wiki.apache.org/tika/TikaJAXRS#Using_prebuilt_Docker_image
+    image: logicalspark/docker-tikaserver
+    ports:
+      - 9998:9998
 volumes:
   mariadb_data:
     driver: local
