@@ -8,7 +8,7 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
   web:
-    image: dataspects/docker-apache-php:1.0
+    image: dataspects/docker-apache-php-dataspects-mediawiki:1.0
     ports:
       - "80:80"
     volumes:
