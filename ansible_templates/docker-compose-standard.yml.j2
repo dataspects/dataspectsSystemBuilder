@@ -9,10 +9,14 @@ services:
       - mariadb_data:/var/lib/mysql
   web:
     image: dataspects/docker-apache-php-dataspects-mediawiki:1.0
-    ports:
-      - "80:80"
     volumes:
       - mediawiki_root:/var/www/html/w
+  proxy:
+    image: dataspects/docker-nginx:1.0
+    ports:
+      - "80"80
+    volumes:
+      nginx_conf:/etc/nginx/conf.d
   parsoid:
     image: dataspects/docker-parsoid:1.0
     ports:
@@ -69,6 +73,8 @@ volumes:
   mariadb_data:
     driver: local
   mediawiki_root:
+    driver: local
+  nginx_conf:
     driver: local
   tomcat_root:
     driver: local
