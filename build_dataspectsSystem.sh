@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ANSIBLETAGS=(
-  # create_dataspectsSystem_instance_path_on_host
-  # copy_docker_compose_file
-  # run_docker_compose
+  create_dataspectsSystem_instance_path_on_host
+  compile_and_copy_docker_compose_file
+  run_docker_compose
   install_mediawiki
-  # install_bluespice_pro
+  # # install_bluespice_pro
   install_mediawiki_extensions
   install_mediawiki_extension_VISUALEDITOR
   install_mediawiki_extension_SEMANTICMEDIAWIKI
@@ -16,10 +16,10 @@ ANSIBLETAGS=(
 time ansible-playbook \
   --extra-vars @build_dataspectsSystem_ANSIBLE_VARS.yml \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
-  --become-method sudo \
   --ask-become-pass \
+  --become-method sudo \
       ansible_playbooks/create_dataspectsSystem_path_on_host.yml \
-      ansible_playbooks/compile_docker_compose_file.yml \
+      ansible_playbooks/compile_and_copy_docker_compose_file.yml \
       ansible_playbooks/run_docker_compose.yml \
       ansible_playbooks/install_mediawiki.yml \
       ansible_playbooks/install_bluespice_pro.yml \

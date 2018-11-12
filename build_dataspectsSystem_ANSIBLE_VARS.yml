@@ -1,15 +1,14 @@
 ---
 
-dataspects_version: 181030a
-dataspectsSystem_path_on_host: /home/lex/dataspectsStandardSystem
-#TODO: dataspectsSystem_label could be implicit from dataspectsSystem_path_on_host
-dataspectsSystem_label: dss0
-dockerComposeFileType: base_mediawiki
-web_container_name: dataspectsstandardsystem_web_1
-ports:
-  nginx_http: 80
-  kibana: 5601
-  parsoid: 8000
+# Your dataspectsSystem ########################################################
+#FIXME: Make this unique somehow on system, i.e. somehow consider absolute path?
+dataspectsSystem_path_on_host: /home/lex/myDataspectsStandardSystem181112a
+dockerComposeFileType: docker-compose-standard
+
+# MariaDB ######################################################################
+mysql_root_password: mysqlrootpass
+
+# MediaWiki ####################################################################
 mediawiki_version: REL1_31
 mediawiki_name: dataspects Standard Semanticmediawiki
 mediawiki_admin_user_password: adminpass

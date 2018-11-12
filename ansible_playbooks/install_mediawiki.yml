@@ -4,10 +4,21 @@
   gather_facts: False
   tasks:
 
+    ############################################################################
+    - name: Register {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_root path on host
+      shell: docker volume inspect {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_root
+      register: volume_profile
+      tags:
+        - install_mediawiki
+    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
+      tags:
+        - install_mediawiki
+    ############################################################################
+
     - name: Copy mediawiki core to volume
       synchronize:
         src: ../mediawiki/
-        dest: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
+        dest: "{{ mountpoint.items()[0][1] }}"
       become: true
       tags:
         - install_mediawiki
@@ -15,7 +26,7 @@
     - name: Checkout required mediawiki version
       shell: "git checkout {{ mediawiki_version }}"
       args:
-        chdir: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
+        chdir: "{{ mountpoint.items()[0][1] }}"
       become: true
       tags:
         - install_mediawiki
@@ -23,39 +34,38 @@
     - name: Install extensions and skins
       shell: "git submodule update --init --recursive"
       args:
-        chdir: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
+        chdir: "{{ mountpoint.items()[0][1] }}"
       become: true
       tags:
         - install_mediawiki
 
-    # # [[IsOperationType::FileSystemOperation]]
-    # - name: Set permissions on mediawiki root
-    #   file:
-    #     path: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data"
-    #     owner: www-data
-    #     recurse: yes
-    #   become: true
-    #   tags:
-    #     - install_mediawiki
-    #
+    # [[IsOperationType::FileSystemOperation]]
+    - name: Set permissions on mediawiki root
+      file:
+        path: "{{ mountpoint.items()[0][1] }}"
+        owner: www-data
+        recurse: yes
+      become: true
+      tags:
+        - install_mediawiki
 
     - name: Place composer install script
       template:
         src: ../ansible_templates/install_composer.sh
-        dest: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data/install_composer.sh"
+        dest: "{{ mountpoint.items()[0][1] }}/install_composer.sh"
         mode: 0777
       become: true
       tags:
         - install_mediawiki
 
     - name: Install composer locally
-      shell: docker exec {{ web_container_name }} bash -c "cd /var/www/html/w && ./install_composer.sh"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_web_1 bash -c "cd /var/www/html/w && ./install_composer.sh"
       tags:
         - install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Run composer inside container
-      shell: docker exec {{ web_container_name }} bash -c "cd /var/www/html/w && php composer.phar install"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_web_1 bash -c "cd /var/www/html/w && php composer.phar install"
       tags:
         - install_mediawiki
 
@@ -63,7 +73,7 @@
     - name: Place mediawiki install script
       template:
         src: ../ansible_templates/install_mediawiki.sh.j2
-        dest: "/var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data/install.sh"
+        dest: "{{ mountpoint.items()[0][1] }}/install.sh"
         mode: 0777
       become: true
       tags:
@@ -71,13 +81,13 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install mediawiki inside container
-      shell: "docker exec {{ web_container_name }} bash -c 'cd /var/www/html/w && ./install.sh'"
+      shell: "docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_web_1 bash -c 'cd /var/www/html/w && ./install.sh'"
       tags:
         - install_mediawiki
 
     - name: Configure LocalSettings.php
       lineinfile:
-        path: /var/lib/docker/volumes/dataspectsstandardsystem_mediawiki_root/_data/LocalSettings.php
+        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
         line: "{{ item }}"
         # insertafter: $wgScriptPath = '/w';
       with_items:
@@ -89,7 +99,7 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Change admin user password
-      shell: docker exec {{ web_container_name }} bash
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_web_1 bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: true

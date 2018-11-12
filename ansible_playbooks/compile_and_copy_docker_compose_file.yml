@@ -6,7 +6,7 @@
 
     - name: Copy docker-compose.yml file to {{ dataspectsSystem_path_on_host }}
       template:
-        src: ../docker_compose_files/{{ dockerComposeFileType }}/docker-compose.yml
+        src: ../ansible_templates/{{ dockerComposeFileType }}.yml.j2
         dest: "{{ dataspectsSystem_path_on_host }}/docker-compose.yml"
       tags:
-        - copy_docker_compose_file
+        - compile_and_copy_docker_compose_file

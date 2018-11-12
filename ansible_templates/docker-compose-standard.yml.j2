@@ -4,7 +4,7 @@ services:
     image: mariadb:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: <PASSWORD>
+      MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
     volumes:
       - mariadb_data:/var/lib/mysql
   web:
@@ -21,7 +21,6 @@ services:
       PARSOID_DOMAIN_localhost: http://web/w/api.php
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
-    container_name: elasticsearch
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -38,7 +37,6 @@ services:
       - esnet
   elasticsearch2:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
-    container_name: elasticsearch2
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -54,7 +52,6 @@ services:
       - esnet
   redis:
     image: redis:4.0.11-alpine
-    container_name: redis
     ports:
       - 6379:6379
   tomcat:

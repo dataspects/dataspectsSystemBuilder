@@ -2,10 +2,10 @@ php maintenance/install.php \
   --dbname=wikidb \
   --dbserver=db \
   --installdbuser=root \
-  --installdbpass="<PASSWORD>" \
+  --installdbpass="{{ mysql_root_password }}" \
   --dbuser=mediawiki \
   --dbpass=mediawikipass \
-  --server="http://localhost:{{ ports.nginx_http }}" \
+  --server="http://localhost" \
   --scriptpath=/w \
   --lang=en \
   --pass=adminpass \
