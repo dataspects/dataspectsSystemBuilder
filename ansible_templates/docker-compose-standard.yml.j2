@@ -1,20 +1,20 @@
 version: "3"
 services:
   db:
-    image: mariadb:latest
+    image: mariadb:10.3.10
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
     volumes:
       - mariadb_data:/var/lib/mysql
   web:
-    image: dataspects/docker-apache-php:latest
+    image: dataspects/docker-apache-php:1.0
     ports:
       - "80:80"
     volumes:
       - mediawiki_root:/var/www/html/w
   parsoid:
-    image: dataspects/docker-parsoid:latest
+    image: dataspects/docker-parsoid:1.0
     ports:
       - "8000:8000"
     environment:
@@ -55,7 +55,7 @@ services:
     ports:
       - 6379:6379
   tomcat:
-    image: dataspects/docker-tomcat:latest
+    image: dataspects/docker-tomcat:1.0
     ports:
       - 8080:8080
     volumes:
