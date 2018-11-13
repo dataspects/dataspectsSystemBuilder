@@ -6,6 +6,7 @@ ANSIBLETAGS=(
   run_docker_compose
   # install_mediawiki
   install_bluespice_pro
+  temp
   # install_mediawiki_extensions
   # install_mediawiki_extension_VISUALEDITOR
   # install_mediawiki_extension_SEMANTICMEDIAWIKI

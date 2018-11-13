@@ -10,15 +10,17 @@
       register: volume_profile
       tags:
         - install_bluespice_pro
-    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
+        - temp
+    - set_fact: mountpoint_mw={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
       tags:
         - install_bluespice_pro
+        - temp
     ############################################################################
 
     - name: Copy BlueSpice Pro core to volume
       synchronize:
         src: ../bluespice/
-        dest: "{{ mountpoint.items()[0][1] }}"
+        dest: "{{ mountpoint_mw.items()[0][1] }}"
       become: true
       tags:
         - install_bluespice_pro
@@ -27,11 +29,22 @@
     - name: Place mediawiki install script
       template:
         src: ../ansible_templates/install_mediawiki.sh.j2
-        dest: "{{ mountpoint.items()[0][1] }}/install.sh"
+        dest: "{{ mountpoint_mw.items()[0][1] }}/install.sh"
         mode: 0777
       become: true
       tags:
         - install_bluespice_pro
+
+    # [[IsOperationType::FileSystemOperation]]
+    - name: Set permissions on mediawiki root
+      file:
+        path: "{{ mountpoint_mw.items()[0][1] }}"
+        owner: www-data
+        recurse: yes
+      become: true
+      tags:
+        - install_bluespice_pro
+        - temp
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install BlueSpice inside container
@@ -55,7 +68,7 @@
 
     - name: Register VisualEditor in LocalSettings.php
       lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
+        path: "{{ mountpoint_mw.items()[0][1] }}/LocalSettings.php"
         line: "{{ item }}"
       with_items:
         - "wfLoadExtension( 'VisualEditor' );"
@@ -66,8 +79,42 @@
       tags:
         - install_bluespice_pro
 
+    - name: Configure dockerized Elasticsearch
+      lineinfile:
+        path: "{{ mountpoint_mw.items()[0][1] }}/LocalSettings.php"
+        line: "{{ item }}"
+      with_items:
+        - "$bsgOverrideESBackendHost = 'http://elasticsearch:9200';"
+        # Missing tomcat override!
+      become: true
+      tags:
+        - install_bluespice_pro
 
-# ~/mediawiki/w/extensions/BlueSpiceExtendedSearch$ sudo vi extension.json
-# vagrant@dataspects-full-on-single-machine:~/mediawiki/w/extensions/BlueSpiceExtendedSearch/docs$ vi README.md
+    # extensions/BlueSpiceExtendedSearch/docs/README.md
+    # php extensions/BlueSpiceExtendedSearch/maintenance/rebuildIndex.php && php maintenance/runJobs.php
 
-# sysctl -w vm.max_map_count=262144 on VM????
+    ############################################################################
+    # Webservices
+    - name: Register {{ dataspectsSystem_path_on_host | basename | lower }}_tomcat_root path on host
+      shell: docker volume inspect {{ dataspectsSystem_path_on_host | basename | lower }}_tomcat_root
+      register: volume_profile
+      tags:
+        - install_bluespice_pro
+        - temp
+    - set_fact: mountpoint_tc={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
+      tags:
+        - install_bluespice_pro
+        - temp
+
+    - name: Copy BShtml2PDF.war
+      synchronize:
+        src: "{{ mountpoint_mw.items()[0][1] }}/extensions/{{ item.path }}/webservices/{{ item.name }}"
+        dest: "{{ mountpoint_tc.items()[0][1] }}/{{ item.name }}"
+      with_items:
+        - { path: 'BlueSpiceUEModulePDF', name: 'BShtml2PDF.war' }
+        - { path: 'BlueSpiceVisualDiff', name: 'BShtmlDiff.war' }
+        - { path: 'BlueSpiceLatexRenderer', name: 'BSLaTeX2PNG.war' }
+      become: true
+      tags:
+        - install_bluespice_pro
+        - temp

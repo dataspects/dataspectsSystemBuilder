@@ -22,34 +22,11 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
     environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     volumes:
-      - esdata1:/usr/share/elasticsearch/data
+      - esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
-    networks:
-      - esnet
-  elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata2:/usr/share/elasticsearch/data
-    networks:
-      - esnet
   redis:
     image: redis:4.0.11-alpine
     ports:
@@ -72,9 +49,5 @@ volumes:
     driver: local
   tomcat_root:
     driver: local
-  esdata1:
+  esdata:
     driver: local
-  esdata2:
-    driver: local
-networks:
-  esnet:
