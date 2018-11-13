@@ -84,7 +84,7 @@
         path: "{{ mountpoint_mw.items()[0][1] }}/LocalSettings.php"
         line: "{{ item }}"
       with_items:
-        - "$bsgOverrideESBackendHost = 'http://elasticsearch:9200';"
+        - "$bsgOverrideESBackendHost = 'elasticsearch';"
         # Missing tomcat override!
       become: true
       tags:
