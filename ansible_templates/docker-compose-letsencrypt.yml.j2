@@ -16,7 +16,10 @@ services:
     ports:
       - "80"80
     volumes:
-      nginx_conf:/etc/nginx/conf.d
+      - nginx_conf:/etc/nginx/conf.d
+      - letsencrypt_conf:/etc/letsencrypt
+      - letsencrypt_var:/var/lib/letsencrypt
+      - dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
   parsoid:
     image: dataspects/docker-parsoid:1.0
     ports:
@@ -52,6 +55,12 @@ volumes:
   mediawiki_root:
     driver: local
   nginx_conf:
+    driver: local
+  letsencrypt_conf:/etc/letsencrypt
+    driver: local
+  letsencrypt_var:/var/lib/letsencrypt
+    driver: local
+  dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
     driver: local
   tomcat_root:
     driver: local
