@@ -14,16 +14,16 @@ services:
   proxy:
     image: dataspects/docker-nginx:1.0
     ports:
-      - "80"80
+      - 80:80
     volumes:
       - nginx_conf:/etc/nginx/conf.d
       - letsencrypt_conf:/etc/letsencrypt
       - letsencrypt_var:/var/lib/letsencrypt
-      - dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
+      - dh-param:/etc/ssl/certs
   parsoid:
     image: dataspects/docker-parsoid:1.0
     ports:
-      - "8000:8000"
+      - 8000:8000
     environment:
       PARSOID_DOMAIN_localhost: http://web/w/api.php
   elasticsearch:
@@ -56,11 +56,11 @@ volumes:
     driver: local
   nginx_conf:
     driver: local
-  letsencrypt_conf: /etc/letsencrypt
+  letsencrypt_conf:
     driver: local
-  letsencrypt_var: /var/lib/letsencrypt
+  letsencrypt_var:
     driver: local
-  dh-param/dhparam-2048.pem: /etc/ssl/certs/dhparam-2048.pem
+  dh-param:
     driver: local
   tomcat_root:
     driver: local
