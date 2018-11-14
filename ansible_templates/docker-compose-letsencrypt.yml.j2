@@ -56,11 +56,11 @@ volumes:
     driver: local
   nginx_conf:
     driver: local
-  letsencrypt_conf:/etc/letsencrypt
+  letsencrypt_conf: /etc/letsencrypt
     driver: local
-  letsencrypt_var:/var/lib/letsencrypt
+  letsencrypt_var: /var/lib/letsencrypt
     driver: local
-  dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
+  dh-param/dhparam-2048.pem: /etc/ssl/certs/dhparam-2048.pem
     driver: local
   tomcat_root:
     driver: local
