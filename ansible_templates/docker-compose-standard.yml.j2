@@ -15,13 +15,13 @@ services:
   proxy:
     image: dataspects/docker-nginx:1.0
     ports:
-      - "80"80
+      - 80:80
     volumes:
       nginx_conf:/etc/nginx/conf.d
   parsoid:
     image: dataspects/docker-parsoid:1.0
     ports:
-      - "8000:8000"
+      - 8000:8000
     environment:
       PARSOID_DOMAIN_localhost: http://web/w/api.php
   elasticsearch:
