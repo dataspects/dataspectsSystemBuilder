@@ -48,18 +48,18 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install BlueSpice inside container
-      shell: "docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_web_1 bash -c 'cd /var/www/html/w && ./install.sh'"
+      shell: "docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c 'cd /var/www/html/w && ./install.sh'"
       tags:
         - install_bluespice_pro
 
     - name: Run maintenance/update.php
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_web_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
       become: true
       tags:
         - install_bluespice_pro
 
     - name: Change admin user password
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_web_1 bash
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: true
