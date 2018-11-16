@@ -10,9 +10,11 @@
       register: volume_profile
       tags:
         - install_mediawiki
+        - t1811161102t
     - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
       tags:
         - install_mediawiki
+        - t1811161102t
     ############################################################################
 
     - name: Copy mediawiki core to volume
@@ -96,14 +98,19 @@
       tags:
         - install_mediawiki
 
+    #FIXME: This should replace, but it actually just adds!
     - name: Replace settings in LocalSettings.php
       lineinfile:
         path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
-        regexp: '^$wgServer = '
-        line: '$wgServer = "http://local.mediawiki";'
+        regexp: '{{ item.orig }}'
+        line: '{{ item.replace }}'
+      with_items:
+        - { orig: "^$wgServer = ", replace: '$wgServer = "http://local.mediawiki";' }
+        - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: true
       tags:
         - install_mediawiki
+        - t1811161102t
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Change admin user password
