@@ -11,14 +11,17 @@ services:
     image: dataspects/docker-apache-php-dataspects-mediawiki:1.0
     volumes:
       - mediawiki_root:/var/www/html/w
+      - mediawiki_conf:/etc/apache2/sites-available
   proxy:
     image: dataspects/docker-nginx:1.0
     ports:
       - 80:80
+      - 443:443
     volumes:
       - nginx_conf:/etc/nginx/conf.d
       - letsencrypt_conf:/etc/letsencrypt
       - letsencrypt_var:/var/lib/letsencrypt
+      - letsencrypt_site:/usr/share/nginx/html
       - dh-param:/etc/ssl/certs
   parsoid:
     image: dataspects/docker-parsoid:1.0
@@ -54,11 +57,15 @@ volumes:
     driver: local
   mediawiki_root:
     driver: local
+  mediawiki_conf:
+    driver: local
   nginx_conf:
     driver: local
   letsencrypt_conf:
     driver: local
   letsencrypt_var:
+    driver: local
+  letsencrypt_site:
     driver: local
   dh-param:
     driver: local

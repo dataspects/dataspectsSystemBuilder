@@ -11,6 +11,7 @@ services:
     image: dataspects/docker-apache-php-dataspects-mediawiki:1.0
     volumes:
       - mediawiki_root:/var/www/html/w
+      - mediawiki_conf:/etc/apache2/sites-available
   proxy:
     image: dataspects/docker-nginx:1.0
     ports:
@@ -50,6 +51,8 @@ volumes:
   mariadb_data:
     driver: local
   mediawiki_root:
+    driver: local
+  mediawiki_conf:
     driver: local
   nginx_conf:
     driver: local
