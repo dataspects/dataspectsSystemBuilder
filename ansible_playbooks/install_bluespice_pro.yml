@@ -44,7 +44,6 @@
       become: true
       tags:
         - install_bluespice_pro
-        - temp
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install BlueSpice inside container
@@ -54,6 +53,19 @@
 
     - name: Run maintenance/update.php
       shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
+      become: true
+      tags:
+        - install_bluespice_pro
+
+    #FIXME: This should replace, but it actually just adds!
+    - name: Replace settings in LocalSettings.php
+      lineinfile:
+        path: "{{ mountpoint_mw.items()[0][1] }}/LocalSettings.php"
+        regexp: '{{ item.orig }}'
+        line: '{{ item.replace }}'
+      with_items:
+        - { orig: "^$wgServer = ", replace: '$wgServer = "http://local.mediawiki";' }
+        - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: true
       tags:
         - install_bluespice_pro
@@ -79,16 +91,19 @@
       tags:
         - install_bluespice_pro
 
-    - name: Configure dockerized Elasticsearch
+    - name: Configure dockerized Elasticsearch and Tomcat URLs
       lineinfile:
         path: "{{ mountpoint_mw.items()[0][1] }}/LocalSettings.php"
         line: "{{ item }}"
       with_items:
         - "$bsgOverrideESBackendHost = 'elasticsearch';"
-        # Missing tomcat override!
+        - "$bsgUEModulePDFPdfServiceURL = 'http://tomcat:8080/BShtml2PDF';"
+        - "$bsgVisualDiffHtmlDiffEngineUrl = 'http://tomcat:8080/BShtmlDiff';"
+        - "$bsgLatexRendererBackendURL = 'http://tomcat:8080/BSLaTeX2PNG';"
       become: true
       tags:
         - install_bluespice_pro
+        - temp
 
     # extensions/BlueSpiceExtendedSearch/docs/README.md
     # php extensions/BlueSpiceExtendedSearch/maintenance/rebuildIndex.php && php maintenance/runJobs.php
@@ -100,13 +115,11 @@
       register: volume_profile
       tags:
         - install_bluespice_pro
-        - temp
     - set_fact: mountpoint_tc={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
       tags:
         - install_bluespice_pro
-        - temp
 
-    - name: Copy BShtml2PDF.war
+    - name: Copy BlueSpice web services wars
       synchronize:
         src: "{{ mountpoint_mw.items()[0][1] }}/extensions/{{ item.path }}/webservices/{{ item.name }}"
         dest: "{{ mountpoint_tc.items()[0][1] }}/{{ item.name }}"
@@ -117,4 +130,40 @@
       become: true
       tags:
         - install_bluespice_pro
+
+    # NGNIX ####################################################################
+    - name: Register {{ dataspectsSystem_path_on_host | basename | lower }}_nginx_conf path on host
+      shell: docker volume inspect {{ dataspectsSystem_path_on_host | basename | lower }}_nginx_conf
+      register: volume_profile
+      tags:
+        - install_bluespice_pro
         - temp
+    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
+      tags:
+        - install_bluespice_pro
+        - temp
+    ############################################################################
+
+    - name: Place mediawiki service nginx conf
+      template:
+        src: ../ansible_templates/mediawiki-nginx.conf.j2
+        dest: "{{ mountpoint.items()[0][1] }}/mediawiki-nginx.conf"
+        mode: 0777
+      become: true
+      tags:
+        - install_bluespice_pro
+        - temp
+
+    - name: Restart Nginx Proxy
+      shell: docker-compose \
+               --file {{ dataspectsSystem_path_on_host }}/docker-compose.yml \
+                 restart proxy
+      tags:
+        - install_bluespice_pro
+        - temp
+
+    - name: Run maintenance/update.php
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
+      become: true
+      tags:
+        - install_bluespice_pro
