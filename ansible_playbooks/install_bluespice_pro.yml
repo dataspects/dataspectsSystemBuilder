@@ -167,3 +167,12 @@
       become: true
       tags:
         - install_bluespice_pro
+
+    - name: Initialize BS ES backend and index
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php {{ item }}"
+      with_items:
+        - "extensions/BlueSpiceExtendedSearch/maintenance/initBackends.php"
+        - "extensions/BlueSpiceExtendedSearch/maintenance/rebuildIndex.php"
+      become: true
+      tags:
+        - install_bluespice_pro
