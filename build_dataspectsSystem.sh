@@ -10,7 +10,7 @@ ANSIBLETAGS=(
   # install_mediawiki_extension_VISUALEDITOR
   # install_mediawiki_extension_SEMANTICMEDIAWIKI
   # install_mediawiki_extension_SEMANTICRESULTFORMATS
-  execute_mediawiki_maintenance_runJobs
+  # execute_mediawiki_maintenance_runJobs
 )
 
 time ansible-playbook \

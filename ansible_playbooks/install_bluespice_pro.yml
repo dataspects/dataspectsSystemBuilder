@@ -47,12 +47,12 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install BlueSpice inside container
-      shell: "docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c 'cd /var/www/html/w && ./install.sh'"
+      shell: "docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c 'cd /var/www/html/w && ./install.sh'"
       tags:
         - install_bluespice_pro
 
     - name: Run maintenance/update.php
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
       become: true
       tags:
         - install_bluespice_pro
@@ -64,14 +64,14 @@
         regexp: '{{ item.orig }}'
         line: '{{ item.replace }}'
       with_items:
-        - { orig: "^$wgServer = ", replace: '$wgServer = "http://local.mediawiki";' }
+        - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}";' }
         - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: true
       tags:
         - install_bluespice_pro
 
     - name: Change admin user password
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: true
@@ -163,13 +163,13 @@
         - temp
 
     - name: Run maintenance/update.php
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
       become: true
       tags:
         - install_bluespice_pro
 
     - name: Initialize BS ES backend and index
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php {{ item }}"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php {{ item }}"
       with_items:
         - "extensions/BlueSpiceExtendedSearch/maintenance/initBackends.php"
         - "extensions/BlueSpiceExtendedSearch/maintenance/rebuildIndex.php"

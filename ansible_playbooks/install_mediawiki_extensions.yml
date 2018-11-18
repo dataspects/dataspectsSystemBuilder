@@ -89,7 +89,7 @@
         - install_mediawiki_extension_VISUALEDITOR
 
     - name: Install Semanticmediawiki 1
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '~3.0' --update-no-dev"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '~3.0' --update-no-dev"
       become: true
       tags:
         - install_mediawiki_extension_SEMANTICMEDIAWIKI
@@ -105,13 +105,13 @@
         - install_mediawiki_extension_SEMANTICMEDIAWIKI
 
     - name: Install Semanticmediawiki 3
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies"
       become: true
       tags:
         - install_mediawiki_extension_SEMANTICMEDIAWIKI
 
     - name: Install Semantic Result Formats 1
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '3.0.*' --update-no-dev"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '3.0.*' --update-no-dev"
       become: true
       tags:
         - install_mediawiki_extension_SEMANTICRESULTFORMATS

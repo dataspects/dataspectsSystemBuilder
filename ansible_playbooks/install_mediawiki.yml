@@ -61,13 +61,13 @@
         - install_mediawiki
 
     - name: Install composer locally
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && ./install_composer.sh"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && ./install_composer.sh"
       tags:
         - install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Run composer inside container
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "cd /var/www/html/w && php composer.phar install"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php composer.phar install"
       tags:
         - install_mediawiki
 
@@ -83,7 +83,7 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install mediawiki inside container
-      shell: "docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c 'cd /var/www/html/w && ./install.sh'"
+      shell: "docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c 'cd /var/www/html/w && ./install.sh'"
       tags:
         - install_mediawiki
 
@@ -114,9 +114,22 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Change admin user password
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
+      become: true
+      tags:
+        - install_mediawiki
+
+    #FIXME: This should replace, but it actually just adds!
+    - name: Replace settings in LocalSettings.php
+      lineinfile:
+        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
+        regexp: '{{ item.orig }}'
+        line: '{{ item.replace }}'
+      with_items:
+        - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}";' }
+        - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: true
       tags:
         - install_mediawiki

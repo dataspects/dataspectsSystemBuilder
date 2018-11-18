@@ -6,6 +6,6 @@
 
     # [[IsOperationType::RunDockerContainer]]
     - name: execute_mediawiki_maintenance_runJobs
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_1 bash -c "php w/maintenance/runJobs.php && php w/extensions/SemanticMediaWiki/maintenance/rebuildData.php"
+      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "php w/maintenance/runJobs.php && php w/extensions/SemanticMediaWiki/maintenance/rebuildData.php"
       tags:
         - execute_mediawiki_maintenance_runJobs

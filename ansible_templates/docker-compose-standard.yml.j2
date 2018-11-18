@@ -7,7 +7,7 @@ services:
       MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
     volumes:
       - mariadb_data:/var/lib/mysql
-  mediawiki:
+  {{ mediawikiDockerServiceName }}:
     image: dataspects/docker-apache-php-dataspects-mediawiki:1.0
     volumes:
       - mediawiki_root:/var/www/html/w
@@ -22,8 +22,8 @@ services:
     image: dataspects/docker-parsoid:1.0
     ports:
       - 8000:8000
-    environment:
-      PARSOID_DOMAIN_localhost: http://web/w/api.php
+    environment: #AAA
+      PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
   elasticsearch:
     image: dataspects/docker-elasticsearch:1.0
     environment:
