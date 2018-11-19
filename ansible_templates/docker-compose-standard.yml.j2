@@ -15,13 +15,11 @@ services:
   proxy:
     image: dataspects/docker-nginx:1.0
     ports:
-      - 80:80
+      - {{ nginxPortOnHost }}:80
     volumes:
       - nginx_conf:/etc/nginx/conf.d
   parsoid:
     image: dataspects/docker-parsoid:1.0
-    ports:
-      - 8000:8000
     environment: #AAA
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
   elasticsearch:
@@ -30,23 +28,15 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - esdata:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
   redis:
     image: redis:4.0.11-alpine
-    ports:
-      - 6379:6379
   tomcat:
     image: dataspects/docker-tomcat:1.0
-    ports:
-      - 8080:8080
     volumes:
       - tomcat_root:/usr/local/tomcat/webapps
   tika:
     # https://wiki.apache.org/tika/TikaJAXRS#Using_prebuilt_Docker_image
     image: logicalspark/docker-tikaserver
-    ports:
-      - 9998:9998
 volumes:
   mariadb_data:
     driver: local

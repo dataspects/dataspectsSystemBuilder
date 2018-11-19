@@ -64,7 +64,7 @@
         regexp: '{{ item.orig }}'
         line: '{{ item.replace }}'
       with_items:
-        - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}";' }
+        - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}:{{ nginxPortOnHost }}";' }
         - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: true
       tags:

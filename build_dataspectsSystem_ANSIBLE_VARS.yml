@@ -2,11 +2,12 @@
 
 # Your dataspectsSystem ########################################################
 #FIXME: Make this unique somehow on system, i.e. somehow consider absolute path?
-dataspectsSystem_path_on_host: /home/lex/myDataspectsStandardSystem181116a
+dataspectsSystem_path_on_host: /home/lex/localmediawiki
 dockerComposeFileType: docker-compose-standard
 mediawikiDockerServiceName: mediawikiservice
 #FIXME: How can this be e.g. local.mediawiki, as this wouldn't work at AAA
 mediawikiDomainNameInHostFile: localmediawiki
+nginxPortOnHost: 80
 
 # MariaDB ######################################################################
 mysql_root_password: mysqlrootpass
