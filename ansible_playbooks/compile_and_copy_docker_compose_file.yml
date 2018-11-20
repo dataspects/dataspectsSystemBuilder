@@ -4,9 +4,9 @@
   gather_facts: False
   tasks:
 
-    - name: Copy docker-compose.yml file to {{ dataspectsSystem_path_on_host }}
+    - name: Copy docker-compose.yml file to {{ dataspectsSystem_control_folder_on_host }}
       template:
         src: ../ansible_templates/{{ dockerComposeFileType }}.yml.j2
-        dest: "{{ dataspectsSystem_path_on_host }}/docker-compose.yml"
+        dest: "{{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml"
       tags:
         - compile_and_copy_docker_compose_file

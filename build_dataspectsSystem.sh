@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ANSIBLETAGS=(
-  create_dataspectsSystem_instance_path_on_host
+  create_dataspectsSystem_control_folder_on_host
   compile_and_copy_docker_compose_file
   run_docker_compose
   install_mediawiki
@@ -18,7 +18,7 @@ time ansible-playbook \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
   --ask-become-pass \
   --become-method sudo \
-      ansible_playbooks/create_dataspectsSystem_path_on_host.yml \
+      ansible_playbooks/create_dataspectsSystem_control_folder_on_host.yml \
       ansible_playbooks/compile_and_copy_docker_compose_file.yml \
       ansible_playbooks/run_docker_compose.yml \
       ansible_playbooks/install_mediawiki.yml \

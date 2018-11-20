@@ -6,7 +6,7 @@
 
     - name: Run docker-compose
       shell: docker-compose \
-               --file {{ dataspectsSystem_path_on_host }}/docker-compose.yml \
+               --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
                  up \
                    --detach
       tags:

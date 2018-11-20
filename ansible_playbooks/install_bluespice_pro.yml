@@ -5,8 +5,8 @@
   tasks:
 
     ############################################################################
-    - name: Register {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_root path on host
-      shell: docker volume inspect {{ dataspectsSystem_path_on_host | basename | lower }}_mediawiki_root
+    - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root path on host
+      shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
       register: volume_profile
       tags:
         - install_bluespice_pro
@@ -47,12 +47,12 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install BlueSpice inside container
-      shell: "docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c 'cd /var/www/html/w && ./install.sh'"
+      shell: "docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c 'cd /var/www/html/w && ./install.sh'"
       tags:
         - install_bluespice_pro
 
     - name: Run maintenance/update.php
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
+      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
       become: true
       tags:
         - install_bluespice_pro
@@ -71,7 +71,7 @@
         - install_bluespice_pro
 
     - name: Change admin user password
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash
+      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: true
@@ -110,8 +110,8 @@
 
     ############################################################################
     # Webservices
-    - name: Register {{ dataspectsSystem_path_on_host | basename | lower }}_tomcat_root path on host
-      shell: docker volume inspect {{ dataspectsSystem_path_on_host | basename | lower }}_tomcat_root
+    - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_tomcat_root path on host
+      shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_tomcat_root
       register: volume_profile
       tags:
         - install_bluespice_pro
@@ -132,8 +132,8 @@
         - install_bluespice_pro
 
     # NGNIX ####################################################################
-    - name: Register {{ dataspectsSystem_path_on_host | basename | lower }}_nginx_conf path on host
-      shell: docker volume inspect {{ dataspectsSystem_path_on_host | basename | lower }}_nginx_conf
+    - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf path on host
+      shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf
       register: volume_profile
       tags:
         - install_bluespice_pro
@@ -156,20 +156,20 @@
 
     - name: Restart Nginx Proxy
       shell: docker-compose \
-               --file {{ dataspectsSystem_path_on_host }}/docker-compose.yml \
+               --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
                  restart proxy
       tags:
         - install_bluespice_pro
         - temp
 
     - name: Run maintenance/update.php
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
+      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php maintenance/update.php"
       become: true
       tags:
         - install_bluespice_pro
 
     - name: Initialize BS ES backend and index
-      shell: docker exec {{ dataspectsSystem_path_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php {{ item }}"
+      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php {{ item }}"
       with_items:
         - "extensions/BlueSpiceExtendedSearch/maintenance/initBackends.php"
         - "extensions/BlueSpiceExtendedSearch/maintenance/rebuildIndex.php"

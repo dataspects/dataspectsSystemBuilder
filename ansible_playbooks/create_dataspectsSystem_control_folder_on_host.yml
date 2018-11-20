@@ -1,0 +1,17 @@
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Create dataspectsSystem_control_folder_on_host
+      file:
+        path: "{{ dataspectsSystem_control_folder_on_host }}"
+        state: directory
+      tags:
+        - create_dataspectsSystem_control_folder_on_host
+
+    - debug:
+        msg:
+          - "Your custom dataspectsSystem name: {{ dataspectsSystem_control_folder_on_host | basename }}"
+          - "Your custom dataspectsSystem location: {{ dataspectsSystem_control_folder_on_host }}"
+      tags:
+        - create_dataspectsSystem_control_folder_on_host
