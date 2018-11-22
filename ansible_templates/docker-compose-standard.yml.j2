@@ -24,9 +24,9 @@ services:
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
   elasticsearch:
     # # BlueSpice
-    # image: dataspects/docker-elasticsearch:1.0
+    image: dataspects/docker-elasticsearch:1.0
     # dataspectsSystem
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.0
+    # image: docker.elastic.co/elasticsearch/elasticsearch:6.5.0
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - "discovery.type=single-node"
@@ -37,7 +37,7 @@ services:
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
     ports:
-      - 5601:5601
+      - 5603:5601
   redis:
     image: redis:4.0.11-alpine
   tomcat:
