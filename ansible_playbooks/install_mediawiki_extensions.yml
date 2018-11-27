@@ -84,9 +84,11 @@
         - "$wgDefaultUserOptions['visualeditor-enable'] = 1;"
         - "$wgHiddenPrefs[] = 'visualeditor-enable';"
         - "$wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://parsoid:8000');"
-        - "$wgVisualEditorEnableWikitext = true;"
-        - "$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;"
-        - "$wgHiddenPrefs[] = 'visualeditor-newwikitext';"
+        # - "$wgVisualEditorEnableWikitext = true;"
+        # - "$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;"
+        # - "$wgHiddenPrefs[] = 'visualeditor-newwikitext';"
+        - "wfLoadExtension( 'WikiEditor' );"
+        - "$wgHiddenPrefs[] = 'usebetatoolbar';"
       become: true
       tags:
         - install_mediawiki_extension_VISUALEDITOR

@@ -37,7 +37,7 @@ services:
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
     ports:
-      - 5603:5601
+      - {{ kibanaPortOnHost }}:5601
   redis:
     image: redis:4.0.11-alpine
   tomcat:
@@ -47,6 +47,23 @@ services:
   tika:
     # https://wiki.apache.org/tika/TikaJAXRS#Using_prebuilt_Docker_image
     image: logicalspark/docker-tikaserver
+  api:
+    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-webservice:latest
+    ports:
+      - {{ dataspectsAPIPortOnHost }}:3000
+    environment:
+      SIDEKIQ_UI_USERNAME: none
+      SIDEKIQ_UI_PASSWORD: none
+      REDIS_URL: redis://redis:6379/12
+    volumes:
+      - dataspects_webservice_customer_data:/usr/dataspectsSoftware
+  sidekiq:
+    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-webservice:latest
+    environment:
+      REDIS_URL: redis://redis:6379/12
+    volumes:
+      - dataspects_webservice_customer_data:/usr/dataspectsSoftware
+    command: bundle exec sidekiq
 volumes:
   mariadb_data:
     driver: local
@@ -59,4 +76,6 @@ volumes:
   tomcat_root:
     driver: local
   esdata:
+    driver: local
+  dataspects_webservice_customer_data:
     driver: local

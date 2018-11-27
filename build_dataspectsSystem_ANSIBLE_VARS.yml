@@ -2,12 +2,14 @@
 
 # Your dataspectsSystem ########################################################
 #FIXME: Make this unique somehow on system, i.e. somehow consider absolute path?
-dataspectsSystem_control_folder_on_host: /home/lex/localhapabluespice
+dataspectsSystem_control_folder_on_host: /home/lex/dshotelwiki
 dockerComposeFileType: docker-compose-standard
 mediawikiDockerServiceName: mediawikiservice
 #FIXME: How can this be e.g. local.mediawiki, as this wouldn't work at AAA
-mediawikiDomainNameInHostFile: localhapabluespice
-nginxPortOnHost: 82
+mediawikiDomainNameInHostFile: dshotelwiki
+nginxPortOnHost: 85
+kibanaPortOnHost: 5605
+dataspectsAPIPortOnHost: 3000
 
 # MariaDB ######################################################################
 mysql_root_password: mysqlrootpass
@@ -65,3 +67,4 @@ mediawiki_extensions:
   - repo: https://github.com/wikimedia/mediawiki-extensions-VEForAll.git
     name: VEForAll
     localsettings: wfLoadExtension( 'VEForAll' );
+    configs: []

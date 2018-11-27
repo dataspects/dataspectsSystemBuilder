@@ -4,12 +4,12 @@ ANSIBLETAGS=(
   create_dataspectsSystem_control_folder_on_host
   compile_and_copy_docker_compose_file
   run_docker_compose
-  # install_mediawiki
-  install_bluespice_pro
-  # install_mediawiki_extensions
-  # install_mediawiki_extension_VISUALEDITOR
-  # install_mediawiki_extension_SEMANTICMEDIAWIKI
-  # install_mediawiki_extension_SEMANTICRESULTFORMATS
+  install_mediawiki
+  # install_bluespice_pro
+  install_mediawiki_extensions
+  install_mediawiki_extension_VISUALEDITOR
+  install_mediawiki_extension_SEMANTICMEDIAWIKI
+  install_mediawiki_extension_SEMANTICRESULTFORMATS
   execute_mediawiki_maintenance_runJobs
 )
 
