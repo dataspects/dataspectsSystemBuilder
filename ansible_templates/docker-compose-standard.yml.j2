@@ -55,12 +55,16 @@ services:
       SIDEKIQ_UI_USERNAME: none
       SIDEKIQ_UI_PASSWORD: none
       REDIS_URL: redis://redis:6379/12
+      DATASPECTS_SEARCH_CONFIG_FILE: /usr/dataspectsSoftware/dataspectsSearch_config.yml
+      DATASPECTS_PLUGINS_FOLDER: /usr/dataspectsSoftware/PLUGINS
     volumes:
       - dataspects_webservice_customer_data:/usr/dataspectsSoftware
   sidekiq:
     image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-webservice:latest
     environment:
       REDIS_URL: redis://redis:6379/12
+      DATASPECTS_SEARCH_CONFIG_FILE: /usr/dataspectsSoftware/dataspectsSearch_config.yml
+      DATASPECTS_PLUGINS_FOLDER: /usr/dataspectsSoftware/PLUGINS
     volumes:
       - dataspects_webservice_customer_data:/usr/dataspectsSoftware
     command: bundle exec sidekiq
