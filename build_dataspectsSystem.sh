@@ -6,6 +6,7 @@ ANSIBLETAGS=(
   run_docker_compose
   install_mediawiki
   # install_bluespice_pro
+  install_mediawiki_skins
   install_mediawiki_extensions
   install_mediawiki_extension_VISUALEDITOR
   install_mediawiki_extension_SEMANTICMEDIAWIKI
@@ -22,6 +23,7 @@ time ansible-playbook \
       ansible_playbooks/compile_and_copy_docker_compose_file.yml \
       ansible_playbooks/run_docker_compose.yml \
       ansible_playbooks/install_mediawiki.yml \
+      ansible_playbooks/install_mediawiki_skins.yml \
       ansible_playbooks/install_bluespice_pro.yml \
       ansible_playbooks/install_mediawiki_extensions.yml \
       ansible_playbooks/execute_mediawiki_maintenance_runJobs.yml

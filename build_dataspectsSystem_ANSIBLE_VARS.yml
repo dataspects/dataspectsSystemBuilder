@@ -18,6 +18,12 @@ mysql_root_password: mysqlrootpass
 mediawiki_version: REL1_31
 mediawiki_name: dataspects Standard Semanticmediawiki
 mediawiki_admin_user_password: adminpass
+mediawiki_skins:
+  - repo: https://github.com/thaider/Tweeki
+    name: Tweeki
+    localsettings: wfLoadSkin( 'Tweeki' );
+    configs:
+      - $wgDefaultSkin = "tweeki";
 mediawiki_extensions:
   - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageForms.git
     name: PageForms

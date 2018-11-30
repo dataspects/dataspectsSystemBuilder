@@ -1,0 +1,47 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    ############################################################################
+    - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root path on host
+      shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
+      register: volume_profile
+      tags:
+        - install_mediawiki_skins
+    - set_fact: "mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}"
+      tags:
+        - install_mediawiki_skins
+    ############################################################################
+
+    - name: Git clone mediawiki skins
+      shell: "git clone {{ item.repo }} {{ item.name }}"
+      args:
+        chdir: "{{ mountpoint.items()[0][1] }}/skins"
+      become: true
+      with_items: "{{ mediawiki_skins }}"
+      when: item.repo is defined
+      tags:
+        - install_mediawiki_skins
+
+    - name: Register mediawiki skins in LocalSettings.php
+      lineinfile:
+        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
+        line: "{{ item.localsettings }}"
+      with_items: "{{ mediawiki_skins }}"
+      become: true
+      tags:
+        - install_mediawiki_skins
+
+    - name: Configure mediawiki skins in LocalSettings.php
+      lineinfile:
+        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
+        line: "{{ item.1 }}"
+        insertafter: "{{ item.0.localsettings }}"
+      with_subelements:
+        - "{{ mediawiki_skins }}"
+        - configs
+      become: true
+      tags:
+        - install_mediawiki_skins
