@@ -23,19 +23,17 @@ services:
     environment: #AAA
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
   elasticsearch:
-    # # BlueSpice
+    # https://github.com/dataspects/docker-elasticsearch/blob/master/Dockerfile
     image: dataspects/docker-elasticsearch:1.0
-    # dataspectsSystem
-    # image: docker.elastic.co/elasticsearch/elasticsearch:6.5.0
     environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
       - "discovery.type=single-node"
     volumes:
       - esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
   kibana:
-    image: kibana:6.5.0
+    image: kibana:6.5.1
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
     ports:

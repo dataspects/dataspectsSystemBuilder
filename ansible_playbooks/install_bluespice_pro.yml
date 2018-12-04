@@ -105,8 +105,10 @@
         - install_bluespice_pro
         - temp
 
+    # [[HasEntityTitle::How to manage BlueSpice ExtendedSearch]]
     # extensions/BlueSpiceExtendedSearch/docs/README.md
     # php extensions/BlueSpiceExtendedSearch/maintenance/rebuildIndex.php && php maintenance/runJobs.php
+    # [[end]]
 
     ############################################################################
     # Webservices
@@ -176,3 +178,34 @@
       become: true
       tags:
         - install_bluespice_pro
+
+###################################################
+# [[HasEntityTitle::Manual environment settings for BlueSpice]]
+#
+# 1. Increase PHP's memory_limit
+#
+#    I had an issue in extensions/BlueSpiceExtendedSearch/src/Source/DocumentProvider/File.php
+#    and manually increased in that file by adding: ini_set('memory_limit', '2048M');
+#
+# 2. MariaDB database name must all be lowercase since ES is using it as a index prefix
+# [[end]]
+
+###################################################
+# [[HasEntityTitle::Manual corrections until new BlueSpice version is available]]
+#
+# 1. In extensions/BlueSpiceExtendedSearch/src/Source/MappingProvider/File.php:20
+#    replace
+#    
+#      $aPC += [
+#   
+#    with
+#
+#      $aPC = array_merge( $aPC, [
+# [[end]]
+
+###################################################
+# [[HasEntityTitle::How to debug BlueSpiceExtendedSearch]]
+#
+# 1. Return entire Exception object in extensions/BlueSpiceExtendedSearch/src/Backend.php:329
+#    which will then be visible in your browser's network response object
+# [[end]]
