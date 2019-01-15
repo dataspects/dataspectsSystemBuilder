@@ -1,54 +1,54 @@
 version: "3"
 services:
   db:
-    image: mariadb:10.3.10
+    image: mariadb:{{ mariadbVersion }}
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
     volumes:
       - mariadb_data:/var/lib/mysql
   {{ mediawikiDockerServiceName }}:
-    image: dataspects/docker-apache-php-dataspects-mediawiki:1.0
+    image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
     volumes:
       - mediawiki_root:/var/www/html/w
       - mediawiki_conf:/etc/apache2/sites-available
   proxy:
-    image: dataspects/docker-nginx:1.0
+    image: dataspects/docker-nginx:{{ dockerNginxVersion }}
     ports:
       - {{ nginxPortOnHost }}:80
     volumes:
       - nginx_conf:/etc/nginx/conf.d
   parsoid:
-    image: dataspects/docker-parsoid:1.0
+    image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
     environment: #AAA
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
   elasticsearch:
     # https://github.com/dataspects/docker-elasticsearch/blob/master/Dockerfile
-    image: dataspects/docker-elasticsearch:1.0
+    image: dataspects/docker-elasticsearch:{{ dockerElasticsearchVersion }}
     environment:
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
       - "discovery.type=single-node"
     volumes:
       - esdata:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - {{ elasticsearchPortOnHost }}:9200
   kibana:
-    image: kibana:6.5.1
+    image: kibana:{{ kibanaVersion }}
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
     ports:
       - {{ kibanaPortOnHost }}:5601
   redis:
-    image: redis:4.0.11-alpine
-  tomcat:
-    image: dataspects/docker-tomcat:1.0
-    volumes:
-      - tomcat_root:/usr/local/tomcat/webapps
+    image: redis:{{ redisVersion }}
+  # tomcat:
+  #   image: dataspects/docker-tomcat:1.0
+  #   volumes:
+  #     - tomcat_root:/usr/local/tomcat/webapps
   tika:
     # https://wiki.apache.org/tika/TikaJAXRS#Using_prebuilt_Docker_image
-    image: logicalspark/docker-tikaserver
+    image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
   api:
-    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-webservice:latest
+    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-webservice:{{ dockerDataspectsWebserviceVersion }}
     ports:
       - {{ dataspectsAPIPortOnHost }}:3000
     environment:
@@ -61,7 +61,7 @@ services:
     volumes:
       - dataspects_webservice_customer_data:/usr/dataspectsSoftware
   sidekiq:
-    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-webservice:latest
+    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-webservice:{{ dockerDataspectsWebserviceVersion }}
     environment:
       REDIS_URL: redis://redis:6379/12
       DATASPECTS_SEARCH_CONFIG_FILE: /usr/dataspectsSoftware/dataspectsSearch_config.yml
@@ -78,8 +78,8 @@ volumes:
     driver: local
   nginx_conf:
     driver: local
-  tomcat_root:
-    driver: local
+  # tomcat_root:
+  #   driver: local
   esdata:
     driver: local
   dataspects_webservice_customer_data:
