@@ -120,3 +120,12 @@
       become: true
       tags:
         - install_mediawiki_extension_SEMANTICRESULTFORMATS
+
+    - name: Install Semantic Result Formats 2
+      lineinfile:
+        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
+        line: "{{ item }}"
+      with_items:
+        - "wfLoadExtension( 'SemanticResultFormats' );"
+      tags:
+        - install_mediawiki_extension_SEMANTICRESULTFORMATS
