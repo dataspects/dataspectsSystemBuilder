@@ -55,7 +55,7 @@ services:
       ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
       API_KEY: none
     volumes:
-      - custom-indexer-classes:/lib/custom-indexer-classes
+      - custom_indexer_classes:/lib/custom_indexer_classes
 volumes:
   mariadb_data:
     driver: local
@@ -69,5 +69,5 @@ volumes:
   #   driver: local
   esdata:
     driver: local
-  custom-indexer-classes:
+  custom_indexer_classes:
     driver: local
