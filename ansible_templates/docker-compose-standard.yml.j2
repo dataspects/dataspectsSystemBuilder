@@ -16,6 +16,7 @@ services:
     image: dataspects/docker-nginx:{{ dockerNginxVersion }}
     ports:
       - {{ nginxPortOnHost }}:80
+      - {{ nginxHttpsPortOnHost }}:443
     volumes:
       - nginx_conf:/etc/nginx/conf.d
   parsoid:
@@ -30,27 +31,20 @@ services:
       - "discovery.type=single-node"
     volumes:
       - esdata:/usr/share/elasticsearch/data
-    ports:
-      - {{ elasticsearchPortOnHost }}:9200
   kibana:
     image: kibana:{{ kibanaVersion }}
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
-    ports:
-      - {{ kibanaPortOnHost }}:5601
-  redis:
-    image: redis:{{ redisVersion }}
-  # tomcat:
-  #   image: dataspects/docker-tomcat:1.0
-  #   volumes:
-  #     - tomcat_root:/usr/local/tomcat/webapps
   tika:
-    # https://wiki.apache.org/tika/TikaJAXRS#Using_prebuilt_Docker_image
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
+  search-service:
+    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-search-webservice:{{ dockerDataspectsSearchWebserviceVersion }}
+    environment:
+      ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
+    volumes:
+      - custom_search_classes:/lib/custom_search_classes
   indexing-service:
     image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-indexing-webservice:{{ dockerDataspectsWebserviceVersion }}
-    ports:
-      - {{ dataspectsAPIPortOnHost }}:3001
     environment:
       ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
       API_KEY: none
@@ -70,4 +64,6 @@ volumes:
   esdata:
     driver: local
   custom_indexer_classes:
+    driver: local
+  custom_search_classes:
     driver: local
