@@ -21,10 +21,9 @@ services:
       - nginx_conf:/etc/nginx/conf.d
   parsoid:
     image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
-    environment: #AAA
+    environment:
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
   elasticsearch:
-    # https://github.com/dataspects/docker-elasticsearch/blob/master/Dockerfile
     image: dataspects/docker-elasticsearch:{{ dockerElasticsearchVersion }}
     environment:
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
@@ -37,19 +36,19 @@ services:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
   tika:
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
-  search-service:
-    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-search-webservice:{{ dockerDataspectsSearchWebserviceVersion }}
-    environment:
-      ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
-    volumes:
-      - custom_search_classes:/lib/custom_search_classes
-  indexing-service:
-    image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-indexing-webservice:{{ dockerDataspectsWebserviceVersion }}
-    environment:
-      ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
-      API_KEY: none
-    volumes:
-      - custom_indexer_classes:/lib/custom_indexer_classes
+  # search-service:
+  #   image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-search-webservice:{{ dockerDataspectsSearchServiceVersion }}
+  #   environment:
+  #     ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
+  #   volumes:
+  #     - custom_search_classes:/lib/custom_search_classes
+  # indexing-service:
+  #   image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-indexing-webservice:{{ dockerDataspectsIndexingServiceVersion }}
+  #   environment:
+  #     ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
+  #     API_KEY: none
+  #   volumes:
+  #     - custom_indexer_classes:/lib/custom_indexer_classes
 volumes:
   mariadb_data:
     driver: local
@@ -59,11 +58,9 @@ volumes:
     driver: local
   nginx_conf:
     driver: local
-  # tomcat_root:
-  #   driver: local
   esdata:
     driver: local
-  custom_indexer_classes:
-    driver: local
-  custom_search_classes:
-    driver: local
+  # custom_indexer_classes:
+  #   driver: local
+  # custom_search_classes:
+  #   driver: local
