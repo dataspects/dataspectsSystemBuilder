@@ -32,9 +32,3 @@ mysql_root_password: mysqlrootpass
 mediawiki_version: REL1_31
 mediawiki_name: Local dataspects Semanticmediawiki
 mediawiki_admin_user_password: adminpass
-mediawiki_skins:
-  - repo: https://github.com/thaider/Tweeki
-    name: Tweeki
-    localsettings_configs: wfLoadSkin( 'Tweeki' );
-    configs: []
-#      - $wgDefaultSkin = "tweeki";
