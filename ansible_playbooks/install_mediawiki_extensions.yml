@@ -15,117 +15,28 @@
         - install_mediawiki_extensions
     ############################################################################
 
-    - name: Git clone mediawiki extensions
-      shell: "git clone {{ item.repo }} {{ item.name }}"
-      args:
-        chdir: "{{ mountpoint.items()[0][1] }}/extensions"
-      become: true
-      with_items: "{{ mediawiki_extensions }}"
-      when: item.repo is defined
-      tags:
-        - install_mediawiki_extensions
-
-    - name: Register mediawiki extensions in LocalSettings.php
-      lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
-        line: "{{ item.localsettings }}"
-      with_items: "{{ mediawiki_extensions }}"
+    - name: Place MediaWiki extensions list
+      template:
+        src: ../ansible_templates/mediawiki_extensions.yml.j2
+        dest: "{{ mountpoint.items()[0][1] }}/mediawiki_extensions.yml"
+        mode: 0777
       become: true
       tags:
         - install_mediawiki_extensions
 
-    - name: Configure mediawiki extensions in LocalSettings.php
-      lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
-        line: "{{ item.1 }}"
-        insertafter: "{{ item.0.localsettings }}"
-      with_subelements:
-        - "{{ mediawiki_extensions }}"
-        - configs
+    - name: Place MediaWiki extensions install script
+      template:
+        src: ../ansible_templates/install_mediawiki_extensions.rb.j2
+        dest: "{{ mountpoint.items()[0][1] }}/install_mediawiki_extensions.rb"
+        mode: 0777
       become: true
       tags:
         - install_mediawiki_extensions
 
-    ###########################################################################################
-    # VisualEditor
-    - name: Install VisualEditor 1
-      # https://www.mediawiki.org/wiki/Extension:VisualEditor#Download
-      shell: "git clone https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor.git"
+    - name: Install MediaWiki extensions
+      shell: ruby install_mediawiki_extensions.rb
       args:
-        chdir: "{{ mountpoint.items()[0][1] }}/extensions"
+        chdir: "{{ mountpoint.items()[0][1] }}"
       become: true
       tags:
-        - install_mediawiki_extension_VISUALEDITOR
-
-    - name: Install VisualEditor 2
-      # https://www.mediawiki.org/wiki/Extension:VisualEditor#Download
-      shell: "git checkout REL1_31"
-      args:
-        chdir: "{{ mountpoint.items()[0][1] }}/extensions/VisualEditor"
-      become: true
-      tags:
-        - install_mediawiki_extension_VISUALEDITOR
-
-    - name: Install VisualEditor 3
-      # https://www.mediawiki.org/wiki/Extension:VisualEditor#Download
-      shell: "git submodule update --init"
-      args:
-        chdir: "{{ mountpoint.items()[0][1] }}/extensions/VisualEditor"
-      become: true
-      tags:
-        - install_mediawiki_extension_VISUALEDITOR
-
-    - name: Install VisualEditor 4
-      lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
-        line: "{{ item }}"
-      with_items:
-        - "wfLoadExtension( 'VisualEditor' );"
-        - "$wgDefaultUserOptions['visualeditor-enable'] = 1;"
-        - "$wgHiddenPrefs[] = 'visualeditor-enable';"
-        - "$wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://parsoid:8000');"
-        # - "$wgVisualEditorEnableWikitext = true;"
-        # - "$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;"
-        # - "$wgHiddenPrefs[] = 'visualeditor-newwikitext';"
-        - "wfLoadExtension( 'WikiEditor' );"
-        - "$wgHiddenPrefs[] = 'usebetatoolbar';"
-      become: true
-      tags:
-        - install_mediawiki_extension_VISUALEDITOR
-
-    - name: Install Semanticmediawiki 1
-      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '~3.0' --update-no-dev"
-      become: true
-      tags:
-        - install_mediawiki_extension_SEMANTICMEDIAWIKI
-
-    - name: Install Semanticmediawiki 2
-      lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
-        line: "{{ item }}"
-      with_items:
-        - "enableSemantics( 'localhost' );"
-      become: true
-      tags:
-        - install_mediawiki_extension_SEMANTICMEDIAWIKI
-
-    - name: Install Semanticmediawiki 3
-      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies"
-      become: true
-      tags:
-        - install_mediawiki_extension_SEMANTICMEDIAWIKI
-
-    - name: Install Semantic Result Formats 1
-      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '3.0.*' --update-no-dev"
-      become: true
-      tags:
-        - install_mediawiki_extension_SEMANTICRESULTFORMATS
-
-    - name: Install Semantic Result Formats 2
-      lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
-        line: "{{ item }}"
-      with_items:
-        - "wfLoadExtension( 'SemanticResultFormats' );"
-      tags:
-        - install_mediawiki_extension_SEMANTICRESULTFORMATS
+        - install_mediawiki_extensions

@@ -1,0 +1,42 @@
+require 'yaml'
+require 'awesome_print'
+
+extensions = YAML.load_file("mediawiki_extensions.yml")
+@mediawiki_root = '.'
+mediawiki_container_name = '{{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1'
+
+def append_to_localsettings s
+  open("#{@mediawiki_root}/LocalSettings.php", "a") do |f|
+    f.puts(s)
+  end
+end
+
+extensions['mediawiki_extensions'].each do |extension|
+
+  # Do we need to get the extension code?
+  if(extension.has_key?('repo'))
+    `git clone #{extension['repo']} #{@mediawiki_root}/extensions/#{extension['name']}`
+  end
+
+  # Run Docker commands
+  if(extension.has_key?('docker_commands'))
+    extension['docker_commands'].each do |docker_command|
+      puts `docker exec #{mediawiki_container_name} bash -c "#{docker_command}"`
+    end
+  end
+
+  # Run in-extension-folder commands
+  if(extension.has_key?('in_extension_folder_commands'))
+    extension['in_extension_folder_commands'].each do |in_extension_folder_command|
+      `cd #{@mediawiki_root}/extensions/#{extension['name']} && #{in_extension_folder_command} && cd #{@mediawiki_root}`
+    end
+  end
+
+  # Add extension configurations to LocalSettings.php
+  if(extension.has_key?('localsettings_configs'))
+    extension['localsettings_configs'].each do |config|
+      append_to_localsettings(config)
+    end
+  end
+
+end

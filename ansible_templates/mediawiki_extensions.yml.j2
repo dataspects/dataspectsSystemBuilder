@@ -1,0 +1,71 @@
+---
+mediawiki_extensions:
+  - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageForms.git
+    name: PageForms
+    localsettings_configs:
+      - wfLoadExtension( 'PageForms' );
+  - repo: https://github.com/wikimedia/mediawiki-extensions-DisplayTitle.git
+    name: DisplayTitle
+    localsettings_configs:
+      - wfLoadExtension( 'DisplayTitle' );
+      - $wgRestrictDisplayTitle = false;
+  - name: ParserFunctions
+    localsettings_configs:
+      - wfLoadExtension( 'ParserFunctions' );
+      - $wgPFEnableStringFunctions = true;
+  - repo: https://github.com/wikimedia/mediawiki-extensions-HeaderTabs.git
+    name: HeaderTabs
+    localsettings_configs:
+      - wfLoadExtension( 'HeaderTabs' );
+  - repo: https://github.com/wikimedia/mediawiki-extensions-Variables.git
+    name: Variables
+    localsettings_configs:
+      - wfLoadExtension( 'Variables' );
+  - repo: https://github.com/wikimedia/mediawiki-extensions-Scribunto.git
+    name: Scribunto
+    localsettings_configs:
+      - wfLoadExtension( 'Scribunto' );
+      - $wgScribuntoDefaultEngine = 'luastandalone';
+  - repo: https://github.com/dataspects/MWExtension-DataspectsSearch.git
+    name: DataspectsSearch
+    localsettings_configs:
+      - wfLoadExtension( 'DataspectsSearch' );
+  - repo: https://github.com/wikimedia/mediawiki-extensions-Arrays.git
+    name: Arrays
+    localsettings_configs:
+      - require_once "$IP/extensions/Arrays/Arrays.php";
+  - repo: https://github.com/wikimedia/mediawiki-extensions-MyVariables.git
+    name: MyVariables
+    localsettings_configs:
+      - require_once "$IP/extensions/MyVariables/MyVariables.php";
+  - name: CategoryTree
+    localsettings_configs:
+      - wfLoadExtension( 'CategoryTree' );
+  - name: SyntaxHighlight_GeSHi
+    localsettings_configs:
+      - wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+    # chmod a+x /path/to/extensions/SyntaxHighlight_GeSHi/pygments/pygmentize
+  - repo: https://github.com/wikimedia/mediawiki-extensions-VEForAll.git
+    name: VEForAll
+    localsettings_configs:
+      - wfLoadExtension( 'VEForAll' );
+  - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor.git
+    name: VisualEditor
+    in_extension_folder_commands:
+      - git checkout REL1_31
+      - git submodule update --init
+    localsettings_configs:
+      - wfLoadExtension( 'VisualEditor' );
+      - $wgDefaultUserOptions['visualeditor-enable'] = 1;
+      - $wgHiddenPrefs[] = 'visualeditor-enable';
+      - $wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://parsoid:8000');
+  - docker_commands:
+      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '~3.0' --update-no-dev
+      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
+    localsettings_configs:
+      - enableSemantics( 'localhost' );
+  - docker_commands:
+      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '3.0.*' --update-no-dev
+      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
+    localsettings_configs:
+      - wfLoadExtension( 'SemanticResultFormats' );

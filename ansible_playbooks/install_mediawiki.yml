@@ -33,7 +33,7 @@
       tags:
         - install_mediawiki
 
-    - name: Install extensions and skins
+    - name: Install core extensions and skins
       shell: "git submodule update --init --recursive"
       args:
         chdir: "{{ mountpoint.items()[0][1] }}"
