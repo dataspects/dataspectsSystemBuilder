@@ -21,7 +21,7 @@ extensions['mediawiki_extensions'].each do |extension|
   # Run Docker commands
   if(extension.has_key?('docker_commands'))
     extension['docker_commands'].each do |docker_command|
-      puts `docker exec #{mediawiki_container_name} bash -c "#{docker_command}"`
+      `docker exec --user www-data #{mediawiki_container_name} bash -c "#{docker_command}"`
     end
   end
 
