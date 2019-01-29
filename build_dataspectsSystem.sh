@@ -7,6 +7,7 @@ ANSIBLETAGS=(
   # Comment the following for manual installation on Docker stack in accordance
   # with C1470408196
   install_mediawiki
+  configure_proxy
   install_mediawiki_extensions
   execute_mediawiki_maintenance_runJobs
 )

@@ -41,16 +41,6 @@
       tags:
         - install_mediawiki
 
-    # [[IsOperationType::FileSystemOperation]]
-    - name: Set permissions on mediawiki root
-      file:
-        path: "{{ mountpoint.items()[0][1] }}"
-        owner: www-data
-        recurse: yes
-      become: true
-      tags:
-        - install_mediawiki
-
     - name: Place composer install script
       template:
         src: ../ansible_templates/install_composer.sh
@@ -134,17 +124,27 @@
       tags:
         - install_mediawiki
 
-    # NGNIX ####################################################################
+    # [[IsOperationType::FileSystemOperation]]
+    - name: Set permissions on mediawiki root
+      file:
+        path: "{{ mountpoint.items()[0][1] }}"
+        owner: www-data
+        recurse: yes
+      become: true
+      tags:
+        - install_mediawiki
+
+    ############################################################################
+    # configure_proxy ##########################################################
     - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf path on host
       shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf
       register: volume_profile
       tags:
-        - install_mediawiki
+        - configure_proxy
     - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
       tags:
-        - install_mediawiki
-    ############################################################################
-
+        - configure_proxy
+    
     - name: Place mediawiki service nginx conf
       template:
         src: ../ansible_templates/mediawiki-nginx.conf.j2
@@ -152,11 +152,11 @@
         mode: 0777
       become: true
       tags:
-        - install_mediawiki
+        - configure_proxy
 
     - name: Restart Nginx Proxy
       shell: docker-compose \
                --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
                  restart proxy
       tags:
-        - install_mediawiki
+        - configure_proxy
