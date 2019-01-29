@@ -10,6 +10,7 @@ ANSIBLETAGS=(
   configure_proxy
   install_mediawiki_extensions
   execute_mediawiki_maintenance_runJobs
+  install_backup_functionality
 )
 
 time ansible-playbook \
@@ -22,4 +23,5 @@ time ansible-playbook \
       ansible_playbooks/run_docker_compose.yml \
       ansible_playbooks/install_mediawiki.yml \
       ansible_playbooks/install_mediawiki_extensions.yml \
-      ansible_playbooks/execute_mediawiki_maintenance_runJobs.yml
+      ansible_playbooks/execute_mediawiki_maintenance_runJobs.yml \
+      ansible_playbooks/install_backup_functionality.yml

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+docker exec \
+    {{ mediawikiDomainNameInHostFile }}_db_1 \
+      mysqldump \
+        --password={{ mysql_root_password }} \
+        --user=root \
+        --host=localhost \
+        --complete-insert \
+        --add-drop-database \
+        --add-drop-table \
+        --compact \
+        --create-options \
+        --no-create-db \
+        --result-file=/datadump/mediawiki_root/dump.sql \
+        wikidb
+
+docker run --rm --user 0 \
+  -v {{ dataspectsSystem_control_folder_on_host }}/.cache:/home/duplicity/.cache/duplicity \
+  -v {{ dataspectsSystem_control_folder_on_host }}:/backup \
+  -e DEST="file:////backup/{{ mediawikiDomainNameInHostFile }}" \
+  -e ENCRYPTION=no \
+  -v /var/lib/docker/volumes/{{ mediawikiDomainNameInHostFile }}_mediawiki_root:/data \
+  dataspects/docker-duplicity:1.0 \
+  --backup
