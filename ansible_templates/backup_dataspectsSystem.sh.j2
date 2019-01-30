@@ -17,8 +17,8 @@ docker exec \
 
 docker run --rm --user 0 \
   -v {{ dataspectsSystem_control_folder_on_host }}/.cache:/home/duplicity/.cache/duplicity \
-  -v {{ dataspectsSystem_control_folder_on_host }}:/backup \
-  -e DEST="file:////backup/{{ mediawikiDomainNameInHostFile }}" \
+  -v {{ dataspectsSystem_control_folder_on_host }}/backup:/backup \
+  -e DEST="file:////backup/" \
   -e ENCRYPTION=no \
   -v /var/lib/docker/volumes/{{ mediawikiDomainNameInHostFile }}_mediawiki_root:/data \
   dataspects/docker-duplicity:1.0 \

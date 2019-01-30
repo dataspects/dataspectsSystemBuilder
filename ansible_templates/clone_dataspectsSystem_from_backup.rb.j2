@@ -1,0 +1,5 @@
+puts `docker-compose up --detach`
+
+cloned_mediawiki_root = `docker volume inspect cloning_mediawiki_root`.scan(/^ *"Mountpoint": "(.*)",$/)[0][0]
+
+puts `ls #{cloned_mediawiki_root}`

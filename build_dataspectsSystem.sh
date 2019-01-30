@@ -1,16 +1,17 @@
 #!/bin/bash
 
 ANSIBLETAGS=(
-  create_dataspectsSystem_control_folder_on_host
-  compile_and_copy_docker_compose_file
-  run_docker_compose
-  # Comment the following for manual installation on Docker stack in accordance
-  # with C1470408196
-  install_mediawiki
-  configure_proxy
-  install_mediawiki_extensions
-  execute_mediawiki_maintenance_runJobs
+  # create_dataspectsSystem_control_folder_on_host
+  # compile_and_copy_docker_compose_file
+  # run_docker_compose
+  # # Comment the following for manual installation on Docker stack in accordance
+  # # with C1470408196
+  # install_mediawiki
+  # configure_proxy
+  # install_mediawiki_extensions
+  # execute_mediawiki_maintenance_runJobs
   install_backup_functionality
+  install_clone_functionality
 )
 
 time ansible-playbook \
@@ -24,4 +25,4 @@ time ansible-playbook \
       ansible_playbooks/install_mediawiki.yml \
       ansible_playbooks/install_mediawiki_extensions.yml \
       ansible_playbooks/execute_mediawiki_maintenance_runJobs.yml \
-      ansible_playbooks/install_backup_functionality.yml
+      ansible_playbooks/install_backup_and_clone_functionality.yml

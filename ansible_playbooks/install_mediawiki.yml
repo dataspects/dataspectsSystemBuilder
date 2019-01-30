@@ -17,16 +17,8 @@
         - t1811161102t
     ############################################################################
 
-    - name: Copy mediawiki core to volume
-      synchronize:
-        src: ../mediawiki/
-        dest: "{{ mountpoint.items()[0][1] }}"
-      become: true
-      tags:
-        - install_mediawiki
-
-    - name: Checkout required mediawiki version
-      shell: "git checkout {{ mediawiki_version }}"
+    - name: Clone required mediawiki version
+      shell: "git clone -b {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
       args:
         chdir: "{{ mountpoint.items()[0][1] }}"
       become: true
@@ -36,7 +28,7 @@
     - name: Install core extensions and skins
       shell: "git submodule update --init --recursive"
       args:
-        chdir: "{{ mountpoint.items()[0][1] }}"
+        chdir: "{{ mountpoint.items()[0][1] }}/w/"
       become: true
       tags:
         - install_mediawiki
@@ -44,7 +36,7 @@
     - name: Place composer install script
       template:
         src: ../ansible_templates/install_composer.sh
-        dest: "{{ mountpoint.items()[0][1] }}/install_composer.sh"
+        dest: "{{ mountpoint.items()[0][1] }}/w/install_composer.sh"
         mode: 0777
       become: true
       tags:
@@ -65,7 +57,7 @@
     - name: Place mediawiki install script
       template:
         src: ../ansible_templates/install_mediawiki.sh.j2
-        dest: "{{ mountpoint.items()[0][1] }}/install.sh"
+        dest: "{{ mountpoint.items()[0][1] }}/w/install.sh"
         mode: 0777
       become: true
       tags:
@@ -79,7 +71,7 @@
 
     - name: Add settings to LocalSettings.php
       lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
+        path: "{{ mountpoint.items()[0][1] }}/w/LocalSettings.php"
         line: "{{ item }}"
       with_items:
         - $wgArticlePath = '/wiki/$1';
@@ -91,7 +83,7 @@
     #FIXME: This should replace, but it actually just adds!
     - name: Replace settings in LocalSettings.php
       lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
+        path: "{{ mountpoint.items()[0][1] }}/w/LocalSettings.php"
         regexp: '{{ item.orig }}'
         line: '{{ item.replace }}'
       with_items:
@@ -114,7 +106,7 @@
     #FIXME: This should replace, but it actually just adds!
     - name: Replace settings in LocalSettings.php
       lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/LocalSettings.php"
+        path: "{{ mountpoint.items()[0][1] }}/w/LocalSettings.php"
         regexp: '{{ item.orig }}'
         line: '{{ item.replace }}'
       with_items:
@@ -127,7 +119,7 @@
     # [[IsOperationType::FileSystemOperation]]
     - name: Set permissions on mediawiki root
       file:
-        path: "{{ mountpoint.items()[0][1] }}"
+        path: "{{ mountpoint.items()[0][1] }}/w/"
         owner: www-data
         recurse: yes
       become: true
@@ -144,7 +136,7 @@
     - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
       tags:
         - configure_proxy
-    
+
     - name: Place mediawiki service nginx conf
       template:
         src: ../ansible_templates/mediawiki-nginx.conf.j2

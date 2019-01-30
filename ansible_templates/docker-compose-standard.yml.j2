@@ -6,12 +6,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
     volumes:
-      - mariadb_data:/var/lib/mysql
-      - mediawiki_root:/datadump/mediawiki_root
+      - mariadb_data:/var/lib/mysql/
+      - mediawiki_root:/datadump/mediawiki_root/
   {{ mediawikiDockerServiceName }}:
     image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
     volumes:
-      - mediawiki_root:/var/www/html/w
+      - mediawiki_root:/var/www/html/
       - mediawiki_conf:/etc/apache2/sites-available
   proxy:
     image: dataspects/docker-nginx:{{ dockerNginxVersion }}

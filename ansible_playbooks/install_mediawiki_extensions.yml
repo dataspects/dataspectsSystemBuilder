@@ -18,7 +18,7 @@
     - name: Place MediaWiki extensions list
       template:
         src: ../ansible_templates/mediawiki_extensions.yml.j2
-        dest: "{{ mountpoint.items()[0][1] }}/mediawiki_extensions.yml"
+        dest: "{{ mountpoint.items()[0][1] }}/w/mediawiki_extensions.yml"
         mode: 0777
       become: true
       tags:
@@ -27,7 +27,7 @@
     - name: Place MediaWiki extensions install script
       template:
         src: ../ansible_templates/install_mediawiki_extensions.rb.j2
-        dest: "{{ mountpoint.items()[0][1] }}/install_mediawiki_extensions.rb"
+        dest: "{{ mountpoint.items()[0][1] }}/w/install_mediawiki_extensions.rb"
         mode: 0777
       become: true
       tags:
@@ -36,7 +36,7 @@
     - name: Install MediaWiki extensions
       shell: ruby install_mediawiki_extensions.rb
       args:
-        chdir: "{{ mountpoint.items()[0][1] }}"
+        chdir: "{{ mountpoint.items()[0][1] }}/w/"
       become: true
       tags:
         - install_mediawiki_extensions
