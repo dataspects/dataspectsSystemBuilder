@@ -20,6 +20,6 @@ docker run --rm --user 0 \
   -v {{ dataspectsSystem_control_folder_on_host }}/backup:/backup \
   -e DEST="file:////backup/" \
   -e ENCRYPTION=no \
-  -v /var/lib/docker/volumes/{{ mediawikiDomainNameInHostFile }}_mediawiki_root:/data \
+  -v /var/lib/docker/volumes/{{ mediawikiDomainNameInHostFile }}_mediawiki_root/_data:/data \
   dataspects/docker-duplicity:1.0 \
   --backup

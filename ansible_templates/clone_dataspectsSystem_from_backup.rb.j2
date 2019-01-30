@@ -2,4 +2,13 @@ puts `docker-compose up --detach`
 
 cloned_mediawiki_root = `docker volume inspect cloning_mediawiki_root`.scan(/^ *"Mountpoint": "(.*)",$/)[0][0]
 
+puts `docker run --rm --user 0 \
+  -v {{ dataspectsSystem_control_folder_on_host }}/.cache:/home/duplicity/.cache/duplicity \
+  -v {{ dataspectsSystem_control_folder_on_host }}/backup:/backup \
+  -v #{cloned_mediawiki_root}:/cloned \
+  -e DEST="file:////backup/" \
+  -e ENCRYPTION=no \
+  dataspects/docker-duplicity:1.0 \
+  --restore /cloned`
+
 puts `ls #{cloned_mediawiki_root}`
