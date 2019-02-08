@@ -37,6 +37,10 @@ services:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
   tika:
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
+  # ui:
+  #   image: dataspects/dataspects-ui:{{ dockerDataspectsUIVersion }}
+  #   volumes:
+  #     - uitemplates:???
   # search-service:
   #   image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-search-webservice:{{ dockerDataspectsSearchServiceVersion }}
   #   environment:
