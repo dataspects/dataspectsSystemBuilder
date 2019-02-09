@@ -40,7 +40,8 @@ services:
   # ui:
   #   image: dataspects/dataspects-ui:{{ dockerDataspectsUIVersion }}
   #   volumes:
-  #     - templates:/go/src/app/templates
+  #     - dataspects-ui-public:/app/public
+  #     - dataspects-ui-views:/app/views
   # search-service:
   #   image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-search-webservice:{{ dockerDataspectsSearchServiceVersion }}
   #   environment:
@@ -65,7 +66,9 @@ volumes:
     driver: local
   esdata:
     driver: local
-  # templates:
+  # dataspects-ui-public:
+  #   driver: local
+  # dataspects-ui-views:
   #   driver: local
   # custom_indexer_classes:
   #   driver: local
