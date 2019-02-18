@@ -62,7 +62,8 @@ mediawiki_extensions:
       - wfLoadExtension( 'VisualEditor' );
       - $wgDefaultUserOptions['visualeditor-enable'] = 1;
       - $wgHiddenPrefs[] = 'visualeditor-enable';
-      - $wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://parsoid:8000');
+      - $wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://parsoid:8000', 'domain' => '{{ mediawikiDomainNameInHostFile }}');
+      - $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
   - docker_commands:
       - cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '~3.0' --update-no-dev
       - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
