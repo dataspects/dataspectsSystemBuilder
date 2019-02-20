@@ -1,0 +1,16 @@
+require 'dataspects'
+
+localmw = Dataspects::MediaWiki.new(
+  url: "http://{{ mediawikiDomainNameInHostFile }}/w",
+  user: "admin",
+  password: "{{ mediawiki_admin_user_password }}",
+  log_in: :must_log_in
+)
+
+ontology = "dataspectsSystemCoreOntology"
+coreont = Dataspects::OntologyRepository.new(ontology)
+coreont.use_existing_at_URL
+
+localmw.resources_from_CATEGORY(ontology)
+c = Dataspects::Comparer.new
+c.report(localmw, coreont)

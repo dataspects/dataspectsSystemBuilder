@@ -9,7 +9,7 @@
         src: ../ansible_templates/provisioning/elasticsearch
         dest: "{{ dataspectsSystem_control_folder_on_host }}/provisioning"
       tags:
-        - provision_and_index
+        - provision_and_index_and_compare
 
     - name: Copy control files
       template:
@@ -22,12 +22,13 @@
         - inject_cookbook_ontology.rb
         - inject_cookbook_entities.rb
         - index_cookbook_entities.rb
+        - compare.rb
       tags:
-        - provision_and_index
+        - provision_and_index_and_compare
 
     - name: Execute all control files
       shell: ruby execute_all.rb
       args:
         chdir: "{{ dataspectsSystem_control_folder_on_host }}/provisioning"
       tags:
-        - provision_and_index
+        - provision_and_index_and_compare

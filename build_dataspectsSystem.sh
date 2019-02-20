@@ -15,7 +15,7 @@ ANSIBLETAGS=(
   execute_mediawiki_maintenance_runJobs
   install_backup_functionality
   install_clone_functionality
-  provision_and_index
+  provision_and_index_and_compare
 )
 
 time ansible-playbook \
