@@ -31,12 +31,18 @@ services:
       - "discovery.type=single-node"
     volumes:
       - esdata:/usr/share/elasticsearch/data
+    ports:
+      - {{ elasticsearchPortOnHost }}:9200
   kibana:
     image: kibana:{{ kibanaVersion }}
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+    ports:
+      - {{ kibanaPortOnHost }}:5601
   tika:
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
+    ports:
+      - {{ tikaPortOnHost }}:9998
   # ui:
   #   image: dataspects/dataspects-ui:{{ dockerDataspectsUIVersion }}
   #   volumes:

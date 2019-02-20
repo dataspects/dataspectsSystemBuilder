@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     chmod +x /usr/local/bin/docker-compose
     git clone https://github.com/dataspects/dataspectsSystem.git
     cd dataspectsSystem
-    ./build_dataspectsSystem.sh
+    CONTROL_FOLDER_PATH=/home/vagrant/cookbookfindandlearnnet ./build_dataspectsSystem.sh
     sed 's|$wgServer = "http://.*|$wgServer = "http://wikidataspectssystem:#{port}";|i' \
       #{mediawiki_root}/LocalSettings.php \
       > #{mediawiki_root}/LocalSettings.changed.php

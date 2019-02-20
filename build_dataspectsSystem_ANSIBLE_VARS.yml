@@ -1,25 +1,23 @@
 ---
 
-# Your dataspectsSystem ########################################################
-#FIXME: Make this unique somehow on system, i.e. somehow consider absolute path?
-dataspectsSystem_control_folder_on_host: /home/vagrant/wikidataspectssystem
 dockerComposeFileType: docker-compose-standard
 mediawikiDockerServiceName: mediawikiservice
 #FIXME: How can this be e.g. local.mediawiki, as this wouldn't work at AAA
-mediawikiDomainNameInHostFile: wikidataspectssystem
+
+# Host Ports ###################################################################
 nginxPortOnHost: 80
 nginxHttpsPortOnHost: 443
 kibanaPortOnHost: 5601
-dataspectsAPIPortOnHost: 3000
 elasticsearchPortOnHost: 9200
+tikaPortOnHost: 9998
 
 # Docker Images ################################################################
 mariadbVersion: 10.3.10
 dockerApachePhpDataspectsMediawikiVersion: 1.2
 dockerNginxVersion: 1.0.1
-dockerElasticsearchVersion: 6.5.4
-dockerParsoidVersion: "1.0"
-kibanaVersion: 6.5.4
+dockerElasticsearchVersion: 6.6.0
+dockerParsoidVersion: 0.10.0
+kibanaVersion: 6.6.0
 redisVersion: 4.0.11-alpine
 dockerTikaserverVersion: "1.20"
 dockerDataspectsIndexingServiceVersion: 1
@@ -31,5 +29,5 @@ mysql_root_password: mysqlrootpass
 
 # MediaWiki ####################################################################
 mediawiki_version: REL1_31
-mediawiki_name: Local dataspects Semanticmediawiki
+mediawiki_name: dataspectsSystem Wiki
 mediawiki_admin_user_password: adminpass

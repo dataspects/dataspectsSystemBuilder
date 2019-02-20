@@ -1,0 +1,31 @@
+require 'dataspects'
+
+localmw = Dataspects::MediaWiki.new(
+  url: "http://{{ mediawikiDomainNameInHostFile }}/w",
+  user: "admin",
+  password: "{{ mediawiki_admin_user_password }}",
+  log_in: :must_log_in
+)
+
+publiccookbook = Dataspects::MediaWiki.new(
+  url: "https://cookbook.findandlearn.net/w",
+  user: "roapi",
+  password: "27i34w22f",
+  log_in: :must_log_in
+)
+
+# Extract entities
+falnetentities = Dataspects::OntologyRepository.new("./cookbookfalnet_entities")
+falnetentities.create_new_at_URL
+publiccookbook.resources_from_CATEGORY("Entity") do |resource|
+  falnetentities.store_RESOURCE(resource)
+  STDOUT.puts "Stored"
+end
+
+# Inject entities
+falnetentities.resources.each do |resource|
+  localmw.store_RESOURCE(resource, "Injection job 190218")
+end
+
+# Refresh {{ mediawikiDomainNameInHostFile }}
+`docker exec --user www-data {{ mediawikiDomainNameInHostFile }}_mediawikiservice_1 bash -c "php w/maintenance/runJobs.php && php w/maintenance/refreshLinks.php && php w/extensions/SemanticMediaWiki/maintenance/rebuildData.php"`
