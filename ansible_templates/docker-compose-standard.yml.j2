@@ -43,17 +43,37 @@ services:
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
     ports:
       - {{ tikaPortOnHost }}:9998
-  # ui:
-  #   image: dataspects/dataspects-ui:{{ dockerDataspectsUIVersion }}
-  #   volumes:
-  #     - dataspects-ui-public:/app/public
-  #     - dataspects-ui-views:/app/views
-  # search-service:
-  #   image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-search-webservice:{{ dockerDataspectsSearchServiceVersion }}
-  #   environment:
-  #     ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
-  #   volumes:
-  #     - custom_search_classes:/lib/custom_search_classes
+  mongodb:
+    image: mongo:4.0.6
+  redis:
+    image: redis:5.0.3-alpine
+  ui:
+    image: dataspects/ui:latest
+    restart: always
+    depends_on:
+      - mongodb
+      - redis
+    ports:
+      - {{ dataspectsUIPort }}:3000
+    volumes:
+      - ui_public:/app/public
+      - ui_views:/app/views
+    environment:
+      - "PORT=3000"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "SESSION_SECRET={{ ui_session_secret }}"
+      - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
+      - "ES_URL=http://es:9200"
+      - "AWS_ACCESS_KEY_ID={{ aws_access_key_id }}"
+      - "AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}"
+      - "AWS_SES_API_VERSION=2010-12-01"
+      - "AWS_SES_REGION=eu-west-1"
+      - "FROM_EMAIL=support@dataspects.com"
+      - "FROM_NAME=datasepects"
+      - "SITE_URL=http://localhost:3000"
+      - "OTP_DOMAIN=ui.dataspects.com"
+volumes:
   # indexing-service:
   #   image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-indexing-webservice:{{ dockerDataspectsIndexingServiceVersion }}
   #   environment:
@@ -72,10 +92,10 @@ volumes:
     driver: local
   esdata:
     driver: local
-  # dataspects-ui-public:
-  #   driver: local
-  # dataspects-ui-views:
-  #   driver: local
+  ui_public:
+    driver: local
+  ui_views:
+    driver: local
   # custom_indexer_classes:
   #   driver: local
   # custom_search_classes:

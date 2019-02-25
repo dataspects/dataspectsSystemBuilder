@@ -1,0 +1,12 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Backup
+      shell: ./backup_dataspectsSystem.sh
+      args:
+        chdir: "{{ dataspectsSystem_control_folder_on_host }}"
+      tags:
+        - backup_and_clone

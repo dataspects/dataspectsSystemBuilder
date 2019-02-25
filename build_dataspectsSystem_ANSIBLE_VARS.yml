@@ -10,6 +10,7 @@ nginxHttpsPortOnHost: 443
 kibanaPortOnHost: 5601
 elasticsearchPortOnHost: 9200
 tikaPortOnHost: 9998
+dataspectsUIPort: 3000
 
 # Docker Images ################################################################
 mariadbVersion: 10.3.10
