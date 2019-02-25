@@ -4,14 +4,20 @@
   },
   "properties": {
     "OriginatedFromResourceSiloID": {
-      "type": "keyword",
-      "index": false,
-      "store": false
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
     },
     "OriginatedFromResourceSiloLabel": {
-      "type": "keyword",
-      "index": true,
-      "store": false
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
     },
     "OriginatedFromResourceSiloType": {
       "type": "text",
