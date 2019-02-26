@@ -1,0 +1,210 @@
+require 'dataspects'
+require 'awesome_print'
+
+module Dataspects
+
+  class ElasticsearchCluster
+    def process_pendings
+      response = @client.search(
+        index: "dataspectspublic",
+        type: "doc",
+        body: {
+          size: 10000,
+          query: {
+            nested: {
+              path: "HasEntityAnnotations",
+              query: {
+                term: {
+                  "HasEntityAnnotations.object_class": "PENDING"
+                }
+              }
+            }
+          }
+        }
+      )
+      unless(response['hits']['hits'].empty?)
+        response['hits']['hits'].each do |hit|
+          entity = Entity.new(nil)
+          entity.new_from_es_hit_source(self, hit)
+        end
+      end
+    end
+  end
+
+  class Entity
+    def new_from_es_hit_source(esc, hit)
+      hasEntityAnnotations = []
+      hit['_source']['HasEntityAnnotations'].each do |annotation|
+        object_data = get_object_data(esc, annotation['object'][0..-2])
+        if(object_data.nil?)
+          object_class = "Literal"
+          object_type = "Text"
+        else
+          object_class = object_data['_source']['HasEntityClass']
+          object_type = object_data['_source']['HasEntityType']
+        end
+        hasEntityAnnotations << {
+          subject: annotation['subject'],
+          subject_class: annotation['subject_class'],
+          subject_type: annotation['subject_type'],
+          predicate: annotation['predicate'],
+          object: annotation['object'],
+          object_class: object_class,
+          object_type: object_type,
+          subject_type___object_type: "#{annotation['subject_type']}___#{object_type}"
+        }
+      end
+      esdoc = {
+        # Resource silo level
+        OriginatedFromResourceSiloID: hit['_source']['OriginatedFromResourceSiloID'],
+        OriginatedFromResourceSiloLabel: hit['_source']['OriginatedFromResourceSiloLabel'],
+        OriginatedFromResourceSiloType: hit['_source']['OriginatedFromResourceSiloType'],
+        # Resource level
+        OriginatedFromResourceName: hit['_source']['OriginatedFromResourceName'],
+        OriginatedFromResourceURL: hit['_source']['OriginatedFromResourceURL'],
+        OriginatedFromResourceType: hit['_source']['OriginatedFromResourceType'],
+        # Entity/subject level
+        HasEntityClass: hit['_source']['HasEntityClass'],
+        HasEntityName: hit['_source']['HasEntityName'],
+        HasEntityType: hit['_source']['HasEntityType'],
+        HasEntityURL: hit['_source']['HasEntityURL'],
+        HasEntityTitle: hit['_source']['HasEntityTitle'],
+        HasEntityBlurbTEXT: hit['_source']['HasEntityBlurbTEXT'],
+        HasEntityBlurbHTML: hit['_source']['HasEntityBlurbHTML'],
+        HasEntityContentTEXT: hit['_source']['HasEntityContentTEXT'],
+        HasEntityContentHTML: hit['_source']['HasEntityContentHTML'],
+        HasEntityTypeAndEntityTitle: hit['_source']['HasEntityTypeAndEntityTitle'],
+        HasEntityKeywords: hit['_source']['HasEntityKeywords'],
+        HasEntityAnnotations: hasEntityAnnotations
+      }
+      esc.client.index(
+        index: 'dataspectspublic',
+        type: 'doc',
+        id: hit['_id'],
+        body: esdoc
+      )
+      $logger.info("Updated pending objects for #{hit['_source']['HasEntityURL']}...")
+    end
+    def esdoc(esc)
+      {
+        # Resource silo level
+        OriginatedFromResourceSiloID: @resource.resource_silo.originatedFromResourceSiloID,
+        OriginatedFromResourceSiloLabel: @resource.resource_silo.originatedFromResourceSiloLabel,
+        OriginatedFromResourceSiloType: @resource.resource_silo.originatedFromResourceSiloType,
+        # Resource level
+        OriginatedFromResourceName: @resource.hasResourceName,
+        OriginatedFromResourceURL: @resource.hasResourceURL,
+        OriginatedFromResourceType: @resource.hasResourceType,
+        # Entity/subject level
+        HasEntityClass: hasEntityClass,
+        HasEntityName: hasEntityName,
+        HasEntityType: hasEntityType,
+        HasEntityURL: hasEntityURL,
+        HasEntityTitle: hasEntityTitle,
+        HasEntityBlurbTEXT: hasEntityBlurbTEXT,
+        HasEntityBlurbHTML: hasEntityBlurbHTML,
+        HasEntityContentTEXT: hasEntityContentTEXT,
+        HasEntityContentHTML: hasEntityContentHTML,
+        HasEntityTypeAndEntityTitle: hasEntityTypeAndEntityTitle,
+        HasEntityKeywords: hasEntityKeywords,
+        HasEntityAnnotations: hasEntityAnnotations(esc)
+      }
+    end
+    def get_object_data(esc, hasEntityName)
+      response = esc.client.search(
+        index: "dataspectspublic",
+        type: "doc",
+        body: {
+          query: {
+            term: {
+              HasEntityName: hasEntityName
+            }
+          }
+        }
+      )
+      return response['hits']['hits'][0]
+    end
+    def hasEntityAnnotations(esc)
+      hasEntityAnnotations = []
+      @resource.hasResourceAnnotations.each do |annotation|
+        object_data = get_object_data(esc, annotation.objects[0][0..-2])
+        if(object_data.nil?)
+          object_class = "PENDING" # "entity", "literal"
+          object_type = "PENDING" # entity_type, literal_type
+        else
+          object_class = object_data['_source']['HasEntityClass']
+          object_type = object_data['_source']['HasEntityType']
+        end
+        hasEntityAnnotations << {
+          subject: annotation.subject,
+          subject_class: hasEntityClass,
+          subject_type: hasEntityType,
+          predicate: annotation.predicate,
+          object: annotation.objects[0],
+          object_class: object_class,
+          object_type: object_type,
+          subject_type___object_type: "#{hasEntityType}___#{object_type}"
+        }
+      end
+      return hasEntityAnnotations
+    end
+  end
+
+  class MediaWikiStandardIndexer < Indexer
+
+    def initialize(es_url:, tika_url:)
+      super
+      index = 'dataspectspublic'
+      if(@esc.client.indices.exists?(index: index))
+        @esc.client.indices.delete(index: index)
+      end
+      @esc.client.indices.create(index: index)
+      @esc.client.indices.close(index: index)
+      @esc.client.indices.put_settings(
+        index: index,
+        body: JSON.parse(File.read(
+          'elasticsearch/standard_index_settings.json'))
+      )
+      @esc.client.indices.put_mapping(
+        index: index,
+        type: 'doc',
+        body: JSON.parse(File.read(
+          'elasticsearch/standard_index_mapping.json'))
+      )
+      @esc.client.indices.open(index: index)
+    end
+
+    def execute
+      # Specify a MediaWiki as the resource silo
+      mw = MediaWiki.new(
+        url: "http://{{ mediawikiDomainNameInHostFile }}/w",
+        user: "admin",
+        password: "{{ mediawiki_admin_user_password }}",
+        log_in: :must_log_in
+      )
+      # [[ProvidesCustomizationPossibilityFor::ResourceSilo level]]
+      mw.originatedFromResourceSiloLabel = "DEMO::FindAndLearn::Cookbook"
+      mw.originatedFromResourceSiloID = "cookbookfindandlearnnet"
+      # Specify a facet of MediaWiki's resources and iterate through resources
+      mw.resources_from_CATEGORY("Entity") do |re|
+        # Iterate through a resource's entities
+        re.entities.each do |entity|
+          # Store esdoc to escluster
+          @esc.index(
+            body: entity.esdoc(@esc),
+            index: "dataspectspublic"
+          )
+          $logger.info("#{entity.hasEntityURL} indexed...")
+          @esc.process_pendings
+        end
+      end
+    end
+
+  end
+end
+
+$development_tika_url = "http://localhost:9998"
+mwsi = Dataspects::MediaWikiStandardIndexer.new(
+  tika_url: $development_tika_url,
+  es_url: "http://localhost:9200"
+).execute

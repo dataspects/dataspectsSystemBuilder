@@ -1,0 +1,14 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Execute all control files
+      shell: ruby {{ item }}
+      args:
+        chdir: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts"
+      with_items:
+        - compare.rb
+      tags:
+        - compare

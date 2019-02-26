@@ -62,11 +62,11 @@
       }
     },
     "HasEntityName": {
-      "type": "text",
+      "type": "keyword",
       "store": false
     },
     "HasEntityURL": {
-      "type": "text",
+      "type": "keyword",
       "store": false
     },
     "HasEntityTitleTypeKeywordsBlurb": {
@@ -138,7 +138,19 @@
       "type": "nested",
       "include_in_root": "true",
       "properties": {
-        "mysubject": {
+        "subject": {
+          "type": "keyword"
+        },
+        "subject_class": {
+          "type": "keyword"
+        },
+        "subject_type": {
+          "type": "keyword"
+        },
+        "predicate": {
+          "type": "keyword"
+        },
+        "object": {
           "type": "text",
           "fields": {
             "keyword": {
@@ -146,21 +158,14 @@
             }
           }
         },
-        "mypredicate": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
+        "object_class": {
+          "type": "keyword"
         },
-        "myobject": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
+        "object_type": {
+          "type": "keyword"
+        },
+        "subject_type___object_type": {
+          "type": "keyword"
         }
       }
     }

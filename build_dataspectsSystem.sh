@@ -7,19 +7,22 @@ if [[ ! $AWS_SECRET_ACCESS_KEY ]]; then AWS_SECRET_ACCESS_KEY=dummy; fi
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 
 ANSIBLETAGS=(
-  create_dataspectsSystem_control_folder_on_host
-  compile_and_copy_docker_compose_file
-  run_docker_compose
-  # Comment the following for manual installation on Docker stack in accordance
-  # with C1470408196
-  install_mediawiki
-  configure_proxy
-  install_mediawiki_extensions
-  execute_mediawiki_maintenance_runJobs
-  install_backup_functionality
-  install_clone_functionality
-  provision_and_index_and_compare
-  backup_and_clone
+  # create_dataspectsSystem_control_folder_on_host
+  # compile_and_copy_docker_compose_file
+  # run_docker_compose
+  # # Comment the following for manual installation on Docker stack in accordance
+  # # with C1470408196
+  # install_mediawiki
+  # configure_proxy
+  # install_mediawiki_extensions
+  # execute_mediawiki_maintenance_runJobs
+  # install_backup_functionality
+  # install_clone_functionality
+  copy_control_scripts
+  # provision_as_cookbookfalnet
+  # index_cookbook_entities
+  # compare
+  # backup_and_clone
 )
 
 time ansible-playbook \
@@ -39,5 +42,8 @@ time ansible-playbook \
       ansible_playbooks/install_mediawiki_extensions.yml \
       ansible_playbooks/execute_mediawiki_maintenance_runJobs.yml \
       ansible_playbooks/install_backup_and_clone_functionality.yml \
+      ansible_playbooks/copy_control_scripts.yml \
       ansible_playbooks/provision_as_cookbookfalnet.yml \
+      ansible_playbooks/index_cookbook_entities.yml \
+      ansible_playbooks/compare.yml \
       ansible_playbooks/backup_and_clone.yml
