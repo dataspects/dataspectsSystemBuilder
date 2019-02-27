@@ -48,6 +48,8 @@ module Dataspects
           subject_class: annotation['subject_class'],
           subject_type: annotation['subject_type'],
           predicate: annotation['predicate'],
+          predicate_class: annotation['predicate_class'],
+          predicate_type: annotation['predicate_type'],
           object: annotation['object'],
           object_class: object_class,
           object_type: object_type,
@@ -140,6 +142,8 @@ module Dataspects
           subject_class: hasEntityClass,
           subject_type: hasEntityType,
           predicate: annotation.predicate,
+          predicate_class: "PassiveAction",
+          predicate_type: "Text",
           object: annotation.objects[0],
           object_class: object_class,
           object_type: object_type,
@@ -176,10 +180,16 @@ module Dataspects
 
     def execute
       # Specify a MediaWiki as the resource silo
-      mw = MediaWiki.new(
-        url: "http://{{ mediawikiDomainNameInHostFile }}/w",
-        user: "admin",
-        password: "{{ mediawiki_admin_user_password }}",
+      # mw = MediaWiki.new(
+      #   url: "http://{{ mediawikiDomainNameInHostFile }}/w",
+      #   user: "admin",
+      #   password: "{{ mediawiki_admin_user_password }}",
+      #   log_in: :must_log_in
+      # )
+      mw = Dataspects::MediaWiki.new(
+        url: "https://cookbook.findandlearn.net/w",
+        user: "roapi",
+        password: "27i34w22f",
         log_in: :must_log_in
       )
       # [[ProvidesCustomizationPossibilityFor::ResourceSilo level]]

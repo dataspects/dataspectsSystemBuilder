@@ -150,6 +150,12 @@
         "predicate": {
           "type": "keyword"
         },
+        "predicate_class": {
+          "type": "keyword"
+        },
+        "predicate_type": {
+          "type": "keyword"
+        },
         "object": {
           "type": "text",
           "fields": {
