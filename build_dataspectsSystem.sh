@@ -8,6 +8,7 @@ if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 
 ANSIBLETAGS=(
   # create_dataspectsSystem_control_folder_on_host
+  # pull_private_Docker_images_from_registry_dataspects_com
   # compile_and_copy_docker_compose_file
   # run_docker_compose
   # # Comment the following for manual installation on Docker stack in accordance
@@ -18,9 +19,10 @@ ANSIBLETAGS=(
   # execute_mediawiki_maintenance_runJobs
   # install_backup_functionality
   # install_clone_functionality
-  copy_control_scripts
+  # copy_control_scripts
   # provision_as_cookbookfalnet
   # index_cookbook_entities
+  index_dataspectsSystem_source_folder
   # compare
   # backup_and_clone
 )
@@ -36,6 +38,7 @@ time ansible-playbook \
   --ask-become-pass \
   --become-method sudo \
       ansible_playbooks/create_dataspectsSystem_control_folder_on_host.yml \
+      ansible_playbooks/pull_private_Docker_images_from_registry_dataspects_com.yml \
       ansible_playbooks/compile_and_copy_docker_compose_file.yml \
       ansible_playbooks/run_docker_compose.yml \
       ansible_playbooks/install_mediawiki.yml \
@@ -45,5 +48,6 @@ time ansible-playbook \
       ansible_playbooks/copy_control_scripts.yml \
       ansible_playbooks/provision_as_cookbookfalnet.yml \
       ansible_playbooks/index_cookbook_entities.yml \
+      ansible_playbooks/index_dataspectsSystem_source_folder.yml \
       ansible_playbooks/compare.yml \
       ansible_playbooks/backup_and_clone.yml

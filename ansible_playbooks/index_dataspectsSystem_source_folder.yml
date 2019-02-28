@@ -1,0 +1,26 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Download and extract dataspects-indexer-ubuntu-18.04
+      unarchive:
+        src: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-indexer-ubuntu-18.04.zip"
+        dest: "{{ dataspectsSystem_control_folder_on_host }}"
+      tags:
+        - index_dataspectsSystem_source_folder
+
+    - name: Configure dataspects-indexer
+      template:
+        src: ../ansible_templates/dataspects-indexer-config.json.j2
+        dest: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-indexer-config.json"
+      tags:
+        - index_dataspectsSystem_source_folder
+
+    - name: Run dataspects-indexer
+      shell: ./dataspects-indexer --config dataspects-indexer-config.json --indexer cofal
+      args:
+        chdir: "{{ dataspectsSystem_control_folder_on_host }}"
+      tags:
+        - index_dataspectsSystem_source_folderSTOP

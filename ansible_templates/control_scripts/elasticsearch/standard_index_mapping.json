@@ -89,7 +89,10 @@
       ]
     },
     "HasEntityKeywords": {
-      "type": "keyword"
+      "type": "keyword",
+      "copy_to": [
+        "completion"
+      ]
     },
     "completion": {
       "fielddata": true,
@@ -100,10 +103,7 @@
       "type": "text",
       "analyzer": "my_ngram_tokenizer_analyzer",
       "term_vector": "with_positions_offsets_payloads",
-      "store": false,
-      "copy_to": [
-        "completion"
-      ]
+      "store": false
     },
     "HasEntityBlurbTEXT": {
       "type": "text",
@@ -119,10 +119,7 @@
       "fielddata": true,
       "analyzer": "my_ngram_tokenizer_analyzer",
       "term_vector": "with_positions_offsets_payloads",
-      "store": false,
-      "copy_to": [
-        "completion"
-      ]
+      "store": false
     },
     "HasEntityContentTEXT": {
       "type": "text",

@@ -11,6 +11,7 @@ kibanaPortOnHost: 5601
 elasticsearchPortOnHost: 9200
 tikaPortOnHost: 9998
 dataspectsUIPort: 3000
+dataspectsIndexingServicePort: 3003
 
 # Docker Images ################################################################
 mariadbVersion: 10.3.10
@@ -32,3 +33,6 @@ mysql_root_password: mysqlrootpass
 mediawiki_version: REL1_31
 mediawiki_name: dataspectsSystem Wiki
 mediawiki_admin_user_password: adminpass
+
+# dataspects-indexer-ubuntu-18.04 ##############################################
+dataspects_indexer_ubuntu_18_04_version: 1.0-beta3
