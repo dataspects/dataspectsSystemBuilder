@@ -13,7 +13,7 @@
 
     - name: Configure dataspects-indexer
       template:
-        src: ../ansible_templates/dataspects-indexer-config.json.j2
+        src: ../../ansible_templates/dataspects-indexer-config.json.j2
         dest: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-indexer-config.json"
       tags:
         - index_dataspectsSystem_source_folder

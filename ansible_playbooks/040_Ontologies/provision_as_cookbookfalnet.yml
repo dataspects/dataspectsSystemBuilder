@@ -4,29 +4,19 @@
   gather_facts: False
   tasks:
 
-    - name: Copy control config files
-      copy:
-        src: ../ansible_templates/control_scripts/elasticsearch
-        dest: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts"
-      tags:
-        - provision_and_index_and_compare
-
-    - name: Copy control files
+    - name: Copy provision jobs
       template:
-        src: "../ansible_templates/control_scripts/{{ item }}.j2"
+        src: "../../ansible_templates/control_scripts/{{ item }}.j2"
         dest: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/{{ item }}"
         mode: 0777
       with_items:
-        - execute_all.rb
         - inject_core_ontology.rb
         - inject_cookbook_ontology.rb
         - inject_cookbook_entities.rb
-        - index_cookbook_entities.rb
-        - compare.rb
       tags:
         - provision_as_cookbookfalnet
 
-    - name: Execute all control files
+    - name: Execute provision jobs
       shell: ruby {{ item }}
       args:
         chdir: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts"

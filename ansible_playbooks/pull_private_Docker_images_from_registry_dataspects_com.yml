@@ -1,7 +1,0 @@
----
-
-- hosts: localhost
-  gather_facts: False
-  tasks:
-
-    # https://cookbook.findandlearn.net/wiki/C181015155822

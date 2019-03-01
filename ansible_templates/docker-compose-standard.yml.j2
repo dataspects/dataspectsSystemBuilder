@@ -45,34 +45,38 @@ services:
       - {{ tikaPortOnHost }}:9998
   mongodb:
     image: mongo:4.0.6
+    ports:
+      - {{ mongodbPortOnHost }}:27017
   redis:
     image: redis:5.0.3-alpine
-  ui:
-    image: dataspects/ui:latest
-    restart: always
-    depends_on:
-      - mongodb
-      - redis
     ports:
-      - {{ dataspectsUIPort }}:3000
-    volumes:
-      - ui_public:/app/public
-      - ui_views:/app/views
-    environment:
-      - "PORT=3000"
-      - "REDIS_HOST=redis"
-      - "REDIS_PORT=6379"
-      - "SESSION_SECRET={{ ui_session_secret }}"
-      - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
-      - "ES_URL=http://es:9200"
-      - "AWS_ACCESS_KEY_ID={{ aws_access_key_id }}"
-      - "AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}"
-      - "AWS_SES_API_VERSION=2010-12-01"
-      - "AWS_SES_REGION=eu-west-1"
-      - "FROM_EMAIL=support@dataspects.com"
-      - "FROM_NAME=datasepects"
-      - "SITE_URL=http://localhost:3000"
-      - "OTP_DOMAIN=ui.dataspects.com"
+      - {{ redisPortOnHost }}:6379
+  # ui:
+  #   image: dataspects/ui:latest
+  #   restart: always
+  #   depends_on:
+  #     - mongodb
+  #     - redis
+  #   ports:
+  #     - {{ dataspectsUIPort }}:3000
+  #   volumes:
+  #     - ui_public:/app/public
+  #     - ui_views:/app/views
+  #   environment:
+  #     - "PORT=3000"
+  #     - "REDIS_HOST=redis"
+  #     - "REDIS_PORT=6379"
+  #     - "SESSION_SECRET={{ ui_session_secret }}"
+  #     - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
+  #     - "ES_URL=http://elasticsearch:9200"
+  #     - "AWS_ACCESS_KEY_ID={{ aws_access_key_id }}"
+  #     - "AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}"
+  #     - "AWS_SES_API_VERSION=2010-12-01"
+  #     - "AWS_SES_REGION=eu-west-1"
+  #     - "FROM_EMAIL=support@dataspects.com"
+  #     - "FROM_NAME=datasepects"
+  #     - "SITE_URL=http://localhost:3000"
+  #     - "OTP_DOMAIN=ui.dataspects.com"
 volumes:
   # indexing-service:
   #   image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-indexing-webservice:{{ dockerDataspectsIndexingServiceVersion }}

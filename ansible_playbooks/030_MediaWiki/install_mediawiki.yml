@@ -35,7 +35,7 @@
 
     - name: Place composer install script
       template:
-        src: ../ansible_templates/install_composer.sh
+        src: ../../ansible_templates/install_composer.sh
         dest: "{{ mountpoint.items()[0][1] }}/w/install_composer.sh"
         mode: 0777
       become: true
@@ -56,7 +56,7 @@
     # [[IsOperationType::FileSystemOperation]]
     - name: Place mediawiki install script
       template:
-        src: ../ansible_templates/install_mediawiki.sh.j2
+        src: ../../ansible_templates/install_mediawiki.sh.j2
         dest: "{{ mountpoint.items()[0][1] }}/w/install.sh"
         mode: 0777
       become: true
@@ -139,7 +139,7 @@
 
     - name: Place mediawiki service nginx conf
       template:
-        src: ../ansible_templates/mediawiki-nginx.conf.j2
+        src: ../../ansible_templates/mediawiki-nginx.conf.j2
         dest: "{{ mountpoint.items()[0][1] }}/mediawiki-nginx.conf"
         mode: 0777
       become: true

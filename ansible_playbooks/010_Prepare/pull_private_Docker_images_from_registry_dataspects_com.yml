@@ -1,0 +1,17 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Log in to registry.dataspects.com
+      shell: docker login --username {{ registry_dataspects_com_user }} --password {{ registry_dataspects_com_password }} https://registry.dataspects.com
+      tags:
+        - pull_private_Docker_images_from_registry_dataspects_com
+
+    - name: Pull Docker images
+      shell: docker pull registry.dataspects.com/{{ item }}
+      with_items:
+        - ui:latest
+      tags:
+        - pull_private_Docker_images_from_registry_dataspects_com

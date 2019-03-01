@@ -12,6 +12,8 @@ elasticsearchPortOnHost: 9200
 tikaPortOnHost: 9998
 dataspectsUIPort: 3000
 dataspectsIndexingServicePort: 3003
+mongodbPortOnHost: 27017
+redisPortOnHost: 6379
 
 # Docker Images ################################################################
 mariadbVersion: 10.3.10
