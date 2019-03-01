@@ -13,8 +13,8 @@ ANSIBLETAGS=(
   #   create_dataspectsSystem_control_folder_on_host
   #   pull_private_Docker_images_from_registry_dataspects_com
   # ### 020_Docker-Compose
-    compile_and_copy_docker_compose_file
-    run_docker_compose
+    # compile_and_copy_docker_compose_file
+    # run_docker_compose
   # ### Comment all following tags for manual installation on Docker stack in accordance with C1470408196
   # ### 030_MediaWiki
   #   install_mediawiki
@@ -25,7 +25,7 @@ ANSIBLETAGS=(
   #   provision_as_cookbookfalnet
   ### 050_Indexing
     # index_cookbook_entities
-  #   index_dataspectsSystem_source_folder
+    index_dataspectsSystem_source_folder
   # ### 060_Backup_and_Clone
   #   install_backup_functionality
   #   install_clone_functionality

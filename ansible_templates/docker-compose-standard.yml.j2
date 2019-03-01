@@ -1,29 +1,29 @@
 version: "3"
 services:
-  db:
-    image: mariadb:{{ mariadbVersion }}
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
-    volumes:
-      - mariadb_data:/var/lib/mysql/
-      - mediawiki_root:/datadump/mediawiki_root/
-  {{ mediawikiDockerServiceName }}:
-    image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
-    volumes:
-      - mediawiki_root:/var/www/html/
-      - mediawiki_conf:/etc/apache2/sites-available
-  proxy:
-    image: dataspects/docker-nginx:{{ dockerNginxVersion }}
-    ports:
-      - {{ nginxPortOnHost }}:80
-      - {{ nginxHttpsPortOnHost }}:443
-    volumes:
-      - nginx_conf:/etc/nginx/conf.d
-  parsoid:
-    image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
-    environment:
-      PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
+  # db:
+  #   image: mariadb:{{ mariadbVersion }}
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
+  #   volumes:
+  #     - mariadb_data:/var/lib/mysql/
+  #     - mediawiki_root:/datadump/mediawiki_root/
+  # {{ mediawikiDockerServiceName }}:
+  #   image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
+  #   volumes:
+  #     - mediawiki_root:/var/www/html/
+  #     - mediawiki_conf:/etc/apache2/sites-available
+  # proxy:
+  #   image: dataspects/docker-nginx:{{ dockerNginxVersion }}
+  #   ports:
+  #     - {{ nginxPortOnHost }}:80
+  #     - {{ nginxHttpsPortOnHost }}:443
+  #   volumes:
+  #     - nginx_conf:/etc/nginx/conf.d
+  # parsoid:
+  #   image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
+  #   environment:
+  #     PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
   elasticsearch:
     image: dataspects/docker-elasticsearch:{{ dockerElasticsearchVersion }}
     environment:

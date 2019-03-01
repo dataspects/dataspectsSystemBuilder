@@ -4,14 +4,20 @@
   gather_facts: False
   tasks:
 
-    - name: Download and extract dataspects-indexer-ubuntu-18.04
-      unarchive:
-        src: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-indexer-ubuntu-18.04.zip"
-        dest: "{{ dataspectsSystem_control_folder_on_host }}"
+    - name: Check if "{{ dataspectsSystem_control_folder_on_host }}/dataspects-indexer" exists
+      stat:
+        path: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-indexer"
+      register: dataspects_indexer_exists
       tags:
         - index_dataspectsSystem_source_folder
 
-    - name: Configure dataspects-indexer
+    - fail:
+        msg: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-indexer not found, download from https://github.com/dataspects/dataspects-indexer/releases"
+      when: dataspects_indexer_exists.stat.exists == False
+      tags:
+        - index_dataspectsSystem_source_folder
+
+    - name: Place dataspects-indexer-config.json
       template:
         src: ../../ansible_templates/dataspects-indexer-config.json.j2
         dest: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-indexer-config.json"
@@ -22,5 +28,6 @@
       shell: ./dataspects-indexer --config dataspects-indexer-config.json --indexer cofal
       args:
         chdir: "{{ dataspectsSystem_control_folder_on_host }}"
+      when: dataspects_indexer_exists.stat.exists == True
       tags:
         - index_dataspectsSystem_source_folderSTOP
