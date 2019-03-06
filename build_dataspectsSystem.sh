@@ -9,29 +9,29 @@ if [[ ! $AWS_SECRET_ACCESS_KEY ]]; then AWS_SECRET_ACCESS_KEY=dummy; fi
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 
 ANSIBLETAGS=(
-  # ### 010_Prepare
-  #   create_dataspectsSystem_control_folder_on_host
-  #   pull_private_Docker_images_from_registry_dataspects_com
-  # ### 020_Docker-Compose
-    # compile_and_copy_docker_compose_file
-    # run_docker_compose
-  # ### Comment all following tags for manual installation on Docker stack in accordance with C1470408196
-  # ### 030_MediaWiki
-  #   install_mediawiki
-  #   configure_proxy
-  #   install_mediawiki_extensions
-  #   execute_mediawiki_maintenance_runJobs
-  # ### 040_Ontologies
-  #   provision_as_cookbookfalnet
-  ### 050_Indexing
-    # index_cookbook_entities
+  ### 010_Prepare
+    create_dataspectsSystem_control_folder_on_host
+    pull_private_Docker_images_from_registry_dataspects_com
+  ### 020_Docker-Compose
+    compile_and_copy_docker_compose_file
+    run_docker_compose
+  ### Comment all following tags for manual installation on Docker stack in accordance with C1470408196
+  ### 030_MediaWiki
+    install_mediawiki
+    configure_proxy
+    install_mediawiki_extensions
+    execute_mediawiki_maintenance_runJobs
+  ### 040_Ontologies
+    provision_as_cookbookfalnet
+  ## 050_Indexing
+    index_cookbook_entities
     index_dataspectsSystem_source_folder
-  # ### 060_Backup_and_Clone
-  #   install_backup_functionality
-  #   install_clone_functionality
-  #   backup_and_clone
-  # ### 070_Tools
-  #   compare
+  ### 060_Backup_and_Clone
+    install_backup_functionality
+    install_clone_functionality
+    backup_and_clone
+  ### 070_Tools
+    compare
 
 )
 

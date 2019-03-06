@@ -126,11 +126,16 @@ module Dataspects
       )
       return response['hits']['hits'][0]
     end
+
     def hasEntityAnnotations(esc)
       hasEntityAnnotations = []
       @resource.hasResourceAnnotations.each do |annotation|
-        object_data = get_object_data(esc, annotation.objects[0][0..-2])
+        #FIXME: Get rid of trailing #!
+        object =  annotation.objects[0][0..-2]
+        # Check if object is an HasEntityName
+        object_data = get_object_data(esc, object)
         if(object_data.nil?)
+          # Not yet found. Mark as PENDING
           object_class = "PENDING" # "entity", "literal"
           object_type = "PENDING" # entity_type, literal_type
         else
@@ -197,6 +202,7 @@ module Dataspects
       mw.originatedFromResourceSiloID = "cookbookfindandlearnnet"
       # Specify a facet of MediaWiki's resources and iterate through resources
       mw.resources_from_CATEGORY("Entity") do |re|
+      # mw.resources_from_ASK_QUERIES(["[[C1588549209]]", "[[C0319950530]]"]) do |re|
         # Iterate through a resource's entities
         re.entities.each do |entity|
           # Store esdoc to escluster
@@ -205,9 +211,13 @@ module Dataspects
             index: "dataspectspublic"
           )
           $logger.info("#{entity.hasEntityURL} indexed...")
-          @esc.process_pendings
         end
       end
+      # This method must not set anything to Text if called in entities
+      # iteration. If no PENDING object is found, then it must remain PENDING
+      # and once all entities have been processed, this method is allowed to
+      # set Text!
+      @esc.process_pendings
     end
 
   end
