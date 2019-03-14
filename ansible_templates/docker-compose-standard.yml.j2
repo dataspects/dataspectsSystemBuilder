@@ -47,6 +47,8 @@ services:
     image: mongo:4.0.6
     ports:
       - {{ mongodbPortOnHost }}:27017
+    volumes:
+      - mongo_data:/data/db
   redis:
     image: redis:5.0.3-alpine
     ports:
@@ -93,6 +95,8 @@ volumes:
   mediawiki_conf:
     driver: local
   nginx_conf:
+    driver: local
+  mongo_data:
     driver: local
   esdata:
     driver: local

@@ -1,0 +1,119 @@
+require 'dataspects'
+require 'awesome_print'
+
+module Dataspects
+
+  class Entity
+
+    def mongodoc
+      {
+        "slug": "/wiki/#{@resource.hasResourceName}",
+        "pagename": @resource.hasResourceName,
+        "nonFormssemanticizedWikitextHtml": hasEntityContentHTML,
+        "hasEntityClass": hasEntityClass,
+        "hasEntityName": hasEntityName,
+        "hasEntityType": hasEntityType,
+        "hasEntityURL": hasEntityURL,
+        "hasEntityTitle": hasEntityTitle,
+        "hasEntityBlurbTEXT": hasEntityBlurbTEXT,
+        "hasEntityBlurbHTML": hasEntityBlurbHTML,
+        "hasEntityKeywords": hasEntityKeywords,
+        "annotations": hasEntityAnnotations
+      }.to_json
+    end
+
+    def hasEntityAnnotations
+      hasEntityAnnotations = []
+      @resource.hasResourceAnnotations.each do |annotation|
+        hasEntityAnnotations << {
+          id: "subob",
+          subject: annotation.subject,
+          predicate: annotation.predicate,
+          object: annotation.objects[0]
+        }
+      end
+      return hasEntityAnnotations
+    end
+
+  end
+
+  class Feeder
+
+    def initialize(dataspects_api_url:, dataspects_api_key:)
+      @dataspects_api_url = dataspects_api_url
+      @dataspects_api_key = dataspects_api_key
+    end
+
+    def post(mediawiki:, body:)
+      rc = RestClient.post(
+        @dataspects_api_url+"/"+mediawiki['_id']+"/pages",
+        body = body,
+        headers = {
+          "dataspects-api-key": @dataspects_api_key,
+          content_type: :json,
+          accept: :json
+        }
+      )
+    end
+
+    def ensure_it_exists(body:)
+      response = RestClient.post(
+        @dataspects_api_url,
+        body = body,
+        headers = {
+          "dataspects-api-key": @dataspects_api_key,
+          content_type: :json,
+          accept: :json
+        }
+      )
+      return JSON.parse(response)
+    end
+
+  end
+
+  class MediaWikiPageStandardFeeder < Feeder
+
+    def initialize(dataspects_api_url:, dataspects_api_key:)
+      super
+    end
+
+    def execute()
+      @mediawiki = ensure_it_exists(body: {
+        "baseUrl": "https://cookbook.findandlearn.net",
+        "identifier": "cofalnet"
+      }.to_json)
+
+      mw = Dataspects::MediaWiki.new(
+        url: "https://cookbook.findandlearn.net/w",
+        user: "roapi",
+        password: "27i34w22f",
+        log_in: :must_log_in
+      )
+      # [[ProvidesCustomizationPossibilityFor::ResourceSilo level]]
+      mw.originatedFromResourceSiloLabel = "DEMO::FindAndLearn::Cookbook"
+      mw.originatedFromResourceSiloID = "cookbookfindandlearnnet"
+      # Specify a facet of MediaWiki's resources and iterate through resources
+      mw.resources_from_CATEGORY("Entity") do |re|
+      # mw.resources_from_ASK_QUERIES(["[[C1588549209]]", "[[C0319950530]]"]) do |re|
+        # Iterate through a resource's entities
+        re.entities.each do |entity|
+          post(
+            mediawiki: @mediawiki,
+            body: entity.mongodoc()
+          )
+          $logger.info("#{entity.hasEntityURL} fed...")
+          # @esc.process_pending_annotation_objects(final: false)
+        end
+      end
+      # @esc.process_pending_annotation_objects(final: true)
+    end
+
+  end
+end
+
+# Run by "ruby feed_cookbook_entities.rb"
+$development_tika_url = "http://localhost:9998"
+mwpsf = Dataspects::MediaWikiPageStandardFeeder.new(
+  dataspects_api_url: "http://localhost:3000/api/mediawikis",
+  dataspects_api_key: "aslkdjasldkjlaskdj"
+).execute
