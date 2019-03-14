@@ -3,75 +3,7 @@ require 'awesome_print'
 
 module Dataspects
 
-  class Entity
-
-    def mongodoc
-      {
-        "slug": "/wiki/#{@resource.hasResourceName}",
-        "pagename": @resource.hasResourceName,
-        "nonFormssemanticizedWikitextHtml": hasEntityContentHTML,
-        "hasEntityClass": hasEntityClass,
-        "hasEntityName": hasEntityName,
-        "hasEntityType": hasEntityType,
-        "hasEntityURL": hasEntityURL,
-        "hasEntityTitle": hasEntityTitle,
-        "hasEntityBlurbTEXT": hasEntityBlurbTEXT,
-        "hasEntityBlurbHTML": hasEntityBlurbHTML,
-        "hasEntityKeywords": hasEntityKeywords,
-        "annotations": hasEntityAnnotations
-      }.to_json
-    end
-
-    def hasEntityAnnotations
-      hasEntityAnnotations = []
-      @resource.hasResourceAnnotations.each do |annotation|
-        hasEntityAnnotations << {
-          id: "subob",
-          subject: annotation.subject,
-          predicate: annotation.predicate,
-          object: annotation.objects[0]
-        }
-      end
-      return hasEntityAnnotations
-    end
-
-  end
-
-  class Feeder
-
-    def initialize(dataspects_api_url:, dataspects_api_key:)
-      @dataspects_api_url = dataspects_api_url
-      @dataspects_api_key = dataspects_api_key
-    end
-
-    def post(mediawiki:, body:)
-      rc = RestClient.post(
-        @dataspects_api_url+"/"+mediawiki['_id']+"/pages",
-        body = body,
-        headers = {
-          "dataspects-api-key": @dataspects_api_key,
-          content_type: :json,
-          accept: :json
-        }
-      )
-    end
-
-    def ensure_it_exists(body:)
-      response = RestClient.post(
-        @dataspects_api_url,
-        body = body,
-        headers = {
-          "dataspects-api-key": @dataspects_api_key,
-          content_type: :json,
-          accept: :json
-        }
-      )
-      return JSON.parse(response)
-    end
-
-  end
-
-  class MediaWikiPageStandardFeeder < Feeder
+  class CookbookFALnetFeeder < Feeder
 
     def initialize(dataspects_api_url:, dataspects_api_key:)
       super
@@ -113,7 +45,7 @@ end
 
 # Run by "ruby feed_cookbook_entities.rb"
 $development_tika_url = "http://localhost:9998"
-mwpsf = Dataspects::MediaWikiPageStandardFeeder.new(
+mwpsf = Dataspects::CookbookFALnetFeeder.new(
   dataspects_api_url: "http://localhost:3000/api/mediawikis",
   dataspects_api_key: "aslkdjasldkjlaskdj"
 ).execute
