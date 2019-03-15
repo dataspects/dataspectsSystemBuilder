@@ -11,8 +11,11 @@ module Dataspects
 
     def execute()
       @mediawiki = ensure_it_exists(body: {
-        "baseUrl": "https://cookbook.findandlearn.net",
-        "identifier": "cofalnet"
+        "articleUrl": "https://cookbook.findandlearn.net/wiki",
+        "scriptUrl": "https://cookbook.findandlearn.net/w",
+        "identifier": "cofalnet",
+        "feederClass": "#{`hostname`.strip}:#{Dir.pwd}/#{$0}",
+        "timestamp": Time.now.getutc
       }.to_json)
 
       mw = Dataspects::MediaWiki.new(

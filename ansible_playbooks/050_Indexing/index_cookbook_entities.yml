@@ -28,4 +28,4 @@
       with_items:
         - index_cookbook_entities.rb
       tags:
-        - index_cookbook_entities
+        - index_cookbook_entitiesSTOP

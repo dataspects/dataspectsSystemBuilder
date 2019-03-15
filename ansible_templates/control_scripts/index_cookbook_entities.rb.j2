@@ -3,9 +3,24 @@ require 'awesome_print'
 
 module Dataspects
 
-  class MediaWikiStandardIndexer < Indexer
+  class Indexer
 
-    def initialize(es_url:, tika_url:)
+    def initialize(dataspects_api_url:, dataspects_api_key:, es_url:, tika_url:)
+      @dataspects_api_url = dataspects_api_url
+      @dataspects_api_key = dataspects_api_key
+      @esc = ElasticsearchCluster.new(url: es_url)
+      @tika_url = tika_url
+    end
+
+    def execute
+      raise NotImplementedError.new
+    end
+
+  end
+
+  class CookbookFALnetIndexer < Indexer
+
+    def initialize(dataspects_api_url:, dataspects_api_key:, es_url:, tika_url:)
       super
       index = 'dataspectspublic'
       if(@esc.client.indices.exists?(index: index))
@@ -28,37 +43,44 @@ module Dataspects
     end
 
     def execute()
-      # Specify a MediaWiki as the resource silo
-      # mw = MediaWiki.new(
-      #   url: "http://{{ mediawikiDomainNameInHostFile }}/w",
-      #   user: "admin",
-      #   password: "{{ mediawiki_admin_user_password }}",
-      #   log_in: :must_log_in
-      # )
-      mw = Dataspects::MediaWiki.new(
-        url: "https://cookbook.findandlearn.net/w",
-        user: "roapi",
-        password: "27i34w22f",
-        log_in: :must_log_in
+      response = RestClient.get(
+        @dataspects_api_url,
+        headers = {
+          "dataspects-api-key": @dataspects_api_key,
+          content_type: :json,
+          accept: :json
+        }
       )
-      # [[ProvidesCustomizationPossibilityFor::ResourceSilo level]]
-      mw.originatedFromResourceSiloLabel = "DEMO::FindAndLearn::Cookbook"
-      mw.originatedFromResourceSiloID = "cookbookfindandlearnnet"
-      # Specify a facet of MediaWiki's resources and iterate through resources
-      mw.resources_from_CATEGORY("Entity") do |re|
-      # mw.resources_from_ASK_QUERIES(["[[C1588549209]]", "[[C0319950530]]"]) do |re|
-        # Iterate through a resource's entities
-        re.entities.each do |entity|
-          # Store esdoc to escluster
-          @esc.index(
-            body: entity.esdoc222(@esc),
-            index: "dataspectspublic"
-          )
-          $logger.info("#{entity.hasEntityURL} indexed...")
-          @esc.process_pending_annotation_objects(final: false)
-        end
+      resources = JSON.parse(response)
+      resources.each do |resource|
+        esdoc = {
+          # Resource silo level
+          OriginatedFromResourceSiloID: "",
+          OriginatedFromResourceSiloLabel: "",
+          OriginatedFromResourceSiloType: "",
+          # Resource level
+          OriginatedFromResourceName: resource['pagename'],
+          OriginatedFromResourceURL: "",
+          OriginatedFromResourceType: "",
+          # Entity/subject level
+          HasEntityClass: resource['hasEntityClass'],
+          HasEntityName: resource['hasEntityName'],
+          HasEntityType: resource['hasEntityType'],
+          HasEntityURL: resource['hasEntityURL'],
+          HasEntityTitle: resource['hasEntityTitle'],
+          HasEntityBlurbTEXT: resource['hasEntityBlurbTEXT'],
+          HasEntityBlurbHTML: resource['hasEntityBlurbHTML'],
+          HasEntityContentTEXT: "",
+          HasEntityContentHTML: resource['nonFormssemanticizedWikitextHtml'],
+          HasEntityTypeAndEntityTitle: "#{resource['hasEntityType']} \"resource['hasEntityTitle']\"",
+          HasEntityKeywords: resource['hasEntityKeywords'],
+          HasEntityAnnotations: resource['annotations']
+        }
+        @esc.index(
+          body: esdoc,
+          index: "dataspectspublic"
+        )
       end
-      @esc.process_pending_annotation_objects(final: true)
     end
 
   end
@@ -66,8 +88,9 @@ end
 
 # Run by "ruby index_cookbook_entities.rb"
 $development_tika_url = "http://localhost:9998"
-mwsi = Dataspects::MediaWikiStandardIndexer.new(
+mwsi = Dataspects::CookbookFALnetIndexer.new(
+  dataspects_api_url: "http://localhost:3000/api/mediawikis/5c8bab5ee03192424251b7c9/pages",
+  dataspects_api_key: "aslkdjasldkjlaskdj",
   tika_url: $development_tika_url,
   es_url: "http://localhost:9200"
 ).execute
-~

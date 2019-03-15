@@ -12,6 +12,7 @@ elasticsearchPortOnHost: 9200
 tikaPortOnHost: 9998
 dataspectsUIPort: 3000
 dataspectsIndexingServicePort: 3003
+dataspectsFeederServicePort: 3000
 mongodbPortOnHost: 27017
 redisPortOnHost: 6379
 
