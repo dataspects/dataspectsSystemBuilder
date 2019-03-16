@@ -20,7 +20,7 @@ redisPortOnHost: 6379
 mariadbVersion: 10.3.10
 dockerApachePhpDataspectsMediawikiVersion: 1.2
 dockerNginxVersion: 1.0.1
-dockerElasticsearchVersion: 6.6.0
+dockerElasticsearchVersion: 6.6.2
 dockerParsoidVersion: 0.10.0
 kibanaVersion: 6.6.0
 redisVersion: 4.0.11-alpine

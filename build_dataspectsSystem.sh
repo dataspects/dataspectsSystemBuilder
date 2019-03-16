@@ -9,12 +9,12 @@ if [[ ! $AWS_SECRET_ACCESS_KEY ]]; then AWS_SECRET_ACCESS_KEY=dummy; fi
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 
 ANSIBLETAGS=(
-  # ### 010_Prepare
-  #   create_dataspectsSystem_control_folder_on_host
-  #   pull_private_Docker_images_from_registry_dataspects_com
-  # ### 020_Docker-Compose
-  #   compile_and_copy_docker_compose_file
-  #   run_docker_compose
+  ### 010_Prepare
+    create_dataspectsSystem_control_folder_on_host
+    # pull_private_Docker_images_from_registry_dataspects_com
+  ### 020_Docker-Compose
+    compile_and_copy_docker_compose_file
+    run_docker_compose
   # ### Comment all following tags for manual installation on Docker stack in accordance with C1470408196
   # ### 030_MediaWiki
   #   install_mediawiki

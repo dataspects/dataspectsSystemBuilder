@@ -2,10 +2,13 @@
   gather_facts: False
   tasks:
 
-    - name: Create dataspectsSystem_control_folder_on_host
+    - name: Create dataspectsSystem_control_folder_on_host and subfolders
       file:
-        path: "{{ dataspectsSystem_control_folder_on_host }}"
+        path: "{{ item }}"
         state: directory
+      with_items:
+        - "{{ dataspectsSystem_control_folder_on_host }}"
+        - "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/"
       tags:
         - create_dataspectsSystem_control_folder_on_host
 
