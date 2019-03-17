@@ -10,10 +10,11 @@ module Dataspects
     end
 
     def execute()
+      # https://en.wikipedia.org/wiki/URL
       @mediawiki = ensure_it_exists(body: {
-        "articleUrl": "https://cookbook.findandlearn.net/wiki",
-        "scriptUrl": "https://cookbook.findandlearn.net/w",
-        "identifier": "cofalnet",
+        "articleUrl": "https://cookbook.findandlearn.net/wiki/",
+        "scriptUrl": "https://cookbook.findandlearn.net/w/",
+        "namespace": "https://cookbook.findandlearn.net/wiki/",
         "feederClass": "#{`hostname`.strip}:#{Dir.pwd}/#{$0}",
         "timestamp": Time.now.getutc
       }.to_json)

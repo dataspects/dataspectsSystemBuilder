@@ -25,14 +25,19 @@ module Dataspects
     end
 
     def get(url:)
-      response = RestClient.get(
-        url,
+      RestClient.get(
+        URI.encode(url),
         headers = {
           "dataspects-api-key": @dataspects_api_key,
           content_type: :json,
           accept: :json
         }
-      )
+      ) do |response, request, result|
+        if(response.code == 404)
+          return {'hasEntityType' => 'literal'}
+        end
+        return JSON.parse(response)
+      end
     end
 
     def execute
@@ -110,18 +115,28 @@ module Dataspects
         resource['annotations'].each do |annotation|
           # Can we create an index across models? In order to look up
           # HasEntityName for annotation['subject'] and annotation['object']
-          puts "Lookup data on #{annotation['subject']} :: #{annotation['predicate']} :: #{annotation['object']}"
+
+          subject = get(
+            url: "http://localhost:3000/api/mediawikis/pages/"+annotation['subject'],
+          )
+          object = get(
+            url: "http://localhost:3000/api/mediawikis/pages/"+annotation['object'],
+          )
+
           quad = {
             id: "test",
             subject: annotation['subject'],
-            subject_class: "test",
-            subject_type: "test",
+            subject_namespace: resource['mediaWiki']['namespace'],
+            subject_class: "Entity|Subject", #
+            subject_type: subject['hasEntityType'], #"Diagram|RubyGem" If annotation['subject'] exists in models:pagename then set to its hasEntityType
             predicate: annotation['predicate'],
-            predicate_class: "test",
-            predicate_type: "test",
+            predicate_namespace: resource['mediaWiki']['namespace'],
+            predicate_class: "Property|ActiveAction|PassiveAction",
+            predicate_type: "Text|Page|URL",
             object: annotation['object'],
-            object_class: "test",
-            object_type: "test",
+            object_namespace: "literal", # If annotation['object'] exists in models:pagename then set to resource['mediaWiki']['namespace']
+            object_class: "Entity|Subject|literal",
+            object_type: object['hasEntityType'], #"Diagram|RubyGem|literal" If annotation['object'] exists in models:pagename then set to its hasEntityType
             context: "test"
           }
           post(
@@ -138,7 +153,7 @@ end
 # Run by "ruby index_cookbook_entities.rb"
 $development_tika_url = "http://localhost:9998"
 mwsi = Dataspects::CookbookFALnetIndexer.new(
-  dataspects_api_url: "http://localhost:3000/api/mediawikis/5c8cb9de2026274b9a653718/pages",
+  dataspects_api_url: "http://localhost:3000/api/mediawikis/5c8e750e1446664c692765f1/pages",
   dataspects_api_key: "aslkdjasldkjlaskdj",
   tika_url: $development_tika_url,
   es_url: "http://localhost:9200"

@@ -8,6 +8,17 @@ module Dataspects
     end
 
     def execute(document: document)
+      ################################
+      # Since this is called from the Go app,
+      # this mustn't be carried out repeatedly
+      @filesystem = ensure_it_exists(body: {
+        "machine": "lexAtiv",
+        "path": "/lex/home",
+        "namespace": "file://lexAtiv/home/lex",
+        "feederClass": "#{`hostname`.strip}:#{Dir.pwd}/#{$0}",
+        "timestamp": Time.now.getutc
+      }.to_json)
+      ################################
       nokogiri = Nokogiri::HTML(document.tika_data[0]['X-TIKA:content'])
       esdoc = {
         # Resource silo level
