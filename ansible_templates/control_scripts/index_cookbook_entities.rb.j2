@@ -12,6 +12,29 @@ module Dataspects
       @tika_url = tika_url
     end
 
+    def post(url:, body:)
+      response = RestClient.post(
+        url,
+        body = body,
+        headers = {
+          "dataspects-api-key": @dataspects_api_key,
+          content_type: :json,
+          accept: :json
+        }
+      )
+    end
+
+    def get(url:)
+      response = RestClient.get(
+        url,
+        headers = {
+          "dataspects-api-key": @dataspects_api_key,
+          content_type: :json,
+          accept: :json
+        }
+      )
+    end
+
     def execute
       raise NotImplementedError.new
     end
@@ -76,10 +99,36 @@ module Dataspects
           HasEntityKeywords: resource['hasEntityKeywords'],
           HasEntityAnnotations: resource['annotations']
         }
+
+        # EVERYTHING to Elasticsearch
         @esc.index(
           body: esdoc,
           index: "dataspectspublic"
         )
+
+        # ANNOTATIONS as Quads to MongoDB
+        resource['annotations'].each do |annotation|
+          # Can we create an index across models? In order to look up
+          # HasEntityName for annotation['subject'] and annotation['object']
+          puts "Lookup data on #{annotation['subject']} :: #{annotation['predicate']} :: #{annotation['object']}"
+          quad = {
+            id: "test",
+            subject: annotation['subject'],
+            subject_class: "test",
+            subject_type: "test",
+            predicate: annotation['predicate'],
+            predicate_class: "test",
+            predicate_type: "test",
+            object: annotation['object'],
+            object_class: "test",
+            object_type: "test",
+            context: "test"
+          }
+          post(
+            url: "http://localhost:3000/api/quads",
+            body: quad.to_json
+          )
+        end
       end
     end
 
@@ -89,7 +138,7 @@ end
 # Run by "ruby index_cookbook_entities.rb"
 $development_tika_url = "http://localhost:9998"
 mwsi = Dataspects::CookbookFALnetIndexer.new(
-  dataspects_api_url: "http://localhost:3000/api/mediawikis/5c8bab5ee03192424251b7c9/pages",
+  dataspects_api_url: "http://localhost:3000/api/mediawikis/5c8cb9de2026274b9a653718/pages",
   dataspects_api_key: "aslkdjasldkjlaskdj",
   tika_url: $development_tika_url,
   es_url: "http://localhost:9200"
