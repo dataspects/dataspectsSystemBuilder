@@ -25,6 +25,8 @@ module Dataspects
         password: "27i34w22f",
         log_in: :must_log_in
       )
+
+      # ENTITIES
       # [[ProvidesCustomizationPossibilityFor::ResourceSilo level]]
       mw.originatedFromResourceSiloLabel = "DEMO::FindAndLearn::Cookbook"
       mw.originatedFromResourceSiloID = "cookbookfindandlearnnet"
@@ -34,13 +36,35 @@ module Dataspects
         # Iterate through a resource's entities
         re.entities.each do |entity|
           post(
-            mediawiki: @mediawiki,
+            url: "http://localhost:3000/api/mediawikis/#{@mediawiki['_id']}/pages",
             body: entity.mongodoc()
           )
           $logger.info("#{entity.hasEntityURL} fed...")
           # @esc.process_pending_annotation_objects(final: false)
         end
       end
+
+      # PROPERTIES
+      mw.resources_from_NAMESPACE("Property") do |re|
+        response = mw.oAPI.action(:ask,
+          query: "[[Property:#{re.hasResourceName}]]|?Has type|?HasPredicateClass",
+          token_type: false
+        )
+        response.data['query']['results'].each do |pagename, page_data|
+          mongodoc = {
+            "predicate": re.hasResourceName,
+            "predicate_type": page_data['printouts']['Has type'][0],
+            "predicate_class": page_data['printouts']['HasPredicateClass'][0],
+            "predicate_namespace": page_data['fullurl'].chomp("Property:#{re.hasResourceName}")
+          }
+          ap mongodoc
+          post(
+            url: "http://localhost:3000/api/predicates",
+            body: mongodoc
+          )
+        end
+      end
+
       # @esc.process_pending_annotation_objects(final: true)
     end
 

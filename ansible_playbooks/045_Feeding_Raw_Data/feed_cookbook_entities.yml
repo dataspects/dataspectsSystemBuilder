@@ -14,11 +14,11 @@
       tags:
         - feed_cookbook_entities
 
-    # - name: feed_cookbook_entities
-    #   shell: ruby {{ item }}
-    #   args:
-    #     chdir: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts"
-    #   with_items:
-    #     - feed_cookbook_entities.rb
-    #   tags:
-    #     - feed_cookbook_entities
+    - name: feed_cookbook_entities
+      shell: ruby {{ item }}
+      args:
+        chdir: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts"
+      with_items:
+        - feed_cookbook_entities.rb
+      tags:
+        - feed_cookbook_entitiesSTOP

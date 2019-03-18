@@ -111,28 +111,36 @@ module Dataspects
           index: "dataspectspublic"
         )
 
-        # ANNOTATIONS as Quads to MongoDB
+        # ANNOTATIONS as Annotations to MongoDB
         resource['annotations'].each do |annotation|
-          # Can we create an index across models? In order to look up
-          # HasEntityName for annotation['subject'] and annotation['object']
+          # annotation = {
+          #           "_id" => "5c8f6eb5500c843c92dcf0e7",
+          #            "id" => "subob",
+          #       "subject" => "C0174167973",
+          #     "predicate" => "ConcernsAspect",
+          #        "object" => "Curation#"
+          # }
 
           subject = get(
-            url: "http://localhost:3000/api/mediawikis/pages/"+annotation['subject'],
+            url: "http://localhost:3000/api/mediawikis/pages/"+annotation['subject']
+          )
+          predicate = get(
+            url: "http://localhost:3000/api/predicates/"+annotation['predicate']
           )
           object = get(
-            url: "http://localhost:3000/api/mediawikis/pages/"+annotation['object'],
+            url: "http://localhost:3000/api/mediawikis/pages/"+annotation['object']
           )
 
-          quad = {
+          mongodoc = {
             id: "test",
             subject: annotation['subject'],
             subject_namespace: resource['mediaWiki']['namespace'],
             subject_class: "Entity|Subject", #
             subject_type: subject['hasEntityType'], #"Diagram|RubyGem" If annotation['subject'] exists in models:pagename then set to its hasEntityType
             predicate: annotation['predicate'],
-            predicate_namespace: resource['mediaWiki']['namespace'],
-            predicate_class: "Property|ActiveAction|PassiveAction",
-            predicate_type: "Text|Page|URL",
+            predicate_namespace: predicate['predicate_namespace'],
+            predicate_class: predicate['predicate_class'], #"Property|ActiveAction|PassiveAction"
+            predicate_type: predicate['predicate_type'], #"Text|Page|URL"
             object: annotation['object'],
             object_namespace: "literal", # If annotation['object'] exists in models:pagename then set to resource['mediaWiki']['namespace']
             object_class: "Entity|Subject|literal",
@@ -140,8 +148,8 @@ module Dataspects
             context: "test"
           }
           post(
-            url: "http://localhost:3000/api/quads",
-            body: quad.to_json
+            url: "http://localhost:3000/api/annotations",
+            body: mongodoc.to_json
           )
         end
       end
@@ -153,7 +161,7 @@ end
 # Run by "ruby index_cookbook_entities.rb"
 $development_tika_url = "http://localhost:9998"
 mwsi = Dataspects::CookbookFALnetIndexer.new(
-  dataspects_api_url: "http://localhost:3000/api/mediawikis/5c8e750e1446664c692765f1/pages",
+  dataspects_api_url: "http://localhost:3000/api/mediawikis/5c8f6e96500c843c92dcf0de/pages",
   dataspects_api_key: "aslkdjasldkjlaskdj",
   tika_url: $development_tika_url,
   es_url: "http://localhost:9200"
