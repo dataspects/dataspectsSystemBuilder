@@ -3,49 +3,6 @@ require 'awesome_print'
 
 module Dataspects
 
-  class Indexer
-
-    def initialize(dataspects_api_url:, dataspects_api_key:, es_url:, tika_url:)
-      @dataspects_api_url = dataspects_api_url
-      @dataspects_api_key = dataspects_api_key
-      @esc = ElasticsearchCluster.new(url: es_url)
-      @tika_url = tika_url
-    end
-
-    def post(url:, body:)
-      response = RestClient.post(
-        url,
-        body = body,
-        headers = {
-          "dataspects-api-key": @dataspects_api_key,
-          content_type: :json,
-          accept: :json
-        }
-      )
-    end
-
-    def get(url:)
-      RestClient.get(
-        URI.encode(url),
-        headers = {
-          "dataspects-api-key": @dataspects_api_key,
-          content_type: :json,
-          accept: :json
-        }
-      ) do |response, request, result|
-        if(response.code == 404)
-          return {'hasEntityType' => 'literal'}
-        end
-        return JSON.parse(response)
-      end
-    end
-
-    def execute
-      raise NotImplementedError.new
-    end
-
-  end
-
   class CookbookFALnetIndexer < Indexer
 
     def initialize(dataspects_api_url:, dataspects_api_key:, es_url:, tika_url:)
@@ -158,10 +115,20 @@ module Dataspects
   end
 end
 
+response = RestClient.get(
+  "http://localhost:3000/api/mediawikis",
+  headers = {
+    "dataspects-api-key": "aslkdjasldkjlaskdj",
+    content_type: :json,
+    accept: :json
+  }
+)
+mediawiki_id = JSON.parse(response.body)[0]["_id"]
+
 # Run by "ruby index_cookbook_entities.rb"
 $development_tika_url = "http://localhost:9998"
 mwsi = Dataspects::CookbookFALnetIndexer.new(
-  dataspects_api_url: "http://localhost:3000/api/mediawikis/5c8f6e96500c843c92dcf0de/pages",
+  dataspects_api_url: "http://localhost:3000/api/mediawikis/#{mediawiki_id}/pages",
   dataspects_api_key: "aslkdjasldkjlaskdj",
   tika_url: $development_tika_url,
   es_url: "http://localhost:9200"

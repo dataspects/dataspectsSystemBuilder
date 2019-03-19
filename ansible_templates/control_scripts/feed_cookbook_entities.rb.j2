@@ -32,15 +32,14 @@ module Dataspects
       mw.originatedFromResourceSiloID = "cookbookfindandlearnnet"
       # Specify a facet of MediaWiki's resources and iterate through resources
       mw.resources_from_CATEGORY("Entity") do |re|
-      # mw.resources_from_ASK_QUERIES(["[[C1588549209]]", "[[C0319950530]]"]) do |re|
+      # mw.resources_from_ASK_QUERY("[[C190110142823]]") do |re|
         # Iterate through a resource's entities
         re.entities.each do |entity|
           post(
             url: "http://localhost:3000/api/mediawikis/#{@mediawiki['_id']}/pages",
-            body: entity.mongodoc()
+            body: entity.mongodoc.to_json
           )
           $logger.info("#{entity.hasEntityURL} fed...")
-          # @esc.process_pending_annotation_objects(final: false)
         end
       end
 
@@ -57,15 +56,12 @@ module Dataspects
             "predicate_class": page_data['printouts']['HasPredicateClass'][0],
             "predicate_namespace": page_data['fullurl'].chomp("Property:#{re.hasResourceName}")
           }
-          ap mongodoc
           post(
             url: "http://localhost:3000/api/predicates",
             body: mongodoc
           )
         end
       end
-
-      # @esc.process_pending_annotation_objects(final: true)
     end
 
   end
