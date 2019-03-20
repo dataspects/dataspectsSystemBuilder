@@ -31,7 +31,7 @@ module Dataspects
       mw.originatedFromResourceSiloLabel = "DEMO::FindAndLearn::Cookbook"
       mw.originatedFromResourceSiloID = "cookbookfindandlearnnet"
       # Specify a facet of MediaWiki's resources and iterate through resources
-      mw.resources_from_CATEGORY("Entity") do |re|
+      mw.resources_from_CATEGORIES(["Entity", "EntityType"]) do |re|
       # mw.resources_from_ASK_QUERY("[[C190110142823]]") do |re|
         # Iterate through a resource's entities
         re.entities.each do |entity|

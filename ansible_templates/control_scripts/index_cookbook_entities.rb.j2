@@ -36,30 +36,30 @@ module Dataspects
           accept: :json
         }
       )
-      resources = JSON.parse(response)
-      resources.each do |resource|
+      pages = JSON.parse(response)
+      pages.each do |page|
         esdoc = {
           # Resource silo level
           OriginatedFromResourceSiloID: "",
           OriginatedFromResourceSiloLabel: "",
           OriginatedFromResourceSiloType: "",
           # Resource level
-          OriginatedFromResourceName: resource['pagename'],
+          OriginatedFromResourceName: page['pagename'],
           OriginatedFromResourceURL: "",
           OriginatedFromResourceType: "",
           # Entity/subject level
-          HasEntityClass: resource['hasEntityClass'],
-          HasEntityName: resource['hasEntityName'],
-          HasEntityType: resource['hasEntityType'],
-          HasEntityURL: resource['hasEntityURL'],
-          HasEntityTitle: resource['hasEntityTitle'],
-          HasEntityBlurbTEXT: resource['hasEntityBlurbTEXT'],
-          HasEntityBlurbHTML: resource['hasEntityBlurbHTML'],
+          HasEntityClass: page['hasEntityClass'],
+          HasEntityName: page['hasEntityName'],
+          HasEntityType: page['hasEntityType'],
+          HasEntityURL: page['hasEntityURL'],
+          HasEntityTitle: page['hasEntityTitle'],
+          HasEntityBlurbTEXT: page['hasEntityBlurbTEXT'],
+          HasEntityBlurbHTML: page['hasEntityBlurbHTML'],
           HasEntityContentTEXT: "",
-          HasEntityContentHTML: resource['nonFormssemanticizedWikitextHtml'],
-          HasEntityTypeAndEntityTitle: "#{resource['hasEntityType']} \"resource['hasEntityTitle']\"",
-          HasEntityKeywords: resource['hasEntityKeywords'],
-          HasEntityAnnotations: resource['annotations']
+          HasEntityContentHTML: page['nonFormssemanticizedWikitextHtml'],
+          HasEntityTypeAndEntityTitle: "#{page['hasEntityType']} \"page['hasEntityTitle']\"",
+          HasEntityKeywords: page['hasEntityKeywords'],
+          HasEntityAnnotations: page['annotations']
         }
 
         # EVERYTHING to Elasticsearch
@@ -69,7 +69,7 @@ module Dataspects
         )
 
         # ANNOTATIONS as Annotations to MongoDB
-        resource['annotations'].each do |annotation|
+        page['annotations'].each do |annotation|
           # annotation = {
           #           "_id" => "5c8f6eb5500c843c92dcf0e7",
           #            "id" => "subob",
@@ -78,22 +78,70 @@ module Dataspects
           #        "object" => "Curation#"
           # }
 
-          subject = get(
+        # This could be an Entity or an EntityType!
+          subject_page = get(
             url: "http://localhost:3000/api/mediawikis/pages/"+annotation['subject']
           )
           predicate = get(
             url: "http://localhost:3000/api/predicates/"+annotation['predicate']
           )
-          object = get(
+          object_page = get(
             url: "http://localhost:3000/api/mediawikis/pages/"+annotation['object']
           )
+
+          ######################################################################
+          ######################################################################
+          ######################################################################
+          # About SearchContexts
+          # --------------------
+          # When SearchContext is "Support", then only consider annotations whose subject_type or object_type have [[BelongsToSearchContext::Support]]
+
+          # We assume subject_page is an Entity!
+          subject_type_belongs_to_search_context = nil
+          subjectType = subject_page['hasEntityType']
+          if(subject_page['hasEntityType'].nil?)
+            # But subject_page can be an EntityType!
+            subject_type = get(
+              url: "http://localhost:3000/api/mediawikis/pages/"+subject_page['pagename']
+            )
+            unless(subject_type['annotations'].empty?)
+              #ASKCRAIG: Optimal retrieval approach?
+              subject_type['annotations'].each do |annotation|
+                if(annotation['predicate'] == "BelongsToSearchContext")
+                  #TODO: These can be multiple!
+                  subject_type_belongs_to_search_context = annotation['object']
+                  subjectType = "EntityType"
+                end
+              end
+            end
+          end
+          ######################################################################
+          object_type_belongs_to_search_context = nil
+          objectType = object_page['hasEntityType']
+          if(object_page['hasEntityType'].nil?)
+            object_type = get(
+              url: "http://localhost:3000/api/mediawikis/pages/"+object_page['pagename']
+            )
+            unless(object_type['annotations'].empty?)
+              object_type['annotations'].each do |annotation|
+                if(annotation['predicate'] == "BelongsToSearchContext")
+                  object_type_belongs_to_search_context = annotation['object']
+                  objectType = "EntityType"
+                end
+              end
+            end
+          end
+          ######################################################################
+          ######################################################################
+          ######################################################################
 
           mongodoc = {
             id: "test",
             subject: annotation['subject'],
-            subject_namespace: resource['mediaWiki']['namespace'],
+            subject_namespace: page['mediaWiki']['namespace'],
             subject_class: "Entity|Subject", #
-            subject_type: subject['hasEntityType'], #"Diagram|RubyGem" If annotation['subject'] exists in models:pagename then set to its hasEntityType
+            subject_type: subjectType, #"Diagram|RubyGem" If annotation['subject'] exists in models:pagename then set to its hasEntityType
+            subject_type_belongs_to_search_context: subject_type_belongs_to_search_context,
             predicate: annotation['predicate'],
             predicate_namespace: predicate['predicate_namespace'],
             predicate_class: predicate['predicate_class'], #"Property|ActiveAction|PassiveAction"
@@ -101,7 +149,8 @@ module Dataspects
             object: annotation['object'],
             object_namespace: "literal", # If annotation['object'] exists in models:pagename then set to resource['mediaWiki']['namespace']
             object_class: "Entity|Subject|literal",
-            object_type: object['hasEntityType'], #"Diagram|RubyGem|literal" If annotation['object'] exists in models:pagename then set to its hasEntityType
+            object_type: objectType, #"Diagram|RubyGem|literal" If annotation['object'] exists in models:pagename then set to its hasEntityType
+            object_type_belongs_to_search_context: object_type_belongs_to_search_context,
             context: "test"
           }
           post(
