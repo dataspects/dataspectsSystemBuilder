@@ -57,7 +57,7 @@ module Dataspects
           HasEntityBlurbHTML: page['hasEntityBlurbHTML'],
           HasEntityContentTEXT: "",
           HasEntityContentHTML: page['nonFormssemanticizedWikitextHtml'],
-          HasEntityTypeAndEntityTitle: "#{page['hasEntityType']} \"page['hasEntityTitle']\"",
+          HasEntityTypeAndEntityTitle: "#{page['hasEntityType']} \"#{page['hasEntityTitle']}\"",
           HasEntityKeywords: page['hasEntityKeywords'],
           HasEntityAnnotations: page['annotations']
         }
@@ -79,8 +79,9 @@ module Dataspects
           # }
 
         # This could be an Entity or an EntityType!
+          temp = annotation['subject'].split('#0##') #FIXME: Lex: check for SMW subobject anonymous id!
           subject_page = get(
-            url: "http://localhost:3000/api/mediawikis/pages/"+annotation['subject']
+            url: "http://localhost:3000/api/mediawikis/pages/"+temp[0]
           )
           predicate = get(
             url: "http://localhost:3000/api/predicates/"+annotation['predicate']
