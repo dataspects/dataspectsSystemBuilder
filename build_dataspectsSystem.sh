@@ -7,6 +7,9 @@ DOMAIN_NAME="$(basename -- $CONTROL_FOLDER_PATH)"
 if [[ ! $AWS_ACCESS_KEY_ID ]]; then AWS_ACCESS_KEY_ID=dummy; fi
 if [[ ! $AWS_SECRET_ACCESS_KEY ]]; then AWS_SECRET_ACCESS_KEY=dummy; fi
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
+if [[ ! $TIKA_USERNAME ]]; then TIKA_USERNAME=dummy; fi
+if [[ ! $TIKA_PASSWORD ]]; then TIKA_PASSWORD=dummy; fi
+if [[ ! $UI_FEED_SERVICE_API_KEY ]]; then UI_FEED_SERVICE_API_KEY=aslkdjasldkjlaskdj; fi
 
 ANSIBLETAGS=(
   ### 010_Prepare
@@ -25,10 +28,10 @@ ANSIBLETAGS=(
   #   provision_as_cookbookfalnet
   ### 045 Feeding
     feed_cookbook_entities
-  #  feed_dataspectsSystem_source_folder
+    feed_dataspectsSystem_source_folder
   # ### 050_Indexing
     index_cookbook_entities
-  #   index_dataspectsSystem_source_folder
+    index_dataspectsSystem_source_folder
   # ### 060_Backup_and_Clone
   #   install_backup_functionality
   #   install_clone_functionality
@@ -45,6 +48,9 @@ time ansible-playbook \
   --extra-vars aws_access_key_id=$AWS_ACCESS_KEY_ID \
   --extra-vars aws_secret_access_key=$AWS_SECRET_ACCESS_KEY \
   --extra-vars ui_session_secret=$UI_SESSION_SECRET \
+  --extra-vars tika_username=$TIKA_USERNAME \
+  --extra-vars tika_password=$TIKA_PASSWORD \
+  --extra-vars ui_feed_service_api_key=$UI_FEED_SERVICE_API_KEY \
   --extra-vars registry_dataspects_com_user=$REGISTRY_DATASPECTS_COM_USER \
   --extra-vars registry_dataspects_com_password=$REGISTRY_DATASPECTS_COM_PASSWORD \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \

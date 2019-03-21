@@ -80,14 +80,6 @@ services:
   #     - "SITE_URL=http://localhost:3000"
   #     - "OTP_DOMAIN=ui.dataspects.com"
 volumes:
-  # indexing-service:
-  #   image: 550143289598.dkr.ecr.eu-central-1.amazonaws.com/dataspects-indexing-webservice:{{ dockerDataspectsIndexingServiceVersion }}
-  #   environment:
-  #     ELASTICSEARCH_CLUSTER_URL: http://elasticsearch:9200
-  #     API_KEY: none
-  #   volumes:
-  #     - custom_indexer_classes:/lib/custom_indexer_classes
-volumes:
   mariadb_data:
     driver: local
   mediawiki_root:
