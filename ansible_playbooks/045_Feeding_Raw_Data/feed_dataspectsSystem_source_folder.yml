@@ -25,7 +25,7 @@
         - feed_dataspectsSystem_source_folder
 
     - name: Run dataspects-file-feeder
-      shell: ./dataspects-file-feeder --config dataspects-file-feeder-config.json --indexer cofal
+      shell: ./dataspects-file-feeder --config dataspects-file-feeder-config.json --feeder-id dsicf --database dsicf.db
       args:
         chdir: "{{ dataspectsSystem_control_folder_on_host }}"
       when: dataspects_file_feeder_exists.stat.exists == True
