@@ -1,0 +1,121 @@
+{
+  "esQuery": {
+    "index": "dataspectspublic",
+    "type": "doc",
+    "body": {
+      "size": 10,
+      "query": {
+        "bool":{
+          "should": [
+            {
+              "match": {
+                "HasEntityTypeAndEntityTitle": {
+                  "query": "{{query.params.queryString}}",
+                  "boost": 10
+                }
+              }
+            },
+            {
+              "match": {
+                "HasEntityBlurbTEXT": {
+                  "query": "{{query.params.queryString}}",
+                  "boost": 5
+                }
+              }
+            },
+            {
+              "match": {
+                "HasEntityKeywords": {
+                  "query": "{{query.params.queryString}}",
+                  "boost": 10
+                }
+              }
+            },
+            {
+              "match": {
+                "HasEntityContentTEXT": {
+                  "query": "{{query.params.queryString}}",
+                  "analyzer": "my_ngram_tokenizer_analyzer"
+                }
+              }
+            },
+            {
+              "nested": {
+                "path": "HasEntityAnnotations",
+                "query": {
+                  "bool": {
+                    "should": [
+                      {
+                        "wildcard": {
+                          "HasEntityAnnotations.HasAnnotationPredicate.myNormalized": {
+                            "value": "*#{{query.params.queryString}}*",
+                            "boost": 10
+                          }
+                        }
+                      },
+                      {
+                        "match": {
+                          "HasEntityAnnotations.HasAnnotationObjectValue.myNormalized": {
+                            "query": "{{query.params.queryString}}"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "inner_hits": {
+                  "highlight": {
+                    "fields": {
+                      "HasEntityAnnotations.HasAnnotationPredicate.myNormalized": {
+                        "number_of_fragments": 1,
+                        "no_match_size": 1000
+                      }
+                    },
+                    "pre_tags": "['<span class=\"badge badge-light\">']",
+                    "post_tags": "['</span>']"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "highlight": {
+        "fields": {
+          "HasEntityTypeAndEntityTitle": {
+            "fragment_size": 0,
+            "number_of_fragments": 1,
+            "no_match_size": 1000
+          },
+          "HasEntityKeywords": {
+            "fragment_size": 0,
+            "number_of_fragments": 1,
+            "no_match_size": 200
+          },
+          "HasEntityBlurbTEXT": {
+            "fragment_size": 2000,
+            "number_of_fragments": 1,
+            "no_match_size": 2000
+          },
+          "HasEntityContentTEXT": {
+            "fragment_size": 1000,
+            "number_of_fragments": 1,
+            "no_match_size": 500
+          }
+        },
+        "pre_tags": "['<span class=\"badge badge-light\">']",
+        "post_tags": "['</span>']"
+      }
+    }
+  },
+  "searchResultSpecials": [
+    {
+      "conditions": {
+        "must": {
+          "HasEntityType": "Problem"
+        }
+      },
+      "actions": []
+    }
+  ]
+}
