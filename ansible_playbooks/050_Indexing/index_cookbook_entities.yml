@@ -21,4 +21,4 @@
       with_items:
         - index_cookbook_entities.rb
       tags:
-        - index_dataspectsSystem_source_folderSTOP
+        - index_dataspectsSystem_source_folder

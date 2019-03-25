@@ -1,7 +1,51 @@
 require 'dataspects'
-require 'awesome_print'
 
 module Dataspects
+
+  class Annotation2
+    attr_reader :subject, :predicate, :object
+    def initialize(subject:, predicate:, object:)
+      @subject = subject
+      @predicate = predicate
+      @object = object
+    end
+  end
+
+  class StandardAnnotator
+    def initialize(subject:, content:)
+      @subject = subject
+      @content = content
+      @annotations = []
+      scan
+    end
+
+    def annotations
+      annotations = []
+      @annotations.each do |annotation|
+        annotations <<
+          {
+            id: "subob",
+            subject: annotation.subject,
+            predicate: annotation.predicate,
+            object: annotation.object
+          }
+      end
+      return annotations
+    end
+
+    private
+
+      def scan
+        matches = @content.scan(/\[\[(\w+)::(.*?)\]\]/)
+        matches.each do |match|
+          @annotations << Annotation2.new(
+            subject: @subject,
+            predicate: match[0],
+            object: match[1]
+          )
+        end
+      end
+  end
 
   class DataspectsSystemInstanceSourceFolder < Indexer
 
@@ -12,9 +56,9 @@ module Dataspects
 
     def execute()
       response = RestClient.get(
-        'http://localhost:3000/api/files',
+        @dataspects_api_url+'/files',
         headers = {
-          "dataspects-api-key": "aslkdjasldkjlaskdj",
+          "dataspects-api-key": @dataspects_api_key,
           content_type: :json,
           accept: :json
         }
@@ -25,6 +69,11 @@ module Dataspects
         content_type = ngdoc.xpath('/html/head/meta[@name="Content-Type"]/@content')
         content = ngdoc.xpath('/html/body/p').text
         absolute_file_path = file['absoluteFilePath']
+
+        annotator = StandardAnnotator.new(
+          subject: absolute_file_path,
+          content: content
+        )
 
         esdoc = {
           # Resource silo level
@@ -38,25 +87,51 @@ module Dataspects
           # Entity/subject level
           HasEntityClass: "Entity",
           HasEntityName: absolute_file_path,
-          HasEntityType: "ConfigFile",
+          HasEntityType: "ProgramClass",
           HasEntityURL: absolute_file_path,
           HasEntityTitle: absolute_file_path,
-          HasEntityBlurbTEXT: "dev",
+          HasEntityBlurbTEXT: "Some blurb...",
           HasEntityBlurbHTML: "dev",
           HasEntityContentTEXT: content,
           HasEntityContentHTML: content,
           HasEntityTypeAndEntityTitle: absolute_file_path,
-          HasEntityKeywords: [],
-          HasEntityAnnotations: [
-
-          ]
+          HasEntityKeywords: ["NodeJS", "DataspectsSystem", "Visualization"],
+          HasEntityAnnotations: annotator.annotations
         }
 
+        # EVERYTHING to Elasticsearch
         @esc.index(
           body: esdoc,
           index: "dataspectspublic"
         )
         $logger.info("#{absolute_file_path} indexed...")
+
+        # ANNOTATIONS as Annotations to MongoDB
+        annotator.annotations.each do |annotation|
+          mongodoc = {
+            id: "test",
+            subject: annotation[:subject],
+            subject_namespace: "https://cookbook.findandlearn.net/wiki",
+            subject_class: "Entity|Subject", #
+            subject_type: "ProgramClass", #"Diagram|RubyGem" If annotation['subject'] exists in models:pagename then set to its hasEntityType
+            subject_type_belongs_to_search_context: nil,
+            predicate: annotation[:predicate],
+            predicate_namespace: "https://cookbook.findandlearn.net/wiki",
+            predicate_class: "ActiveAction", #"Property|ActiveAction|PassiveAction"
+            predicate_type: "URL", #"Text|Page|URL"
+            object: annotation[:object],
+            object_namespace: "literal", # If annotation['object'] exists in models:pagename then set to resource['mediaWiki']['namespace']
+            object_class: "Entity|Subject|literal",
+            object_type: "Feature", #"Diagram|RubyGem|literal" If annotation['object'] exists in models:pagename then set to its hasEntityType
+            object_type_belongs_to_search_context: nil,
+            context: "test"
+          }
+          post(
+            url: @dataspects_api_url+"/annotations",
+            body: mongodoc.to_json
+          )
+          $logger.info("Annotation fed to MongoDB")
+        end
       end
     end
 
@@ -64,10 +139,10 @@ module Dataspects
 
 end
 
-$development_tika_url = "http://localhost:9998"
+$development_tika_url = "http://localhost:{{ tikaPortOnHost }}"
 mwsi = Dataspects::DataspectsSystemInstanceSourceFolder.new(
-  dataspects_api_url: "http://localhost:3000/api/files",
-  dataspects_api_key: "aslkdjasldkjlaskdj",
+  dataspects_api_url: "http://localhost:{{ dataspectsFeederServicePort }}/api",
+  dataspects_api_key: "{{ ui_feed_service_api_key }}",
   tika_url: $development_tika_url,
-  es_url: "http://localhost:9200"
+  es_url: "http://localhost:{{ elasticsearchPortOnHost }}"
 ).execute

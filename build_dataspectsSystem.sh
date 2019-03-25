@@ -26,12 +26,14 @@ ANSIBLETAGS=(
   #   execute_mediawiki_maintenance_runJobs
   # ### 040_Ontologies
   #   provision_as_cookbookfalnet
-  ### 045 Feeding
-    feed_cookbook_entities
-    feed_dataspectsSystem_source_folder
+  ### Configure NodeJS
+    configure_nodejs
+  # ### 045 Feeding
+  #   feed_cookbook_entities
+  #   feed_dataspectsSystem_source_folder
   # ### 050_Indexing
-    index_cookbook_entities
-    index_dataspectsSystem_source_folder
+  #   index_cookbook_entities
+  #   index_dataspectsSystem_source_folder
   # ### 060_Backup_and_Clone
   #   install_backup_functionality
   #   install_clone_functionality
@@ -64,6 +66,7 @@ time ansible-playbook \
       ansible_playbooks/030_MediaWiki/install_mediawiki_extensions.yml \
       ansible_playbooks/030_MediaWiki/execute_mediawiki_maintenance_runJobs.yml \
       ansible_playbooks/040_Ontologies/provision_as_cookbookfalnet.yml \
+      ansible_playbooks/042_NodeJS/configure_nodejs.yml \
       ansible_playbooks/045_Feeding_Raw_Data/feed_cookbook_entities.yml \
       ansible_playbooks/045_Feeding_Raw_Data/feed_dataspectsSystem_source_folder.yml \
       ansible_playbooks/050_Indexing/index_cookbook_entities.yml \

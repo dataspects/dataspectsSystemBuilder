@@ -9,6 +9,8 @@
       with_items:
         - "{{ dataspectsSystem_control_folder_on_host }}"
         - "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/"
+        - "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/elasticsearch"
+        - "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/search_contexts"
       tags:
         - create_dataspectsSystem_control_folder_on_host
 

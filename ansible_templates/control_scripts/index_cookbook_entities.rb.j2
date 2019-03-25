@@ -27,8 +27,23 @@ module Dataspects
     end
 
     def execute()
+      # You need to create a api/mediawikis and puts its MongoDB ObjectID
+      # here:
+      ##########################################################
+      ##########################################################
       response = RestClient.get(
-        @dataspects_api_url,
+        @dataspects_api_url+"/mediawikis?namespace=http://{{ mediawikiDomainNameInHostFile }}/wiki",
+        headers = {
+          "dataspects-api-key": @dataspects_api_key,
+          content_type: :json,
+          accept: :json
+        }
+      )
+      mediawiki_id = JSON.parse(response.body)[0]['_id']
+      ##########################################################
+      ##########################################################
+      response = RestClient.get(
+        @dataspects_api_url+"/mediawikis/#{mediawiki_id}/pages",
         headers = {
           "dataspects-api-key": @dataspects_api_key,
           content_type: :json,
@@ -80,13 +95,13 @@ module Dataspects
         # This could be an Entity or an EntityType!
           temp = annotation['subject'].split('#0##') #FIXME: Lex: check for SMW subobject anonymous id!
           subject_page = get(
-            url: "http://localhost:3000/api/mediawikis/pages/"+temp[0]
+            url: @dataspects_api_url+"/mediawikis/pages/"+temp[0]
           )
           predicate = get(
-            url: "http://localhost:3000/api/predicates/"+annotation['predicate']
+            url: @dataspects_api_url+"/predicates/"+annotation['predicate']
           )
           object_page = get(
-            url: "http://localhost:3000/api/mediawikis/pages/"+annotation['object']
+            url: @dataspects_api_url+"/mediawikis/pages/"+annotation['object']
           )
 
           ######################################################################
@@ -102,7 +117,7 @@ module Dataspects
           if(subject_page['hasEntityType'].nil?)
             # But subject_page can be an EntityType!
             subject_type = get(
-              url: "http://localhost:3000/api/mediawikis/pages/"+subject_page['pagename']
+              url: @dataspects_api_url+"/mediawikis/pages/"+subject_page['pagename']
             )
             unless(subject_type['annotations'].empty?)
               #ASKCRAIG: Optimal retrieval approach?
@@ -120,7 +135,7 @@ module Dataspects
           objectType = object_page['hasEntityType']
           if(object_page['hasEntityType'].nil?)
             object_type = get(
-              url: "http://localhost:3000/api/mediawikis/pages/"+object_page['pagename']
+              url: @dataspects_api_url+"/mediawikis/pages/"+object_page['pagename']
             )
             unless(object_type['annotations'].empty?)
               object_type['annotations'].each do |annotation|
@@ -154,9 +169,10 @@ module Dataspects
             context: "test"
           }
           post(
-            url: "http://localhost:3000/api/annotations",
+            url: @dataspects_api_url+"/annotations",
             body: mongodoc.to_json
           )
+          $logger.info("Annotation fed to MongoDB")
         end
       end
     end
@@ -164,21 +180,11 @@ module Dataspects
   end
 end
 
-response = RestClient.get(
-  "http://localhost:3000/api/mediawikis",
-  headers = {
-    "dataspects-api-key": "aslkdjasldkjlaskdj",
-    content_type: :json,
-    accept: :json
-  }
-)
-mediawiki_id = JSON.parse(response.body)[0]["_id"]
-
 # Run by "ruby index_cookbook_entities.rb"
-$development_tika_url = "http://localhost:9998"
+$development_tika_url = "http://localhost:{{ tikaPortOnHost }}"
 mwsi = Dataspects::CookbookFALnetIndexer.new(
-  dataspects_api_url: "http://localhost:3000/api/mediawikis/#{mediawiki_id}/pages",
-  dataspects_api_key: "aslkdjasldkjlaskdj",
+  dataspects_api_url: "http://localhost:{{ dataspectsFeederServicePort }}/api",
+  dataspects_api_key: "{{ ui_feed_service_api_key }}",
   tika_url: $development_tika_url,
-  es_url: "http://localhost:9200"
+  es_url: "http://localhost:{{ elasticsearchPortOnHost }}"
 ).execute

@@ -1,4 +1,8 @@
 {
+  "label": "General",
+  "slug": "/general",
+  "enabled": true,
+  "default": false,
   "esQuery": {
     "index": "dataspectspublic",
     "type": "doc",
@@ -137,7 +141,7 @@
         },
         {
           "COMMENT": "",
-          "title": "Maybe caused by",
+          "title": "May be caused by",
           "query": {
             "queryName": "must_match_subject_and_match_predicate",
             "params": {

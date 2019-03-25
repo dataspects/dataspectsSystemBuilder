@@ -30,4 +30,4 @@
         chdir: "{{ dataspectsSystem_control_folder_on_host }}"
       when: dataspects_file_feeder_exists.stat.exists == True
       tags:
-        - feed_dataspectsSystem_source_folderSTOP
+        - feed_dataspectsSystem_source_folder

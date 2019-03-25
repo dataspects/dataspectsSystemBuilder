@@ -21,4 +21,4 @@
       with_items:
         - feed_cookbook_entities.rb
       tags:
-        - feed_cookbook_entitiesSTOP
+        - feed_cookbook_entities

@@ -21,4 +21,4 @@
       with_items:
         - index_cookbook_entities.rb
       tags:
-        - index_cookbook_entitiesSTOP
+        - index_cookbook_entities

@@ -1,5 +1,4 @@
 require 'dataspects'
-require 'awesome_print'
 
 module Dataspects
 
@@ -10,14 +9,20 @@ module Dataspects
     end
 
     def execute()
-      # https://en.wikipedia.org/wiki/URL
-      @mediawiki = ensure_it_exists(body: {
-        "articleUrl": "https://cookbook.findandlearn.net/wiki/",
-        "scriptUrl": "https://cookbook.findandlearn.net/w/",
-        "namespace": "https://cookbook.findandlearn.net/wiki/",
-        "feederClass": "#{`hostname`.strip}:#{Dir.pwd}/#{$0}",
-        "timestamp": Time.now.getutc
-      }.to_json)
+
+      ##########################################################
+      ##########################################################
+      response = RestClient.get(
+        @dataspects_api_url+"/mediawikis?namespace=http://{{ mediawikiDomainNameInHostFile }}/wiki",
+        headers = {
+          "dataspects-api-key": @dataspects_api_key,
+          content_type: :json,
+          accept: :json
+        }
+      )
+      mediawiki_id = JSON.parse(response.body)[0]['_id']
+      ##########################################################
+      ##########################################################
 
       mw = Dataspects::MediaWiki.new(
         url: "https://cookbook.findandlearn.net/w",
@@ -36,8 +41,8 @@ module Dataspects
         # Iterate through a resource's entities
         re.entities.each do |entity|
           post(
-            url: "http://localhost:3000/api/mediawikis/#{@mediawiki['_id']}/pages",
-            body: entity.mongodoc.to_json
+            url: @dataspects_api_url+"/mediawikis/#{mediawiki_id}/pages",
+            body: entity.mongodoc
           )
           $logger.info("#{entity.hasEntityURL} fed...")
         end
@@ -57,7 +62,7 @@ module Dataspects
             "predicate_namespace": page_data['fullurl'].chomp("Property:#{re.hasResourceName}")
           }
           post(
-            url: "http://localhost:3000/api/predicates",
+            url: @dataspects_api_url+"/predicates",
             body: mongodoc
           )
         end
@@ -68,8 +73,8 @@ module Dataspects
 end
 
 # Run by "ruby feed_cookbook_entities.rb"
-$development_tika_url = "http://localhost:9998"
+$development_tika_url = "http://localhost:{{ tikaPortOnHost }}"
 mwpsf = Dataspects::CookbookFALnetFeeder.new(
-  dataspects_api_url: "http://localhost:3000/api/mediawikis",
-  dataspects_api_key: "aslkdjasldkjlaskdj"
+  dataspects_api_url: "http://localhost:{{ dataspectsFeederServicePort }}/api",
+  dataspects_api_key: "{{ ui_feed_service_api_key }}"
 ).execute

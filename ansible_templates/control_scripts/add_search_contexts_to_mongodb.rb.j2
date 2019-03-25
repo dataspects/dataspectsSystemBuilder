@@ -1,0 +1,18 @@
+require 'dataspects'
+
+@dataspects_api_url = "http://localhost:{{ dataspectsFeederServicePort }}/api"
+@dataspects_api_key = "{{ ui_feed_service_api_key }}"
+
+# https://docs.mongodb.com/manual/reference/limits/#Restrictions-on-Field-Names
+
+Dir.glob("{{ dataspectsSystem_control_folder_on_host }}/control_scripts/search_contexts/*.json") do |filePath|
+	response = RestClient.post(
+	  @dataspects_api_url+"/searchcontexts",
+	  body = File.read(filePath),
+	  headers = {
+	    "dataspects-api-key": @dataspects_api_key,
+	    content_type: :json,
+	    accept: :json
+	  }
+	)
+end
