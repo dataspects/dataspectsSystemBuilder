@@ -9,10 +9,10 @@
       shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
       register: volume_profile
       tags:
-        - install_mediawiki_extensions
+        - 320_install_mediawiki_extensions
     - set_fact: "mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}"
       tags:
-        - install_mediawiki_extensions
+        - 320_install_mediawiki_extensions
     ############################################################################
 
     - name: Place MediaWiki extensions list
@@ -22,21 +22,21 @@
         mode: 0777
       become: true
       tags:
-        - install_mediawiki_extensions
+        - 320_install_mediawiki_extensions
 
     - name: Place MediaWiki extensions install script
       template:
-        src: ../../ansible_templates/install_mediawiki_extensions.rb.j2
-        dest: "{{ mountpoint.items()[0][1] }}/w/install_mediawiki_extensions.rb"
+        src: ../../ansible_templates/320_install_mediawiki_extensions.rb.j2
+        dest: "{{ mountpoint.items()[0][1] }}/w/320_install_mediawiki_extensions.rb"
         mode: 0777
       become: true
       tags:
-        - install_mediawiki_extensions
+        - 320_install_mediawiki_extensions
 
     - name: Install MediaWiki extensions
-      shell: ruby install_mediawiki_extensions.rb
+      shell: ruby 320_install_mediawiki_extensions.rb
       args:
         chdir: "{{ mountpoint.items()[0][1] }}/w/"
       become: true
       tags:
-        - install_mediawiki_extensions
+        - 320_install_mediawiki_extensions

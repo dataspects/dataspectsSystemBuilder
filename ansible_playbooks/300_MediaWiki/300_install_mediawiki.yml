@@ -9,11 +9,11 @@
       shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
       register: volume_profile
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
         - t1811161102t
     - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
         - t1811161102t
     ############################################################################
 
@@ -23,7 +23,7 @@
         chdir: "{{ mountpoint.items()[0][1] }}"
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     - name: Install core extensions and skins
       shell: "git submodule update --init --recursive"
@@ -31,7 +31,7 @@
         chdir: "{{ mountpoint.items()[0][1] }}/w/"
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     - name: Place composer install script
       template:
@@ -40,34 +40,34 @@
         mode: 0777
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     - name: Install composer locally
       shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && ./install_composer.sh"
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Run composer inside container
       shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php composer.phar install"
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     # [[IsOperationType::FileSystemOperation]]
     - name: Place mediawiki install script
       template:
-        src: ../../ansible_templates/install_mediawiki.sh.j2
+        src: ../../ansible_templates/300_install_mediawiki.sh.j2
         dest: "{{ mountpoint.items()[0][1] }}/w/install.sh"
         mode: 0777
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install mediawiki inside container
       shell: "docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c 'cd /var/www/html/w && ./install.sh'"
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     - name: Add settings to LocalSettings.php
       lineinfile:
@@ -78,7 +78,7 @@
         - $wgFileExtensions[] = 'pdf';
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     #FIXME: This should replace, but it actually just adds!
     - name: Replace settings in LocalSettings.php
@@ -91,7 +91,7 @@
         - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
         - t1811161102t
 
     # [[IsOperationType::VendorPackageOperation]]
@@ -101,7 +101,7 @@
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     #FIXME: This should replace, but it actually just adds!
     - name: Replace settings in LocalSettings.php
@@ -114,7 +114,7 @@
         - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     # [[IsOperationType::FileSystemOperation]]
     - name: Set permissions on mediawiki root
@@ -124,18 +124,18 @@
         recurse: yes
       become: true
       tags:
-        - install_mediawiki
+        - 300_install_mediawiki
 
     ############################################################################
-    # configure_proxy ##########################################################
+    # 310_configure_proxy ##########################################################
     - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf path on host
       shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf
       register: volume_profile
       tags:
-        - configure_proxy
+        - 310_configure_proxy
     - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
       tags:
-        - configure_proxy
+        - 310_configure_proxy
 
     - name: Place mediawiki service nginx conf
       template:
@@ -144,11 +144,11 @@
         mode: 0777
       become: true
       tags:
-        - configure_proxy
+        - 310_configure_proxy
 
     - name: Restart Nginx Proxy
       shell: docker-compose \
                --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
                  restart proxy
       tags:
-        - configure_proxy
+        - 310_configure_proxy

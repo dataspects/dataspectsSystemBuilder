@@ -72,7 +72,7 @@ module Dataspects
   end
 end
 
-# Run by "ruby feed_cookbook_entities.rb"
+# Run by "ruby 600_feed_cookbook_entities.rb"
 $development_tika_url = "http://localhost:{{ tikaPortOnHost }}"
 mwpsf = Dataspects::CookbookFALnetFeeder.new(
   dataspects_api_url: "http://localhost:{{ dataspectsFeederServicePort }}/api",

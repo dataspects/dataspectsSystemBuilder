@@ -1,0 +1,16 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: 700_prepare_indexing
+      template:
+        src: "../../ansible_templates/control_scripts/elasticsearch/{{ item }}"
+        dest: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/elasticsearch/{{ item }}"
+        mode: 0777
+      with_items:
+        - standard_index_mapping.json
+        - standard_index_settings.json
+      tags:
+        - 700_prepare_indexing

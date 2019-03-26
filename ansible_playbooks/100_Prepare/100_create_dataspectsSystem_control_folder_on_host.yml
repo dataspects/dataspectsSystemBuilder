@@ -12,11 +12,11 @@
         - "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/elasticsearch"
         - "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/search_contexts"
       tags:
-        - create_dataspectsSystem_control_folder_on_host
+        - 100_create_dataspectsSystem_control_folder_on_host
 
     - debug:
         msg:
           - "Your custom dataspectsSystem name: {{ dataspectsSystem_control_folder_on_host | basename }}"
           - "Your custom dataspectsSystem location: {{ dataspectsSystem_control_folder_on_host }}"
       tags:
-        - create_dataspectsSystem_control_folder_on_host
+        - 100_create_dataspectsSystem_control_folder_on_host

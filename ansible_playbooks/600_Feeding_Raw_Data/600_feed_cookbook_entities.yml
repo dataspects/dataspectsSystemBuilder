@@ -4,21 +4,21 @@
   gather_facts: False
   tasks:
 
-    - name: Copy indexing jobs
+    - name: COPY feed_cookbook_entities job
       template:
         src: "../../ansible_templates/control_scripts/{{ item }}.j2"
         dest: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/{{ item }}"
         mode: 0777
       with_items:
-        - index_cookbook_entities.rb
+        - feed_cookbook_entities.rb
       tags:
-        - index_cookbook_entities
+        - 600_feed_cookbook_entities
 
-    - name: index_cookbook_entities
+    - name: RUN feed_cookbook_entities job
       shell: ruby {{ item }}
       args:
         chdir: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts"
       with_items:
-        - index_cookbook_entities.rb
+        - feed_cookbook_entities.rb
       tags:
-        - index_cookbook_entities
+        - 600_feed_cookbook_entities

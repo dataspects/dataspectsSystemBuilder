@@ -4,30 +4,30 @@
   gather_facts: False
   tasks:
 
-    - name: Check if "{{ dataspectsSystem_control_folder_on_host }}/dataspects-file-feeder" exists
+    - name: CHECK if "{{ dataspectsSystem_control_folder_on_host }}/dataspects-file-feeder" exists
       stat:
         path: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-file-feeder"
       register: dataspects_file_feeder_exists
       tags:
-        - feed_dataspectsSystem_source_folder
+        - 610_feed_dataspectsSystem_source_folder
 
     - fail:
         msg: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-file-feeder not found, download from https://github.com/dataspects/dataspects-file-feeder/releases"
       when: dataspects_file_feeder_exists.stat.exists == False
       tags:
-        - feed_dataspectsSystem_source_folder
+        - 610_feed_dataspectsSystem_source_folder
 
-    - name: Place dataspects-file-feeder-config.json
+    - name: COPY dataspects-file-feeder-config.json
       template:
         src: ../../ansible_templates/dataspects-file-feeder-config.json.j2
         dest: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-file-feeder-config.json"
       tags:
-        - feed_dataspectsSystem_source_folder
+        - 610_feed_dataspectsSystem_source_folder
 
-    - name: Run dataspects-file-feeder
+    - name: RUN dataspects-file-feeder
       shell: ./dataspects-file-feeder --config dataspects-file-feeder-config.json --feeder-id dsicf --database dsicf.db
       args:
         chdir: "{{ dataspectsSystem_control_folder_on_host }}"
       when: dataspects_file_feeder_exists.stat.exists == True
       tags:
-        - feed_dataspectsSystem_source_folder
+        - 610_feed_dataspectsSystem_source_folder

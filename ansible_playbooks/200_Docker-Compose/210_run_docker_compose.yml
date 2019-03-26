@@ -10,4 +10,4 @@
                  up \
                    --detach
       tags:
-        - run_docker_compose
+        - 210_run_docker_compose

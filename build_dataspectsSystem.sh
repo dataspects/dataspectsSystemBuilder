@@ -12,28 +12,23 @@ if [[ ! $TIKA_PASSWORD ]]; then TIKA_PASSWORD=dummy; fi
 if [[ ! $UI_FEED_SERVICE_API_KEY ]]; then UI_FEED_SERVICE_API_KEY=aslkdjasldkjlaskdj; fi
 
 ANSIBLETAGS=(
-  ### 010_Prepare
-    # create_dataspectsSystem_control_folder_on_host
-    # pull_private_Docker_images_from_registry_dataspects_com
-  ### 020_Docker-Compose
-    # compile_and_copy_docker_compose_file
-    # run_docker_compose
-  # ### Comment all following tags for manual installation on Docker stack in accordance with C1470408196
-  # ### 030_MediaWiki
-  #   install_mediawiki
-  #   configure_proxy
-  #   install_mediawiki_extensions
-  #   execute_mediawiki_maintenance_runJobs
-  # ### 040_Ontologies
-  #   provision_as_cookbookfalnet
-  ### Configure NodeJS
-    configure_nodejs
-  # ### 045 Feeding
-  #   feed_cookbook_entities
-  #   feed_dataspectsSystem_source_folder
-  # ### 050_Indexing
-  #   index_cookbook_entities
-  #   index_dataspectsSystem_source_folder
+  # 100_create_dataspectsSystem_control_folder_on_host
+  # 110_pull_private_Docker_images_from_registry_dataspects_com
+  # 200_compile_and_copy_docker_compose_file
+  # 210_run_docker_compose
+  #### Comment all following tags for manual installation on Docker stack in accordance with C1470408196
+  # 300_install_mediawiki
+  # 310_configure_proxy
+  # 320_install_mediawiki_extensions
+  # 330_execute_mediawiki_maintenance_runJobs
+  # 400_provision_as_cookbookfalnet
+  #### For the time being this requires manually running dataspects-ui
+  500_configure_nodejs
+  600_feed_cookbook_entities
+  610_feed_dataspectsSystem_source_folder
+  700_prepare_indexing
+  710_index_cookbook_entities
+  720_index_dataspectsSystem_instance_source_folder
   # ### 060_Backup_and_Clone
   #   install_backup_functionality
   #   install_clone_functionality
@@ -58,19 +53,20 @@ time ansible-playbook \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
   --ask-become-pass \
   --become-method sudo \
-      ansible_playbooks/010_Prepare/create_dataspectsSystem_control_folder_on_host.yml \
-      ansible_playbooks/010_Prepare/pull_private_Docker_images_from_registry_dataspects_com.yml \
-      ansible_playbooks/020_Docker-Compose/compile_and_copy_docker_compose_file.yml \
-      ansible_playbooks/020_Docker-Compose/run_docker_compose.yml \
-      ansible_playbooks/030_MediaWiki/install_mediawiki.yml \
-      ansible_playbooks/030_MediaWiki/install_mediawiki_extensions.yml \
-      ansible_playbooks/030_MediaWiki/execute_mediawiki_maintenance_runJobs.yml \
-      ansible_playbooks/040_Ontologies/provision_as_cookbookfalnet.yml \
-      ansible_playbooks/042_NodeJS/configure_nodejs.yml \
-      ansible_playbooks/045_Feeding_Raw_Data/feed_cookbook_entities.yml \
-      ansible_playbooks/045_Feeding_Raw_Data/feed_dataspectsSystem_source_folder.yml \
-      ansible_playbooks/050_Indexing/index_cookbook_entities.yml \
-      ansible_playbooks/050_Indexing/index_dataspectsSystem_source_folder.yml \
+      ansible_playbooks/100_Prepare/100_create_dataspectsSystem_control_folder_on_host.yml \
+      ansible_playbooks/100_Prepare/110_pull_private_Docker_images_from_registry_dataspects_com.yml \
+      ansible_playbooks/200_Docker-Compose/200_compile_and_copy_docker_compose_file.yml \
+      ansible_playbooks/200_Docker-Compose/210_run_docker_compose.yml \
+      ansible_playbooks/300_MediaWiki/300_install_mediawiki.yml \
+      ansible_playbooks/300_MediaWiki/320_install_mediawiki_extensions.yml \
+      ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml \
+      ansible_playbooks/400_Ontologies/400_provision_as_cookbookfalnet.yml \
+      ansible_playbooks/500_NodeJS/500_configure_nodejs.yml \
+      ansible_playbooks/600_Feeding_Raw_Data/600_feed_cookbook_entities.yml \
+      ansible_playbooks/600_Feeding_Raw_Data/610_feed_dataspectsSystem_source_folder.yml \
+      ansible_playbooks/700_Indexing/700_prepare_indexing.yml \
+      ansible_playbooks/700_Indexing/710_index_cookbook_entities.yml \
+      ansible_playbooks/700_Indexing/720_index_dataspectsSystem_instance_source_folder.yml \
       ansible_playbooks/060_Backup_and_Clone/install_backup_and_clone_functionality.yml \
       ansible_playbooks/060_Backup_and_Clone/backup_and_clone.yml \
       ansible_playbooks/070_Tools/compare.yml

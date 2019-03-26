@@ -4,21 +4,25 @@
   gather_facts: False
   tasks:
 
-    - name: Copy index_dataspectsSystem_source_folder
+    - name: Copy provision jobs
       template:
         src: "../../ansible_templates/control_scripts/{{ item }}.j2"
         dest: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/{{ item }}"
         mode: 0777
       with_items:
-        - index_dataspectsSystem_instance_source_folder.rb
+        - inject_core_ontology.rb
+        - inject_cookbook_ontology.rb
+        - inject_cookbook_entities.rb
       tags:
-        - index_dataspectsSystem_source_folder
+        - 400_provision_as_cookbookfalnet
 
-    - name: index_dataspectsSystem_source_folder
+    - name: Execute provision jobs
       shell: ruby {{ item }}
       args:
         chdir: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts"
       with_items:
-        - index_cookbook_entities.rb
+        - inject_core_ontology.rb
+        - inject_cookbook_ontology.rb
+        - inject_cookbook_entities.rb
       tags:
-        - index_dataspectsSystem_source_folder
+        - 400_provision_as_cookbookfalnet
