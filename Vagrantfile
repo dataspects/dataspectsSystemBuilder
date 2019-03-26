@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
     apt-get -y install docker.io git ansible vim ruby
     curl -L https://github.com/docker/compose/releases/download/#{docker_compose_version}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
-    git clone https://github.com/dataspects/dataspectsSystem.git
+    git clone --branch mediawiki_only --depth 1 --single-branch https://github.com/dataspects/dataspectsSystem.git
     cd dataspectsSystem
     CONTROL_FOLDER_PATH=/home/vagrant/cookbookfindandlearnnet ./build_dataspectsSystem.sh
     sed 's|$wgServer = "http://.*|$wgServer = "http://wikidataspectssystem:#{port}";|i' \

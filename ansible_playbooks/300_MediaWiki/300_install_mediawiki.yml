@@ -16,7 +16,7 @@
     ############################################################################
 
     - name: Clone required mediawiki version
-      shell: "git clone -b {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
+      shell: "git clone --branch {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
       args:
         chdir: "{{ mountpoint.items()[0][1] }}"
       become: true
