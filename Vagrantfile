@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
     chmod +x /usr/local/bin/docker-compose
     git clone --branch #{system_tag} --depth 1 --single-branch https://github.com/dataspects/dataspectsSystem.git
     cd dataspectsSystem
-    CONTROL_FOLDER_PATH=/home/vagrant/#{system_name} ./build_dataspectsSystem.sh
+    CONTROL_FOLDER_PATH=/home/vagrant/#{system_name} DOCKER_VOLUMES_MODE=automatic ./build_dataspectsSystem.sh
     sudo sed 's|$wgServer = "http://.*|$wgServer = "http://#{system_name}:#{port}";|i' \
       #{mediawiki_root}/LocalSettings.php \
       > #{mediawiki_root}/LocalSettings.changed.php

@@ -3,24 +3,23 @@ version: "3"
 services:
   db:
     image: mariadb:{{ mariadbVersion }}
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
     volumes:
-      - mariadb_data:/var/lib/mysql/
-      - mediawiki_root:/datadump/mediawiki_root/
+      - {{ manual_docker_volumes_location }}mariadb_data:/var/lib/mysql/
+      - {{ manual_docker_volumes_location }}mediawiki_root:/datadump/mediawiki_root/
   {{ mediawikiDockerServiceName }}:
     image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
     volumes:
-      - mediawiki_root:/var/www/html/
-      - mediawiki_conf:/etc/apache2/sites-available
+      - {{ manual_docker_volumes_location }}mediawiki_root:/var/www/html/
+#      - {{ manual_docker_volumes_location }}mediawiki_conf:/etc/apache2/sites-available
   proxy:
     image: dataspects/docker-nginx:{{ dockerNginxVersion }}
     ports:
       - {{ nginxPortOnHost }}:80
       - {{ nginxHttpsPortOnHost }}:443
     volumes:
-      - nginx_conf:/etc/nginx/conf.d
+      - {{ manual_docker_volumes_location }}nginx_conf:/etc/nginx/conf.d
   parsoid:
     image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
     environment:
@@ -31,7 +30,7 @@ services:
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
       - "discovery.type=single-node"
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - {{ manual_docker_volumes_location }}esdata:/usr/share/elasticsearch/data
     ports:
       - {{ elasticsearchPortOnHost }}:9200
   kibana:
@@ -49,7 +48,7 @@ services:
     ports:
       - {{ mongodbPortOnHost }}:27017
     volumes:
-      - mongo_data:/data/db
+      - {{ manual_docker_volumes_location }}mongo_data:/data/db
   redis:
     image: redis:5.0.3-alpine
     ports:
@@ -63,8 +62,8 @@ services:
   #   ports:
   #     - {{ dataspectsUIPort }}:3000
   #   volumes:
-  #     - ui_public:/app/public
-  #     - ui_views:/app/views
+  #     - {{ manual_docker_volumes_location }}ui_public:/app/public
+  #     - {{ manual_docker_volumes_location }}ui_views:/app/views
   #   environment:
   #     - "PORT=3000"
   #     - "REDIS_HOST=redis"
@@ -80,23 +79,23 @@ services:
   #     - "FROM_NAME=datasepects"
   #     - "SITE_URL=http://localhost:3000"
   #     - "OTP_DOMAIN=ui.dataspects.com"
-volumes:
-  mariadb_data:
-    driver: local
-  mediawiki_root:
-    driver: local
-  mediawiki_conf:
-    driver: local
-  nginx_conf:
-    driver: local
-  mongo_data:
-    driver: local
-  esdata:
-    driver: local
-  ui_public:
-    driver: local
-  ui_views:
-    driver: local
+{{ comment_out_volumes }}volumes:
+{{ comment_out_volumes }}  mariadb_data:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  mediawiki_root:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }} # mediawiki_conf:
+{{ comment_out_volumes }} #   driver: local
+{{ comment_out_volumes }}  nginx_conf:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  mongo_data:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  esdata:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  ui_public:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  ui_views:
+{{ comment_out_volumes }}    driver: local
   # custom_indexer_classes:
   #   driver: local
   # custom_search_classes:

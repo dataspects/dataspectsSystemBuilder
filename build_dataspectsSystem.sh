@@ -10,6 +10,7 @@ if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 if [[ ! $TIKA_USERNAME ]]; then TIKA_USERNAME=dummy; fi
 if [[ ! $TIKA_PASSWORD ]]; then TIKA_PASSWORD=dummy; fi
 if [[ ! $UI_FEED_SERVICE_API_KEY ]]; then UI_FEED_SERVICE_API_KEY=aslkdjasldkjlaskdj; fi
+if [[ ! $DOCKER_VOLUMES_MODE ]]; then DOCKER_VOLUMES_MODE=manual; fi
 
 ANSIBLETAGS=(
   100_create_dataspectsSystem_control_folder_on_host
@@ -40,6 +41,7 @@ ANSIBLETAGS=(
 
 time ansible-playbook \
   --extra-vars @build_dataspectsSystem_ANSIBLE_VARS.yml \
+  --extra-vars docker_volumes_mode=$DOCKER_VOLUMES_MODE \
   --extra-vars dataspectsSystem_control_folder_on_host=$CONTROL_FOLDER_PATH \
   --extra-vars mediawikiDomainNameInHostFile=$DOMAIN_NAME \
   --extra-vars aws_access_key_id=$AWS_ACCESS_KEY_ID \
