@@ -26,15 +26,15 @@
 
     - name: Place MediaWiki extensions install script
       template:
-        src: ../../ansible_templates/320_install_mediawiki_extensions.rb.j2
-        dest: "{{ mountpoint.items()[0][1] }}/w/320_install_mediawiki_extensions.rb"
+        src: ../../ansible_templates/install_mediawiki_extensions.rb.j2
+        dest: "{{ mountpoint.items()[0][1] }}/w/install_mediawiki_extensions.rb"
         mode: 0777
       become: true
       tags:
         - 320_install_mediawiki_extensions
 
     - name: Install MediaWiki extensions
-      shell: ruby 320_install_mediawiki_extensions.rb
+      shell: ruby install_mediawiki_extensions.rb
       args:
         chdir: "{{ mountpoint.items()[0][1] }}/w/"
       become: true

@@ -10,11 +10,9 @@
       register: volume_profile
       tags:
         - 300_install_mediawiki
-        - t1811161102t
     - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
       tags:
         - 300_install_mediawiki
-        - t1811161102t
     ############################################################################
 
     - name: Clone required mediawiki version
@@ -56,7 +54,7 @@
     # [[IsOperationType::FileSystemOperation]]
     - name: Place mediawiki install script
       template:
-        src: ../../ansible_templates/300_install_mediawiki.sh.j2
+        src: ../../ansible_templates/install_mediawiki.sh.j2
         dest: "{{ mountpoint.items()[0][1] }}/w/install.sh"
         mode: 0777
       become: true
