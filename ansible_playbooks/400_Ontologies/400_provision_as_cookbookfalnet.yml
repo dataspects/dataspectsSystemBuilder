@@ -4,6 +4,11 @@
   gather_facts: False
   tasks:
 
+    - pause:
+        prompt: "Please make sure RubyGem 'dataspects' is installed on your system. See https://github.com/dataspects/dataspects. When ready press ENTER..."
+      tags:
+        - 400_provision_as_cookbookfalnet
+
     - name: Copy provision jobs
       template:
         src: "../../ansible_templates/control_scripts/{{ item }}.j2"

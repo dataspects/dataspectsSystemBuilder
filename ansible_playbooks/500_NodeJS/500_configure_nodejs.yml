@@ -4,6 +4,11 @@
   gather_facts: False
   tasks:
 
+    - pause:
+        prompt: Press ENTER when nodemon is running...
+      tags:
+        - 500_configure_nodejs
+
     - name: COPY NodeJS search contexts
       copy:
         src: "../../ansible_templates/control_scripts/search_contexts/{{ item }}"

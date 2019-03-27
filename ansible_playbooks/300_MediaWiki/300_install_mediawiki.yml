@@ -8,9 +8,15 @@
     - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root path on host
       shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
       register: volume_profile
+      when: docker_volumes_mode == 'automatic'
       tags:
         - 300_install_mediawiki
-    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
+    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).items()[0][1] }}
+      when: docker_volumes_mode == 'automatic'
+      tags:
+        - 300_install_mediawiki
+    - set_fact: mountpoint={{ manual_docker_volumes_location }}mediawiki_root
+      when: docker_volumes_mode == 'manual'
       tags:
         - 300_install_mediawiki
     ############################################################################
@@ -18,7 +24,7 @@
     - name: Clone required mediawiki version
       shell: "git clone --branch {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
       args:
-        chdir: "{{ mountpoint.items()[0][1] }}"
+        chdir: "{{ mountpoint }}"
       become: true
       tags:
         - 300_install_mediawiki
@@ -26,7 +32,7 @@
     - name: Install core extensions and skins
       shell: "git submodule update --init --recursive"
       args:
-        chdir: "{{ mountpoint.items()[0][1] }}/w/"
+        chdir: "{{ mountpoint }}/w/"
       become: true
       tags:
         - 300_install_mediawiki
@@ -34,7 +40,7 @@
     - name: Place composer install script
       template:
         src: ../../ansible_templates/install_composer.sh
-        dest: "{{ mountpoint.items()[0][1] }}/w/install_composer.sh"
+        dest: "{{ mountpoint }}/w/install_composer.sh"
         mode: 0777
       become: true
       tags:
@@ -55,7 +61,7 @@
     - name: Place mediawiki install script
       template:
         src: ../../ansible_templates/install_mediawiki.sh.j2
-        dest: "{{ mountpoint.items()[0][1] }}/w/install.sh"
+        dest: "{{ mountpoint }}/w/install.sh"
         mode: 0777
       become: true
       tags:
@@ -69,7 +75,7 @@
 
     - name: Add settings to LocalSettings.php
       lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/w/LocalSettings.php"
+        path: "{{ mountpoint }}/w/LocalSettings.php"
         line: "{{ item }}"
       with_items:
         - $wgArticlePath = '/wiki/$1';
@@ -81,7 +87,7 @@
     #FIXME: This should replace, but it actually just adds!
     - name: Replace settings in LocalSettings.php
       lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/w/LocalSettings.php"
+        path: "{{ mountpoint }}/w/LocalSettings.php"
         regexp: '{{ item.orig }}'
         line: '{{ item.replace }}'
       with_items:
@@ -104,7 +110,7 @@
     #FIXME: This should replace, but it actually just adds!
     - name: Replace settings in LocalSettings.php
       lineinfile:
-        path: "{{ mountpoint.items()[0][1] }}/w/LocalSettings.php"
+        path: "{{ mountpoint }}/w/LocalSettings.php"
         regexp: '{{ item.orig }}'
         line: '{{ item.replace }}'
       with_items:
@@ -117,7 +123,7 @@
     # [[IsOperationType::FileSystemOperation]]
     - name: Set permissions on mediawiki root
       file:
-        path: "{{ mountpoint.items()[0][1] }}/w/"
+        path: "{{ mountpoint }}/w/"
         owner: www-data
         recurse: yes
       become: true
@@ -129,16 +135,22 @@
     - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf path on host
       shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf
       register: volume_profile
+      when: docker_volumes_mode == 'automatic'
       tags:
         - 310_configure_proxy
-    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')) }}
+    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).items()[0][1] }}
+      when: docker_volumes_mode == 'automatic'
+      tags:
+        - 310_configure_proxy
+    - set_fact: mountpoint={{ manual_docker_volumes_location }}nginx_conf
+      when: docker_volumes_mode == 'manual'
       tags:
         - 310_configure_proxy
 
     - name: Place mediawiki service nginx conf
       template:
         src: ../../ansible_templates/mediawiki-nginx.conf.j2
-        dest: "{{ mountpoint.items()[0][1] }}/mediawiki-nginx.conf"
+        dest: "{{ mountpoint }}/mediawiki-nginx.conf"
         mode: 0777
       become: true
       tags:
