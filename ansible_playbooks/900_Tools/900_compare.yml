@@ -11,6 +11,8 @@
         mode: 0777
       with_items:
         - compare.rb
+      tags:
+        - 900_compare
 
     - name: Compare ontologies
       shell: ruby {{ item }}
@@ -19,4 +21,4 @@
       with_items:
         - compare.rb
       tags:
-        - compare
+        - 900_compare

@@ -27,7 +27,7 @@
         src: ../../ansible_templates/{{ item }}.j2
         dest: "{{ dataspectsSystem_control_folder_on_host }}/{{ item }}"
       with_items:
-        - dataspects-file-feeder-config.json
+        - control_scripts/dataspects-file-feeder-config.json
         - control_scripts/feed_dataspectsSystem_instance_source_folder.sh
       tags:
         - 610_feed_dataspectsSystem_source_folder
