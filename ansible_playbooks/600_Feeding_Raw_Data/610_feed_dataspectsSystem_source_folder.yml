@@ -4,6 +4,11 @@
   gather_facts: False
   tasks:
 
+    - pause:
+        prompt: "Please ensure that https://github.com/dataspects/dataspects-file-feeder/releases is present in {{ dataspectsSystem_control_folder_on_host }}. When ready press ENTER..."
+      tags:
+        - 610_feed_dataspectsSystem_source_folder
+
     - name: CHECK if "{{ dataspectsSystem_control_folder_on_host }}/dataspects-file-feeder" exists
       stat:
         path: "{{ dataspectsSystem_control_folder_on_host }}/dataspects-file-feeder"

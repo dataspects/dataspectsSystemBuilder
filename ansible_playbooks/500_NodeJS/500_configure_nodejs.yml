@@ -5,7 +5,7 @@
   tasks:
 
     - pause:
-        prompt: Press ENTER when nodemon is running
+        prompt: Press ENTER when nodemon is running...
       tags:
         - 500_configure_nodejs
 
