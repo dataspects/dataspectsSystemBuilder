@@ -3,7 +3,8 @@
   "slug": "/features",
   "enabled": true,
   "default": false,
-  "settings": {
+  "author": "5c9ce52730a3cf64f4866ed6",
+  "theSettings": {
     "esQuery": {
       "index": "dataspectspublic",
       "type": "doc",

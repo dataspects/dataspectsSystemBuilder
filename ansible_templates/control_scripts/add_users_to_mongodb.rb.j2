@@ -3,9 +3,9 @@ require 'dataspects'
 @dataspects_api_url = "http://localhost:{{ dataspectsFeederServicePort }}/api"
 @dataspects_api_key = "{{ ui_feed_service_api_key }}"
 
-Dir.glob("{{ dataspectsSystem_control_folder_on_host }}/control_scripts/search_contexts/*.json") do |filePath|
+Dir.glob("{{ dataspectsSystem_control_folder_on_host }}/control_scripts/users/*.json") do |filePath|
 	response = RestClient.post(
-	  @dataspects_api_url+"/searchcontexts",
+	  @dataspects_api_url+"/setup/users/admin",
 	  body = File.read(filePath),
 	  headers = {
 	    "dataspects-api-key": @dataspects_api_key,
@@ -13,4 +13,5 @@ Dir.glob("{{ dataspectsSystem_control_folder_on_host }}/control_scripts/search_c
 	    accept: :json
 	  }
 	)
+	puts response
 end

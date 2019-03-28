@@ -63,7 +63,7 @@ services:
   #     - {{ dataspectsUIPort }}:3000
   #   volumes:
   #     - {{ manual_docker_volumes_location }}ui_public:/app/public
-  #     - {{ manual_docker_volumes_location }}ui_views:/app/views
+  #     - {{ manual_docker_volumes_location }}ui_search_views:/app/views/search
   #   environment:
   #     - "PORT=3000"
   #     - "REDIS_HOST=redis"
@@ -94,7 +94,7 @@ services:
 {{ comment_out_volumes }}    driver: local
 {{ comment_out_volumes }}  ui_public:
 {{ comment_out_volumes }}    driver: local
-{{ comment_out_volumes }}  ui_views:
+{{ comment_out_volumes }}  ui_search_views:
 {{ comment_out_volumes }}    driver: local
   # custom_indexer_classes:
   #   driver: local
