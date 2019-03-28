@@ -6,11 +6,11 @@
 
   - name: Place backup_dataspectsSystem.sh
     template:
-      src: ../../ansible_templates/backup_dataspectsSystem.sh.j2
+      src: ../../ansible_templates/control_scripts/backup_dataspectsSystem.sh.j2
       dest: "{{ dataspectsSystem_control_folder_on_host }}/backup_dataspectsSystem.sh"
       mode: 0777
     tags:
-      - install_backup_functionality
+      - 800_install_backup_functionality
 
   # Cloning
 
@@ -19,19 +19,19 @@
       path: "{{ dataspectsSystem_control_folder_on_host }}/cloning/"
       state: directory
     tags:
-      - install_clone_functionality
+      - 800_install_clone_functionality
 
   - name: Copy docker-compose.yml file to {{ dataspectsSystem_control_folder_on_host }}
     template:
       src: ../../ansible_templates/docker-compose-clone.yml.j2
       dest: "{{ dataspectsSystem_control_folder_on_host }}/cloning/docker-compose.yml"
     tags:
-      - install_clone_functionality
+      - 800_install_clone_functionality
 
   - name: Place clone_dataspectsSystem_from_backup.rb
     template:
-      src: ../../ansible_templates/clone_dataspectsSystem_from_backup.rb.j2
+      src: ../../ansible_templates/control_scripts/clone_dataspectsSystem_from_backup.rb.j2
       dest: "{{ dataspectsSystem_control_folder_on_host }}/cloning/clone_dataspectsSystem_from_backup.rb"
       mode: 0777
     tags:
-      - install_clone_functionality
+      - 800_install_clone_functionality
