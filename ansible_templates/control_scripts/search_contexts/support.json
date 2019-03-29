@@ -126,14 +126,13 @@
             "COMMENT": "",
             "title": "Solutions",
             "query": {
-              "queryName": "must_match_predicate_and_match_object",
+              "queryName": "must_match_subject_and_match_predicate",
               "params": {
                 "subject": ".search-result@@@hasentityname",
                 "predicate": "HasSolution"
               },
-              "return": "subject"
+              "return": "object"
             },
-            "view": "search/result_classes/support_problem_solution",
             "show_button": {
               "conditions": {
                 "always": false
@@ -145,17 +144,16 @@
             "COMMENT": "",
             "title": "May be caused by",
             "query": {
-              "queryName": "must_match_subject_and_match_predicate",
+              "queryName": "must_match_predicate_and_match_object",
               "params": {
                 "predicate": "CanBeCausedBy",
                 "object": ".search-result@@@hasentityname"
               },
-              "return": "object"
+              "return": "subject"
             },
-            "view": "search/result_classes/support_problem_problem",
             "show_button": {
               "conditions": {
-                "always": true
+                "always": false
               }
             },
             "execute": true
