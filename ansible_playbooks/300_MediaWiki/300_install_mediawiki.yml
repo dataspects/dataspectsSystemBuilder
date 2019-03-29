@@ -25,7 +25,7 @@
       shell: "git clone --branch {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
       args:
         chdir: "{{ mountpoint }}"
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
@@ -33,7 +33,7 @@
       shell: "git submodule update --init --recursive"
       args:
         chdir: "{{ mountpoint }}/w/"
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
@@ -42,7 +42,7 @@
         src: ../../ansible_templates/install_composer.sh
         dest: "{{ mountpoint }}/w/install_composer.sh"
         mode: 0777
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
@@ -63,7 +63,7 @@
         src: ../../ansible_templates/install_mediawiki.sh.j2
         dest: "{{ mountpoint }}/w/install.sh"
         mode: 0777
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
@@ -80,7 +80,7 @@
       with_items:
         - $wgArticlePath = '/wiki/$1';
         - $wgFileExtensions[] = 'pdf';
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
@@ -93,7 +93,7 @@
       with_items:
         - { orig: "^$wgServer = ", replace: '$wgServer = "http://local.mediawiki";' }
         - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
         - t1811161102t
@@ -103,7 +103,7 @@
       shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
@@ -116,7 +116,7 @@
       with_items:
         - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}:{{ nginxPortOnHost }}";' }
         - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
@@ -126,39 +126,8 @@
         path: "{{ mountpoint }}/w/"
         owner: www-data
         recurse: yes
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      when:
+        platform == 'linux'
       tags:
         - 300_install_mediawiki
-
-    ############################################################################
-    # 310_configure_proxy ##########################################################
-    - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf path on host
-      shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf
-      register: volume_profile
-      when: docker_volumes_mode == 'automatic'
-      tags:
-        - 310_configure_proxy
-    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).items()[0][1] }}
-      when: docker_volumes_mode == 'automatic'
-      tags:
-        - 310_configure_proxy
-    - set_fact: mountpoint={{ manual_docker_volumes_location }}nginx_conf
-      when: docker_volumes_mode == 'manual'
-      tags:
-        - 310_configure_proxy
-
-    - name: Place mediawiki service nginx conf
-      template:
-        src: ../../ansible_templates/mediawiki-nginx.conf.j2
-        dest: "{{ mountpoint }}/mediawiki-nginx.conf"
-        mode: 0777
-      become: true
-      tags:
-        - 310_configure_proxy
-
-    - name: Restart Nginx Proxy
-      shell: docker-compose \
-               --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
-                 restart proxy
-      tags:
-        - 310_configure_proxy

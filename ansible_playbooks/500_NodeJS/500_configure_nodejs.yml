@@ -21,9 +21,14 @@
       tags:
         - 500_configure_nodejs
 
-    - name: COPY NodeJS search contexts
-      copy:
-        src: "../../ansible_templates/control_scripts/users/{{ item }}"
+    - debug:
+        msg: "{{ dataspectsui_email }}"
+      tags:
+        - 500_configure_nodejs
+
+    - name: COPY NodeJS users
+      template:
+        src: "../../ansible_templates/control_scripts/users/{{ item }}.j2"
         dest: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/users/{{ item }}"
         mode: 0777
       with_items:

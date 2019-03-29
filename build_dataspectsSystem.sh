@@ -2,7 +2,7 @@
 
 source ../dataspectsSystemCONFIG
 
-if [[ ! $CONTROL_FOLDER_PATH ]]; then CONTROL_FOLDER_PATH=/home/lex/cookbookfindandlearnnet; fi
+if [[ ! $CONTROL_FOLDER_PATH ]]; then CONTROL_FOLDER_PATH=`pwd`/../cookbookfindandlearnnet; fi
 DOMAIN_NAME="$(basename -- $CONTROL_FOLDER_PATH)"
 if [[ ! $AWS_ACCESS_KEY_ID ]]; then AWS_ACCESS_KEY_ID=dummy; fi
 if [[ ! $AWS_SECRET_ACCESS_KEY ]]; then AWS_SECRET_ACCESS_KEY=dummy; fi
@@ -11,6 +11,8 @@ if [[ ! $TIKA_USERNAME ]]; then TIKA_USERNAME=dummy; fi
 if [[ ! $TIKA_PASSWORD ]]; then TIKA_PASSWORD=dummy; fi
 if [[ ! $UI_FEED_SERVICE_API_KEY ]]; then UI_FEED_SERVICE_API_KEY=aslkdjasldkjlaskdj; fi
 if [[ ! $DOCKER_VOLUMES_MODE ]]; then DOCKER_VOLUMES_MODE=automatic; fi
+if [[ ! $PLATFORM ]]; then PLATFORM="linux"; fi
+if [ $PLATFORM == "linux" ]; then PRIVILEGE_ESCALATION="--ask-become-pass --become-method sudo"; else PRIVILEGE_ESCALATION=""; fi
 
 ANSIBLETAGS=(
   100_create_dataspectsSystem_control_folder_on_host
@@ -18,22 +20,22 @@ ANSIBLETAGS=(
   200_compile_and_copy_docker_compose_file
   210_run_docker_compose
   ### Comment all following tags for manual installation on Docker stack in accordance with C1470408196
-  # 300_install_mediawiki
-  # 310_configure_proxy
-  # 320_install_mediawiki_extensions
-  # 330_execute_mediawiki_maintenance_runJobs
-  # 400_provision_as_cookbookfalnet
-  # ### For the time being this requires manually running dataspects-ui
+  300_install_mediawiki
+  310_configure_proxy
+  320_install_mediawiki_extensions
+  330_execute_mediawiki_maintenance_runJobs
+  400_provision_as_cookbookfalnet
+  ### For the time being this requires manually running dataspects-ui
   500_configure_nodejs
-  # 600_feed_cookbook_entities
-  # 610_feed_dataspectsSystem_source_folder
-  # 700_prepare_indexing
-  # 710_index_cookbook_entities
-  # 720_index_dataspectsSystem_instance_source_folder
-  # 800_install_backup_functionality
-  # 800_install_clone_functionality
-  # 810_backup_and_clone
-  # 900_compare
+  600_feed_cookbook_entities
+  610_feed_dataspectsSystem_source_folder
+  700_prepare_indexing
+  710_index_cookbook_entities
+  720_index_dataspectsSystem_instance_source_folder
+  800_install_backup_functionality
+  800_install_clone_functionality
+  810_backup_and_clone
+  #900_compare
 
 )
 
@@ -50,14 +52,15 @@ time ansible-playbook \
   --extra-vars ui_feed_service_api_key=$UI_FEED_SERVICE_API_KEY \
   --extra-vars registry_dataspects_com_user=$REGISTRY_DATASPECTS_COM_USER \
   --extra-vars registry_dataspects_com_password=$REGISTRY_DATASPECTS_COM_PASSWORD \
+  --extra-vars platform=$PLATFORM \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
-  --ask-become-pass \
-  --become-method sudo \
+  $PRIVILEGE_ESCALATION \
       ansible_playbooks/100_Prepare/100_create_dataspectsSystem_control_folder_on_host.yml \
       ansible_playbooks/100_Prepare/110_pull_private_Docker_images_from_registry_dataspects_com.yml \
       ansible_playbooks/200_Docker-Compose/200_compile_and_copy_docker_compose_file.yml \
       ansible_playbooks/200_Docker-Compose/210_run_docker_compose.yml \
       ansible_playbooks/300_MediaWiki/300_install_mediawiki.yml \
+      ansible_playbooks/300_MediaWiki/310_configure_proxy.yml \
       ansible_playbooks/300_MediaWiki/320_install_mediawiki_extensions.yml \
       ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml \
       ansible_playbooks/400_Ontologies/400_provision_as_cookbookfalnet.yml \

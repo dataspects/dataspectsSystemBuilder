@@ -25,16 +25,16 @@ services:
     environment:
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
   elasticsearch:
-    image: dataspects/docker-elasticsearch:{{ dockerElasticsearchVersion }}
+    image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
     environment:
-      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx2048m"
       - "discovery.type=single-node"
     volumes:
       - {{ manual_docker_volumes_location }}esdata:/usr/share/elasticsearch/data
     ports:
       - {{ elasticsearchPortOnHost }}:9200
   kibana:
-    image: kibana:{{ kibanaVersion }}
+    image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
     ports:
@@ -44,13 +44,13 @@ services:
     ports:
       - {{ tikaPortOnHost }}:9998
   mongodb:
-    image: mongo:4.0.6
+    image: mongo:{{ mongoVersion }}
     ports:
       - {{ mongodbPortOnHost }}:27017
     volumes:
       - {{ manual_docker_volumes_location }}mongo_data:/data/db
   redis:
-    image: redis:5.0.3-alpine
+    image: redis:{{ redisVersion }}
     ports:
       - {{ redisPortOnHost }}:6379
   # ui:

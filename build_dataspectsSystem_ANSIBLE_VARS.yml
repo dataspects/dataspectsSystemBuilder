@@ -19,10 +19,11 @@ redisPortOnHost: 6379
 mariadbVersion: 10.3.10
 dockerApachePhpDataspectsMediawikiVersion: 1.2
 dockerNginxVersion: 1.0.1
-dockerElasticsearchVersion: 6.6.2
+dockerElasticsearchVersion: 6.7.0
 dockerParsoidVersion: 0.10.0
-kibanaVersion: 6.6.0
-redisVersion: 4.0.11-alpine
+kibanaVersion: 6.7.0
+redisVersion: 5.0.4-alpine
+mongoVersion: 4.0.7
 dockerTikaserverVersion: "1.20"
 dockerDataspectsUIVersion: 1
 
@@ -33,3 +34,8 @@ mysql_root_password: mysqlrootpass
 mediawiki_version: REL1_31
 mediawiki_name: dataspectsSystem Wiki
 mediawiki_admin_user_password: adminpass
+
+# dataspectsUI #################################################################
+
+dataspectsui_email: admin@example.com
+dataspectsui_password: adminpass

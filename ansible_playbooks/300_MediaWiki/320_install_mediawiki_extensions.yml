@@ -10,15 +10,15 @@
       register: volume_profile
       when: docker_volumes_mode == 'automatic'
       tags:
-        - 300_install_mediawiki
+        - 320_install_mediawiki_extensions
     - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).items()[0][1] }}
       when: docker_volumes_mode == 'automatic'
       tags:
-        - 300_install_mediawiki
+        - 320_install_mediawiki_extensions
     - set_fact: mountpoint={{ manual_docker_volumes_location }}mediawiki_root
       when: docker_volumes_mode == 'manual'
       tags:
-        - 300_install_mediawiki
+        - 320_install_mediawiki_extensions
     ############################################################################
 
     - name: Place MediaWiki extensions list
@@ -26,7 +26,7 @@
         src: ../../ansible_templates/mediawiki_extensions.yml.j2
         dest: "{{ mountpoint }}/w/mediawiki_extensions.yml"
         mode: 0777
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 320_install_mediawiki_extensions
 
@@ -35,7 +35,7 @@
         src: ../../ansible_templates/install_mediawiki_extensions.rb.j2
         dest: "{{ mountpoint }}/w/install_mediawiki_extensions.rb"
         mode: 0777
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 320_install_mediawiki_extensions
 
@@ -43,6 +43,6 @@
       shell: ruby install_mediawiki_extensions.rb
       args:
         chdir: "{{ mountpoint }}/w/"
-      become: true
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 320_install_mediawiki_extensions
