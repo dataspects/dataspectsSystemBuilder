@@ -25,7 +25,7 @@ kibanaVersion: 6.7.0
 redisVersion: 5.0.4-alpine
 mongoVersion: 4.0.7
 dockerTikaserverVersion: "1.20"
-dockerDataspectsUIVersion: 1
+dockerDataspectsUIVersion: "0.0.9"
 
 # MariaDB ######################################################################
 mysql_root_password: mysqlrootpass

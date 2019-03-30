@@ -53,32 +53,27 @@ services:
     image: redis:{{ redisVersion }}
     ports:
       - {{ redisPortOnHost }}:6379
-  # ui:
-  #   image: dataspects/ui:latest
-  #   restart: always
-  #   depends_on:
-  #     - mongodb
-  #     - redis
-  #   ports:
-  #     - {{ dataspectsUIPort }}:3000
-  #   volumes:
-  #     - {{ manual_docker_volumes_location }}ui_public:/app/public
-  #     - {{ manual_docker_volumes_location }}ui_search_views:/app/views/search
-  #   environment:
-  #     - "PORT=3000"
-  #     - "REDIS_HOST=redis"
-  #     - "REDIS_PORT=6379"
-  #     - "SESSION_SECRET={{ ui_session_secret }}"
-  #     - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
-  #     - "ES_URL=http://elasticsearch:9200"
-  #     - "AWS_ACCESS_KEY_ID={{ aws_access_key_id }}"
-  #     - "AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}"
-  #     - "AWS_SES_API_VERSION=2010-12-01"
-  #     - "AWS_SES_REGION=eu-west-1"
-  #     - "FROM_EMAIL=support@dataspects.com"
-  #     - "FROM_NAME=datasepects"
-  #     - "SITE_URL=http://localhost:3000"
-  #     - "OTP_DOMAIN=ui.dataspects.com"
+  ui:
+    image: registry.dataspects.com/ui:{{ dockerDataspectsUIVersion }}
+    depends_on:
+      - mongodb
+      - redis
+    ports:
+      - {{ dataspectsUIPort }}:3000
+    volumes:
+      - {{ manual_docker_volumes_location }}ui_public:/app/public
+      - {{ manual_docker_volumes_location }}ui_search_views:/app/views/search
+    environment:
+      - "PORT=3000"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "SESSION_SECRET={{ ui_session_secret }}"
+      - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
+      - "ES_URL=http://elasticsearch:9200"
+      - "FROM_EMAIL=support@dataspects.com"
+      - "FROM_NAME=dataspects"
+      - "SITE_URL=http://localhost:3000"
+      - "OTP_DOMAIN=ui.dataspects.com"
 {{ comment_out_volumes }}volumes:
 {{ comment_out_volumes }}  mariadb_data:
 {{ comment_out_volumes }}    driver: local
