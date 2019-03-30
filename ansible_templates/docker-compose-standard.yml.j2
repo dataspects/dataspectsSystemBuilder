@@ -74,6 +74,7 @@ services:
       - "FROM_NAME=dataspects"
       - "SITE_URL=http://localhost:3000"
       - "OTP_DOMAIN=ui.dataspects.com"
+      - "API_KEY={{ ui_feed_service_api_key }}"
 {{ comment_out_volumes }}volumes:
 {{ comment_out_volumes }}  mariadb_data:
 {{ comment_out_volumes }}    driver: local

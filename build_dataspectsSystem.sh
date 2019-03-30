@@ -4,8 +4,6 @@ source ../dataspectsSystemCONFIG
 
 if [[ ! $CONTROL_FOLDER_PATH ]]; then CONTROL_FOLDER_PATH=`pwd`/../cookbookfindandlearnnet; fi
 DOMAIN_NAME="$(basename -- $CONTROL_FOLDER_PATH)"
-if [[ ! $AWS_ACCESS_KEY_ID ]]; then AWS_ACCESS_KEY_ID=dummy; fi
-if [[ ! $AWS_SECRET_ACCESS_KEY ]]; then AWS_SECRET_ACCESS_KEY=dummy; fi
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 if [[ ! $TIKA_USERNAME ]]; then TIKA_USERNAME=dummy; fi
 if [[ ! $TIKA_PASSWORD ]]; then TIKA_PASSWORD=dummy; fi
