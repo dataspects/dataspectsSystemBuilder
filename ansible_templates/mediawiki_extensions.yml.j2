@@ -33,7 +33,7 @@ mediawiki_extensions:
   - repo: https://github.com/wikimedia/mediawiki-extensions-Arrays.git
     name: Arrays
     localsettings_configs:
-      - require_once "$IP/extensions/Arrays/Arrays.php";
+      - wfLoadExtension( 'Arrays' );
   - repo: https://github.com/wikimedia/mediawiki-extensions-MyVariables.git
     name: MyVariables
     localsettings_configs:

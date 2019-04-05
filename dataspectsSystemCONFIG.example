@@ -1,5 +1,0 @@
-REGISTRY_DATASPECTS_COM_USER=
-REGISTRY_DATASPECTS_COM_PASSWORD=
-CONTROL_FOLDER_PATH= # Must be absolute!
-PLATFORM=linux # linux|mac|windows
-DOCKER_VOLUMES_MODE=automatic # automatic|manual
