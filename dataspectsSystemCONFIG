@@ -1,3 +1,3 @@
-CONTROL_FOLDER_PATH=/home/lex/emwcon2019wiki  # Must be absolute!
+CONTROL_FOLDER_PATH=/home/vagrant/emwcon2019wiki  # Must be absolute!
 PLATFORM=linux                                # linux|mac|windows
 DOCKER_VOLUMES_MODE=manual                    # automatic|manual
