@@ -100,10 +100,10 @@ module Dataspects
         }
 
         # EVERYTHING to Elasticsearch
-        @esc.index(
-          body: esdoc,
-          index: "dataspectspublic"
-        )
+        # @esc.index(
+        #   body: esdoc,
+        #   index: "dataspectspublic"
+        # )
         $logger.info("#{absolute_file_path} indexed...")
 
         # ANNOTATIONS as Annotations to MongoDB
@@ -126,10 +126,10 @@ module Dataspects
             object_type_belongs_to_search_context: nil,
             context: "test"
           }
-          post(
-            url: @dataspects_api_url+"/annotations",
-            body: mongodoc.to_json
-          )
+          # post(
+          #   url: @dataspects_api_url+"/annotations",
+          #   body: mongodoc.to_json
+          # )
           $logger.info("Annotation fed to MongoDB")
         end
       end
