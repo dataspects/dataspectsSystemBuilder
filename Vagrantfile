@@ -5,6 +5,7 @@
 
 system_name = "dataspectssystemwiki"
 system_tag = "mediawiki_only"
+system_tag = "emwcon2019"
 
 port = 8080
 docker_compose_version = "1.22.0"

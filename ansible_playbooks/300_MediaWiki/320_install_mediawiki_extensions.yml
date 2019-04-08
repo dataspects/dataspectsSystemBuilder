@@ -46,3 +46,15 @@
       become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 320_install_mediawiki_extensions
+
+    # [[IsOperationType::FileSystemOperation]]
+    - name: Set permissions on mediawiki root
+      file:
+        path: "{{ mountpoint }}/w/"
+        owner: www-data
+        recurse: yes
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      when:
+        platform == 'linux'
+      tags:
+        - 320_install_mediawiki_extensions
