@@ -2,6 +2,13 @@ require 'dataspects'
 
 module Dataspects
 
+  class Entity
+    def hasEntityType
+      #FIXME! This must be "automated" with regard to entitization
+      @resource.sRandomValueForSMWPROPERTYNAME('HasEntityType')
+    end
+  end
+
   class CookbookFALnetFeeder < Feeder
 
     def initialize(dataspects_api_url:, dataspects_api_key:)

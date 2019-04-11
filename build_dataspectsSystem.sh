@@ -27,8 +27,8 @@ ANSIBLETAGS=(
   500_configure_nodejs
   600_feed_cookbook_entities
   # 610_feed_dataspectsSystem_source_folder
-  # 700_prepare_indexing
-  # 710_index_cookbook_entities
+  700_prepare_indexing
+  710_index_cookbook_entities
   # 720_index_dataspectsSystem_instance_source_folder
   # 800_install_backup_functionality
   # 800_install_clone_functionality
