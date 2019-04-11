@@ -185,6 +185,6 @@ $development_tika_url = "http://localhost:{{ tikaPortOnHost }}"
 mwsi = Dataspects::CookbookFALnetIndexer.new(
   dataspects_api_url: "http://localhost:{{ dataspectsFeederServicePort }}/api",
   dataspects_api_key: "{{ ui_feed_service_api_key }}",
-  tika_url: $development_tika_url,
+  tika_url: $development_tika_url, #FIXME!
   es_url: "http://localhost:{{ elasticsearchPortOnHost }}"
 ).execute

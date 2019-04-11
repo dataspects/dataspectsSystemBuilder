@@ -10,18 +10,12 @@ module Dataspects
 
     def execute()
 
-      ##########################################################
-      ##########################################################
-      response = RestClient.get(
-        @dataspects_api_url+"/mediawikis?namespace=http://{{ mediawikiDomainNameInHostFile }}/wiki",
-        headers = {
-          "dataspects-api-key": @dataspects_api_key,
-          content_type: :json,
-          accept: :json
-        }
+      dds = DocumentStore.new(
+        dataspects_api_url: @dataspects_api_url,
+        dataspects_api_key: @dataspects_api_key
       )
-      mediawiki_id = JSON.parse(response.body)[0]['_id']
-      ##########################################################
+      rb = dds.get_response_body(endPoint: "/mediawikis?namespace=http://cookbookfindandlearnnet/wiki")
+      mediawiki_id = rb[0]['_id']
       ##########################################################
 
       mw = Dataspects::MediaWiki.new(
@@ -72,9 +66,7 @@ module Dataspects
   end
 end
 
-# Run by "ruby 600_feed_cookbook_entities.rb"
-$development_tika_url = "http://localhost:{{ tikaPortOnHost }}"
 mwpsf = Dataspects::CookbookFALnetFeeder.new(
-  dataspects_api_url: "http://localhost:{{ dataspectsFeederServicePort }}/api",
-  dataspects_api_key: "{{ ui_feed_service_api_key }}"
+  dataspects_api_url: "http://localhost:3000/api",
+  dataspects_api_key: "aslkdjasldkjlaskdj"
 ).execute
