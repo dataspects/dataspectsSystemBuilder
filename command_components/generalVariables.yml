@@ -1,6 +1,5 @@
 ---
 
-dockerComposeFileType: docker-compose-standard
 mediawikiDockerServiceName: mediawikiservice
 #FIXME: How can this be e.g. local.mediawiki, as this wouldn't work at AAA
 

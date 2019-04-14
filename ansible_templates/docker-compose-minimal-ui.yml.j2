@@ -1,0 +1,79 @@
+# [[ImplementsFeature::C1898799575]]
+version: "3"
+services:
+  proxy:
+    image: dataspects/docker-nginx:{{ dockerNginxVersion }}
+    ports:
+      - {{ nginxPortOnHost }}:80
+      - {{ nginxHttpsPortOnHost }}:443
+    volumes:
+      - {{ manual_docker_volumes_location }}nginx_conf:/etc/nginx/conf.d
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
+    environment:
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx2048m"
+      - "discovery.type=single-node"
+    volumes:
+      - {{ manual_docker_volumes_location }}esdata:/usr/share/elasticsearch/data
+    ports:
+      - {{ elasticsearchPortOnHost }}:9200
+  kibana:
+    image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
+    environment:
+      - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+    depends_on:
+      - elasticsearch
+    ports:
+      - {{ kibanaPortOnHost }}:5601
+  tika:
+    image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
+    ports:
+      - {{ tikaPortOnHost }}:9998
+  mongodb:
+    image: mongo:{{ mongoVersion }}
+    ports:
+      - {{ mongodbPortOnHost }}:27017
+    volumes:
+      - {{ manual_docker_volumes_location }}mongo_data:/data/db
+  redis:
+    image: redis:{{ redisVersion }}
+    ports:
+      - {{ redisPortOnHost }}:6379
+  # ui:
+  #   image: registry.dataspects.com/ui:{{ dockerDataspectsUIVersion }}
+  #   depends_on:
+  #     - mongodb
+  #     - redis
+  #     - elasticsearch
+  #   ports:
+  #     - {{ dataspectsUIPort }}:3000
+  #   volumes:
+  #     - {{ manual_docker_volumes_location }}ui_public:/app/public
+  #     - {{ manual_docker_volumes_location }}ui_search_views:/app/views/search
+  #   environment:
+  #     - "PORT=3000"
+  #     - "REDIS_HOST=redis"
+  #     - "REDIS_PORT=6379"
+  #     - "SESSION_SECRET={{ ui_session_secret }}"
+  #     - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
+  #     - "ES_URL=http://elasticsearch:9200"
+  #     - "FROM_EMAIL=support@dataspects.com"
+  #     - "FROM_NAME=dataspects"
+  #     - "SITE_URL=http://localhost:3000"
+  #     - "OTP_DOMAIN=ui.dataspects.com"
+  #     - "API_KEY={{ ui_feed_service_api_key }}"
+{{ comment_out_volumes }}volumes:
+{{ comment_out_volumes }}  nginx_conf:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  mongo_data:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  esdata:
+{{ comment_out_volumes }}    driver: local
+# {{ comment_out_volumes }}  ui_public:
+# {{ comment_out_volumes }}    driver: local
+# {{ comment_out_volumes }}  ui_search_views:
+# {{ comment_out_volumes }}    driver: local
+  # custom_indexer_classes:
+  #   driver: local
+  # custom_search_classes:
+  #   driver: local
