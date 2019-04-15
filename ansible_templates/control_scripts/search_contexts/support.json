@@ -15,7 +15,7 @@
             "should": [
               {
                 "match": {
-                  "HasEntityTypeAndEntityTitle": {
+                  "HasEntityTitle": {
                     "query": "{{query.params.queryString}}",
                     "boost": 10
                   }
