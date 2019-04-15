@@ -2,7 +2,7 @@
 CONTROL_FOLDER_PATH=/home/lex/cookbookfindandlearnnet # Must be absolute!
 PLATFORM=linux # linux|mac|windows
 DOCKER_VOLUMES_MODE=automatic # automatic|manual
-DOCKER_COMPOSE_FILE_TYPE=docker-compose-standard
+DOCKER_COMPOSE_FILE=docker-compose-standard
 source command_components/environmentVariables.sh
 ANSIBLETAGS=(
   100_create_dataspectsSystem_control_folder_on_host

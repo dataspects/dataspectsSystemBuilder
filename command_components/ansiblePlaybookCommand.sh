@@ -2,7 +2,7 @@
 time ansible-playbook \
   --extra-vars @command_components/generalVariables.yml \
   --extra-vars docker_volumes_mode=$DOCKER_VOLUMES_MODE \
-  --extra-vars dockerComposeFileType=$DOCKER_COMPOSE_FILE_TYPE \
+  --extra-vars dockerComposeFileType=$DOCKER_COMPOSE_FILE \
   --extra-vars dataspectsSystem_control_folder_on_host=$CONTROL_FOLDER_PATH \
   --extra-vars mediawikiDomainNameInHostFile=$DOMAIN_NAME \
   --extra-vars aws_access_key_id=$AWS_ACCESS_KEY_ID \

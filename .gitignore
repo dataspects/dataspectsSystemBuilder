@@ -1,3 +1,4 @@
 .DS_Store
 .vagrant/
 ubuntu-*.log
+secrets.sh

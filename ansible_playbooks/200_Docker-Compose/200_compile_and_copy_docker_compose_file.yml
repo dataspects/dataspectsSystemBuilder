@@ -32,7 +32,7 @@
 
     - name: Copy docker-compose.yml file to {{ dataspectsSystem_control_folder_on_host }}
       template:
-        src: ../../ansible_templates/{{ dockerComposeFileType }}.yml.j2
+        src: ../../ansible_templates/docker-compose/{{ dockerComposeFileType }}.yml.j2
         dest: "{{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml"
       tags:
         - 200_compile_and_copy_docker_compose_file
