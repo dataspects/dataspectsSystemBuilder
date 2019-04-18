@@ -1,5 +1,5 @@
 #!/bin/bash
-if [[ ! $CONTROL_FOLDER_PATH ]]; then CONTROL_FOLDER_PATH=`pwd`/../cookbookfindandlearnnet; fi
+if [[ ! $CONTROL_FOLDER_PATH ]]; then CONTROL_FOLDER_PATH=`pwd`/../dss; fi
 DOMAIN_NAME="$(basename -- $CONTROL_FOLDER_PATH)"
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 if [[ ! $TIKA_USERNAME ]]; then TIKA_USERNAME=dummy; fi
