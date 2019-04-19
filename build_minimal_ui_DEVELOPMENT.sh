@@ -13,6 +13,9 @@ ANSIBLETAGS=(
   ###
   500_configure_nodejs
   ###
+  602_feed_cookbook_entities
+  ###
   700_prepare_indexing
+  712_index_cookbook_entities
 )
 source command_components/ansiblePlaybookCommand.sh

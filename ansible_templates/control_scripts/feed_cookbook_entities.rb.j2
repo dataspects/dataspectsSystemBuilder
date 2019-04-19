@@ -20,7 +20,7 @@ module Dataspects
     end
 
     def execute()
-      rb = @dds.get_response_body(endPoint: "/mediawikis?namespace=http://cookbookfindandlearnnet/wiki")
+      rb = @dds.get_response_body(endPoint: "/mediawikis?namespace=http://{{ mediawikiDomainNameInHostFile }}/wiki")
       mediawiki_id = rb[0]['_id']
       ##########################################################
 

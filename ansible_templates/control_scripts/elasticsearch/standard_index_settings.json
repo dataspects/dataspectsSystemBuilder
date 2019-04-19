@@ -21,7 +21,6 @@
         "my_completion_analyzer": {
           "tokenizer": "standard",
           "filter": [
-            "standard",
             "lowercase",
             "my_shingle_2"
           ]
@@ -31,7 +30,7 @@
         "my_ngram_tokenizer": {
           "type": "ngram",
           "min_gram": 2,
-          "max_gram": 5,
+          "max_gram": 3,
           "token_chars": [
             "letter",
             "digit",

@@ -12,7 +12,7 @@
       with_items:
         - index_cookbook_entities.rb
       tags:
-        - 710_index_cookbook_entities
+        - 712_index_cookbook_entities
 
     - name: RUN index_cookbook_entities.rb
       shell: ruby {{ item }}
@@ -21,4 +21,4 @@
       with_items:
         - index_cookbook_entities.rb
       tags:
-        - 710_index_cookbook_entities
+        - 714_index_cookbook_entities

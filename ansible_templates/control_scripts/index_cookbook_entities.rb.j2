@@ -11,23 +11,11 @@ module Dataspects
         dataspects_api_key: @dataspects_api_key
       )
       @index = 'dataspectspublic'
-      if(@esc.client.indices.exists?(index: @index))
-        @esc.client.indices.delete(index: @index)
-      end
-      @esc.client.indices.create(index: @index)
-      @esc.client.indices.close(index: @index)
-      @esc.client.indices.put_settings(
+      @esc.initialize_index(
         index: @index,
-        body: JSON.parse(File.read(
-          'elasticsearch/standard_index_settings.json'))
+        settings: 'elasticsearch/standard_index_settings.json',
+        mapping: 'elasticsearch/standard_index_mapping.json'
       )
-      @esc.client.indices.put_mapping(
-        index: @index,
-        type: 'doc',
-        body: JSON.parse(File.read(
-          'elasticsearch/standard_index_mapping.json'))
-      )
-      @esc.client.indices.open(index: @index)
     end
 
     def execute()
@@ -35,7 +23,7 @@ module Dataspects
       # here:
       ##########################################################
       ##########################################################
-      rb = @dds.get_response_body(endPoint: "/mediawikis?namespace=http://cookbookfindandlearnnet/wiki")
+      rb = @dds.get_response_body(endPoint: "/mediawikis?namespace=http://{{ mediawikiDomainNameInHostFile }}/wiki")
       mediawiki_id = rb[0]['_id']
       ##########################################################
       ##########################################################
@@ -82,7 +70,7 @@ module Dataspects
 
         # This could be an Entity or an EntityType!
           temp = annotation['subject'].split('#0##') #FIXME: Lex: check for SMW subobject anonymous id!
-          subject_page = get(
+          subject_tikaHash = get(
             url: @dataspects_api_url+"/mediawikis/pages/"+temp[0]
           )
           predicate = get(
@@ -90,11 +78,11 @@ module Dataspects
           )
           #FIXME
           if(predicate["predicate_type"] == "http://semantic-mediawiki.org/swivt/1.0#_txt")
-            object_page = {
+            object_tikaHash = {
               "hasEntityType" => "literal"
             }
           else
-            object_page = get(
+            object_tikaHash = get(
               url: @dataspects_api_url+"/mediawikis/pages/"+annotation['object']
             )
           end

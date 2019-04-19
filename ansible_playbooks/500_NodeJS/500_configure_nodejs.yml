@@ -56,5 +56,6 @@
         - add_mediawiki_instance_to_mongodb.rb
         - add_users_to_mongodb.rb
         #- add_search_contexts_to_mongodb.rb
+      ignore_errors: yes
       tags:
         - 500_configure_nodejs

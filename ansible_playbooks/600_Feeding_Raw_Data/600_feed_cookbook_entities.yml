@@ -12,7 +12,7 @@
       with_items:
         - feed_cookbook_entities.rb
       tags:
-        - 600_feed_cookbook_entities
+        - 602_feed_cookbook_entities
 
     - name: RUN feed_cookbook_entities job
       shell: ruby {{ item }}
@@ -21,4 +21,4 @@
       with_items:
         - feed_cookbook_entities.rb
       tags:
-        - 600_feed_cookbook_entities
+        - 604_feed_cookbook_entities
