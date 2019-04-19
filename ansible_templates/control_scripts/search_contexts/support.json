@@ -7,7 +7,6 @@
   "theSettings": {
     "esQuery": {
       "index": "dataspectspublic",
-      "type": "doc",
       "body": {
         "size": 10,
         "query": {
