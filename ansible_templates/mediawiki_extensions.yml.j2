@@ -1,9 +1,9 @@
 ---
 mediawiki_extensions:
-  - repo: https://github.com/dataspects/DataspectsMediaWikiFeeder
-    name: DataspectsMediaWikiFeeder
-    localsettings_configs:
-      - wfLoadExtension( 'DataspectsMediaWikiFeeder' );
+  # - repo: https://github.com/dataspects/DataspectsMediaWikiFeeder
+  #   name: DataspectsMediaWikiFeeder
+  #   localsettings_configs:
+  #     - wfLoadExtension( 'DataspectsMediaWikiFeeder' );
   - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageForms.git
     name: PageForms
     localsettings_configs:
@@ -82,3 +82,11 @@ mediawiki_extensions:
       - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
     localsettings_configs:
       - wfLoadExtension( 'SemanticResultFormats' );
+  - repo: https://github.com/wikimedia/mediawiki-extensions-TemplateData.git
+    name: TemplateData
+    localsettings_configs:
+      - wfLoadExtension( 'TemplateData' );
+  - docker_commands:
+      - cd /var/www/html/w; php composer.phar require jeroen/mediawiki-github "~1.4"
+    localsettings_configs:
+      - $egGitHubUrl = 'https://raw.githubusercontent.com';

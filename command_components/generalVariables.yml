@@ -30,7 +30,7 @@ dockerDataspectsUIVersion: "0.0.9"
 mysql_root_password: mysqlrootpass
 
 # MediaWiki ####################################################################
-mediawiki_version: REL1_31
+mediawiki_version: REL1_32
 mediawiki_name: dataspectsSystem Wiki
 mediawiki_admin_user_password: adminpass
 

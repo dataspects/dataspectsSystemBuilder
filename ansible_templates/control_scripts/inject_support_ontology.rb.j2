@@ -1,6 +1,6 @@
 require 'dataspects'
 
-# `git clone https://github.com/dataspects/dataspectsSystemCoreOntology.git`
+# `git clone https://github.com/dataspects/dataspectsSupportOntology.git`
 
 localmw = Dataspects::MediaWiki.new(
   url: "http://{{ mediawikiDomainNameInHostFile }}/w",
@@ -9,10 +9,10 @@ localmw = Dataspects::MediaWiki.new(
   log_in: :must_log_in
 )
 
-coreont = Dataspects::OntologyRepository.new("/media/lex/LEXSAMSUNG-64GB/dataspectsSystemCoreOntology")
+coreont = Dataspects::OntologyRepository.new("/media/lex/LEXSAMSUNG-64GB/dataspectsSupportOntology")
 coreont.use_existing_at_URL
 coreont.resources.each do |resource|
-  localmw.store_RESOURCE(resource, "Injection job dataspectsSystemCoreOntology")
+  localmw.store_RESOURCE(resource, "Injection job dataspectsSupportOntology")
 end
 
 # Refresh {{ mediawikiDomainNameInHostFile }}

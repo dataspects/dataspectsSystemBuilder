@@ -24,7 +24,8 @@ time ansible-playbook \
       ansible_playbooks/300_MediaWiki/310_configure_proxy.yml \
       ansible_playbooks/300_MediaWiki/320_install_mediawiki_extensions.yml \
       ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml \
-      ansible_playbooks/400_Ontologies/400_provision_as_cookbookfalnet.yml \
+      ansible_playbooks/400_Ontologies/410_inject_core_ontology.yml \
+      ansible_playbooks/400_Ontologies/420_inject_support_ontology.yml \
       ansible_playbooks/500_NodeJS/500_configure_nodejs.yml \
       ansible_playbooks/600_Feeding_Raw_Data/600_feed_cookbook_entities.yml \
       ansible_playbooks/600_Feeding_Raw_Data/610_feed_dataspectsSystem_source_folder.yml \

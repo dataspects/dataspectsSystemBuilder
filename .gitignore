@@ -2,3 +2,4 @@
 .vagrant/
 ubuntu-*.log
 secrets.sh
+custom*
