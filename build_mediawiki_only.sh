@@ -1,6 +1,6 @@
 #!/bin/bash
 #[[IsDataspectsSystemBuildConfiguration::MediaWiki only]]
-CONTROL_FOLDER_PATH=/home/vagrant/build_mediawiki_only # Must be absolute!
+CONTROL_FOLDER_PATH=/home/lex/DATASPECTSSYSTEMS/managemwstake # Must be absolute!
 PLATFORM=linux # linux|mac|windows
 DOCKER_VOLUMES_MODE=automatic # automatic|manual
 DOCKER_COMPOSE_FILE=docker-compose-mediawiki-only

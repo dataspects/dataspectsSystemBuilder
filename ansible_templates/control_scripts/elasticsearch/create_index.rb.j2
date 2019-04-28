@@ -1,0 +1,11 @@
+require 'dataspects'
+
+esc = Dataspects::ElasticsearchCluster.new(
+  url: "http://localhost:9200"
+)
+
+esc.initialize_index(
+  index: 'dataspectspublic',
+  settings: 'standard_index_settings.json',
+  mapping: 'standard_index_mapping.json'
+)

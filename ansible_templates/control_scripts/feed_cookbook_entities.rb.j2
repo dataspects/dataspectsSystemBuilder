@@ -23,7 +23,6 @@ module Dataspects
       rb = @dds.get_response_body(endPoint: "/mediawikis?namespace=http://{{ mediawikiDomainNameInHostFile }}/wiki")
       mediawiki_id = rb[0]['_id']
       ##########################################################
-
       mw = Dataspects::MediaWiki.new(
         url: "https://cookbook.findandlearn.net/w",
         user: "roapi",
