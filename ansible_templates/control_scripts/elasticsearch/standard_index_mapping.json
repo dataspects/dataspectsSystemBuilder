@@ -1,7 +1,4 @@
 {
-  "_source": {
-    "enabled": true
-  },
   "properties": {
     "OriginatedFromResourceSiloID": {
       "type": "text",

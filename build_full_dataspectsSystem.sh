@@ -1,5 +1,5 @@
 #!/bin/bash
-CONTROL_FOLDER_PATH=/home/lex/DATASPECTSSYSTEMS/cookbookfindandlearnnet # Must be absolute!
+CONTROL_FOLDER_PATH=/home/lex/DSS/hapasupportwiki # Must be absolute!
 PLATFORM=linux # linux|mac|windows
 DOCKER_VOLUMES_MODE=automatic # automatic|manual
 DOCKER_COMPOSE_FILE=docker-compose-full-system
@@ -17,10 +17,10 @@ ANSIBLETAGS=(
   # # 400_provision_as_cookbookfalnet
   # ### For the time being this requires manually running dataspects-ui
   # 500_configure_nodejs
-  # 602_feed_cookbook_entities
+  # # 602_feed_cookbook_entities
   # # 610_feed_dataspectsSystem_source_folder
-  # 700_prepare_indexing
-  712_index_cookbook_entities
+  700_prepare_indexing
+  # 712_index_cookbook_entities
   # 720_index_dataspectsSystem_instance_source_folder
   # 800_install_backup_functionality
   # 800_install_clone_functionality

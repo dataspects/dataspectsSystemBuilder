@@ -32,4 +32,4 @@
       with_items:
         - create_index.rb
       tags:
-        - 700_prepare_indexingSTOP
+        - 700_prepare_indexing
