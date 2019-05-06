@@ -133,7 +133,7 @@
       "include_in_root": "true",
       "properties": {
         "subject": {
-          "type": "keyword"
+          "type": "text"
         },
         "subject_class": {
           "type": "keyword"
