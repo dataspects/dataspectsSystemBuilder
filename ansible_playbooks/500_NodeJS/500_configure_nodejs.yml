@@ -9,18 +9,6 @@
       tags:
         - 500_configure_nodejs
 
-    - name: COPY NodeJS search contexts
-      copy:
-        src: "../../ansible_templates/control_scripts/search_contexts/{{ item }}"
-        dest: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/search_contexts/{{ item }}"
-        mode: 0777
-      with_items:
-        - features.json
-        - general.json
-        - support.json
-      tags:
-        - 500_configure_nodejs
-
     - debug:
         msg: "{{ dataspectsui_email }}"
       tags:
@@ -42,9 +30,7 @@
         dest: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts/{{ item }}"
         mode: 0777
       with_items:
-        - add_mediawiki_instance_to_mongodb.rb
         - add_users_to_mongodb.rb
-        #- add_search_contexts_to_mongodb.rb
       tags:
         - 500_configure_nodejs
 
@@ -53,9 +39,7 @@
       args:
         chdir: "{{ dataspectsSystem_control_folder_on_host }}/control_scripts"
       with_items:
-        - add_mediawiki_instance_to_mongodb.rb
         - add_users_to_mongodb.rb
-        #- add_search_contexts_to_mongodb.rb
       ignore_errors: yes
       tags:
         - 500_configure_nodejs
