@@ -5,7 +5,7 @@ esc = Dataspects::ElasticsearchCluster.new(
 )
 
 esc.initialize_index(
-  index: 'dataspectspublic',
+  index: ENV['ES_INDEX_NAME'],
   settings: 'standard_index_settings.json',
   mapping: 'standard_index_mapping.json'
 )
