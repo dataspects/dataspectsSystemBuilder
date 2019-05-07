@@ -24,7 +24,6 @@ time ansible-playbook \
       $DATASPECTSSYSTEM_CORE/ansible_playbooks/300_MediaWiki/310_configure_proxy.yml \
       $DATASPECTSSYSTEM_CORE/ansible_playbooks/300_MediaWiki/320_install_mediawiki_extensions.yml \
       $DATASPECTSSYSTEM_CORE/ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml \
-      $DATASPECTSSYSTEM_CORE/ansible_playbooks/500_NodeJS/500_configure_nodejs.yml \
       $DATASPECTSSYSTEM_CORE/ansible_playbooks/800_Backup_and_Clone/800_install_backup_and_clone_functionality.yml \
       $DATASPECTSSYSTEM_CORE/ansible_playbooks/800_Backup_and_Clone/810_backup_and_clone.yml \
       $DATASPECTSSYSTEM_CORE/ansible_playbooks/900_Tools/900_compare.yml
