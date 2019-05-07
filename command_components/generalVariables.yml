@@ -25,6 +25,20 @@ redisVersion: 5.0.4-alpine
 mongoVersion: 4.0.9
 dockerTikaserverVersion: "1.20"
 dockerDataspectsUIVersion: "latest"
+dockerNetwork: "dataspects"
+
+# Docker UI Environment Variables ##############################################
+dataspectsUINodeEnv: "develoment"
+dataspectsUISessionSecret: "ReplaceMePlease"
+dataspectsUISMTPServer: "dummy"
+dataspectsUISMTPUsername: "dummy"
+dataspectsUISMTPPassword: "dummy"
+dataspectsUIFromEmail: "dummy"
+dataspectsUIFromName: "dummy"
+dataspectsUISiteURL: "http://localhost:3000"
+dataspectsUIOTPDomain: "otp.locahost"
+dataspectsUIAPIKey: "aslkdjasldkjlaskdj"
+dataspectsUITikaURL: "http://tika:9998"
 
 # MariaDB ######################################################################
 mysql_root_password: mysqlrootpass

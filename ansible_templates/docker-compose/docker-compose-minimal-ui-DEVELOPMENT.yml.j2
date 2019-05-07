@@ -1,5 +1,5 @@
 # [[ImplementsFeature::C1898799575]]
-version: "3"
+version: "3.5"
 services:
   proxy:
     image: dataspects/docker-nginx:{{ dockerNginxVersion }}
@@ -8,6 +8,8 @@ services:
       - {{ nginxHttpsPortOnHost }}:443
     volumes:
       - {{ manual_docker_volumes_location }}nginx_conf:/etc/nginx/conf.d
+    networks:
+      - dataspects
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
     environment:
@@ -17,6 +19,8 @@ services:
       - {{ manual_docker_volumes_location }}esdata:/usr/share/elasticsearch/data
     ports:
       - {{ elasticsearchPortOnHost }}:9200
+    networks:
+      - dataspects
   kibana:
     image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
     environment:
@@ -25,20 +29,59 @@ services:
       - elasticsearch
     ports:
       - {{ kibanaPortOnHost }}:5601
+    networks:
+      - dataspects
   tika:
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
     ports:
       - {{ tikaPortOnHost }}:9998
+    networks:
+      - dataspects
   mongodb:
     image: mongo:{{ mongoVersion }}
     ports:
       - {{ mongodbPortOnHost }}:27017
     volumes:
       - {{ manual_docker_volumes_location }}mongo_data:/data/db
+    networks:
+      - dataspects
   redis:
     image: redis:{{ redisVersion }}
     ports:
       - {{ redisPortOnHost }}:6379
+    networks:
+      - dataspects
+  ui:
+    image: dataspects/ui:{{ dockerDataspectsUIVersion }}
+    ports:
+      - {{ dataspectsUIPort }}:3000
+    depends_on:
+      - mongodb
+      - redis
+      - elasticsearch
+    networks:
+      - dataspects
+    environment:
+      - "NODE_ENV={{ dataspectsUINodeEnv }}"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "SESSION_SECRET={{ dataspectsUISessionSecret }}"
+      - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
+      - "ES_URL=http://elasticsearch:9200"
+      - "SMTP_SERVER={{ dataspectsUISMTPServer }}"
+      - "SMTP_USERNAME={{ dataspectsUISMTPUsername }}"
+      - "SMTP_PASSWORD={{ dataspectsUISMTPPassword }}"
+      - "FROM_EMAIL={{ dataspectsUIFromEmail }}"
+      - "FROM_NAME={{ dataspectsUIFromName }}"
+      - "SITE_URL={{ dataspectsUISiteURL }}"
+      - "OTP_DOMAIN={{ dataspectsUIOTPDomain }}"
+      - "API_KEY={{ dataspectsUIAPIKey }}"
+      - "TIKA_URL={{ dataspectsUITikaURL }}"
+networks:
+  dataspects:
+    name: dataspects
+    driver: bridge
+
 {{ comment_out_volumes }}volumes:
 {{ comment_out_volumes }}  nginx_conf:
 {{ comment_out_volumes }}    driver: local
