@@ -4,10 +4,8 @@
 : "${PLATFORM:?MISSING - must be one of linux|mac|windows}"
 : "${DOCKER_VOLUMES_MODE:?MISSING - must be one of automatic|manual}"
 : "${DOCKER_COMPOSE_FILE:?MISSING}"
-: "${ES_INDEX_NAME:?MISSING}"
 : "${DATASPECTS_API_KEY:?MISSING}"
 
-DOMAIN_NAME="$(basename -- $CONTROL_FOLDER_PATH)"
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 if [[ ! $TIKA_USERNAME ]]; then TIKA_USERNAME=dummy; fi
 if [[ ! $TIKA_PASSWORD ]]; then TIKA_PASSWORD=dummy; fi

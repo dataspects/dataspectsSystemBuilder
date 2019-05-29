@@ -1,5 +1,5 @@
 # [[ImplementsFeature::C1898799575]]
-version: "3"
+version: "3.5"
 services:
   db:
     image: mariadb:{{ mariadbVersion }}
@@ -8,6 +8,8 @@ services:
     volumes:
       - {{ manual_docker_volumes_location }}mariadb_data:/var/lib/mysql/
       - {{ manual_docker_volumes_location }}mediawiki_root:/datadump/mediawiki_root/
+    networks:
+      - dataspects
   {{ mediawikiDockerServiceName }}:
     image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
     volumes:
@@ -16,6 +18,8 @@ services:
     depends_on:
       - db
       - parsoid
+    networks:
+      - dataspects
   proxy:
     image: dataspects/docker-nginx:{{ dockerNginxVersion }}
     ports:
@@ -25,10 +29,18 @@ services:
       - {{ mediawikiDockerServiceName }}
     volumes:
       - {{ manual_docker_volumes_location }}nginx_conf:/etc/nginx/conf.d
+    networks:
+      - dataspects
   parsoid:
     image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
     environment:
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
+    networks:
+      - dataspects
+networks:
+  dataspects:
+    name: dataspects
+    driver: bridge
 {{ comment_out_volumes }}volumes:
 {{ comment_out_volumes }}  mariadb_data:
 {{ comment_out_volumes }}    driver: local

@@ -1,15 +1,6 @@
 # [[ImplementsFeature::C1898799575]]
 version: "3.5"
 services:
-  proxy:
-    image: dataspects/docker-nginx:{{ dockerNginxVersion }}
-    ports:
-      - {{ nginxPortOnHost }}:80
-      - {{ nginxHttpsPortOnHost }}:443
-    volumes:
-      - {{ manual_docker_volumes_location }}nginx_conf:/etc/nginx/conf.d
-    networks:
-      - dataspects
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
     environment:

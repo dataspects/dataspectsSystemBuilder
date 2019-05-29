@@ -1,0 +1,110 @@
+# [[ImplementsFeature::C1898799575]]
+version: "3.5"
+services:
+  db:
+    image: mariadb:{{ mariadbVersion }}
+    environment:
+      MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
+    volumes:
+      - {{ manual_docker_volumes_location }}mariadb_data:/var/lib/mysql/
+      - {{ manual_docker_volumes_location }}mediawiki_root:/datadump/mediawiki_root/
+    network_mode: host
+  {{ mediawikiDockerServiceName }}:
+    image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
+    volumes:
+      - {{ manual_docker_volumes_location }}mediawiki_root:/var/www/html/
+#      - {{ manual_docker_volumes_location }}mediawiki_conf:/etc/apache2/sites-available
+    depends_on:
+      - db
+      - parsoid
+    network_mode: host
+  proxy:
+    image: dataspects/docker-nginx:{{ dockerNginxVersion }}
+    ports:
+      - {{ nginxPortOnHost }}:80
+      - {{ nginxHttpsPortOnHost }}:443
+    depends_on:
+      - {{ mediawikiDockerServiceName }}
+    volumes:
+      - {{ manual_docker_volumes_location }}nginx_conf:/etc/nginx/conf.d
+    network_mode: host
+  parsoid:
+    image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
+    environment:
+      PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
+    network_mode: host
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
+    environment:
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx2048m"
+      - "discovery.type=single-node"
+    volumes:
+      - {{ manual_docker_volumes_location }}esdata:/usr/share/elasticsearch/data
+    ports:
+      - {{ elasticsearchPortOnHost }}:9200
+    network_mode: host
+  kibana:
+    image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
+    environment:
+      - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+    depends_on:
+      - elasticsearch
+    ports:
+      - {{ kibanaPortOnHost }}:5601
+    network_mode: host
+  tika:
+    image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
+    ports:
+      - {{ tikaPortOnHost }}:9998
+    network_mode: host
+  mongodb:
+    image: mongo:{{ mongoVersion }}
+    ports:
+      - {{ mongodbPortOnHost }}:27017
+    volumes:
+      - {{ manual_docker_volumes_location }}mongo_data:/data/db
+    network_mode: host
+  redis:
+    image: redis:{{ redisVersion }}
+    ports:
+      - {{ redisPortOnHost }}:6379
+    network_mode: host
+  ui:
+    image: dataspects/ui:{{ dockerDataspectsUIVersion }}
+    ports:
+      - {{ dataspectsUIPort }}:3000
+    depends_on:
+      - mongodb
+      - redis
+      - elasticsearch
+    network_mode: host
+    environment:
+      - "NODE_ENV={{ dataspectsUINodeEnv }}"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "SESSION_SECRET={{ dataspectsUISessionSecret }}"
+      - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
+      - "ES_URL=http://elasticsearch:9200"
+      - "SMTP_SERVER={{ dataspectsUISMTPServer }}"
+      - "SMTP_USERNAME={{ dataspectsUISMTPUsername }}"
+      - "SMTP_PASSWORD={{ dataspectsUISMTPPassword }}"
+      - "FROM_EMAIL={{ dataspectsUIFromEmail }}"
+      - "FROM_NAME={{ dataspectsUIFromName }}"
+      - "SITE_URL={{ dataspectsUISiteURL }}"
+      - "OTP_DOMAIN={{ dataspectsUIOTPDomain }}"
+      - "API_KEY={{ dataspectsUIAPIKey }}"
+      - "TIKA_URL={{ dataspectsUITikaURL }}"
+      - "ES_NODE=http://elasticsearch:9200"
+{{ comment_out_volumes }}volumes:
+{{ comment_out_volumes }}  mariadb_data:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  mediawiki_root:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }} # mediawiki_conf:
+{{ comment_out_volumes }} #   driver: local
+{{ comment_out_volumes }}  nginx_conf:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  mongo_data:
+{{ comment_out_volumes }}    driver: local
+{{ comment_out_volumes }}  esdata:
+{{ comment_out_volumes }}    driver: local

@@ -1,9 +1,12 @@
 ---
 mediawiki_extensions:
-  # - repo: https://github.com/dataspects/DataspectsMediaWikiFeeder
-  #   name: DataspectsMediaWikiFeeder
-  #   localsettings_configs:
-  #     - wfLoadExtension( 'DataspectsMediaWikiFeeder' );
+  - repo: https://github.com/dataspects/DataspectsMediaWikiFeeder.git
+    name: DataspectsMediaWikiFeeder
+    localsettings_configs:
+      - wfLoadExtension( 'DataspectsMediaWikiFeeder' );
+      - $wgMediaWikiMongoID = "";
+      - $wgDataspectsApiKey = "";
+      - $wgDataspectsApiURL = "http://127.0.0.1:3000/api/mediawikis/";
   - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageForms.git
     name: PageForms
     localsettings_configs:
