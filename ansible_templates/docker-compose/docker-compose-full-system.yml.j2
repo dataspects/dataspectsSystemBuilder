@@ -24,7 +24,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
     environment:
-      - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
     depends_on:
       - elasticsearch
     ports:
