@@ -14,6 +14,7 @@ if [[ $PLATFORM == "linux" ]]; then PRIVILEGE_ESCALATION="--ask-become-pass --be
 time ansible-playbook \
   --extra-vars @$RESOURCES_PATH/dataspectsSystem/command_components/generalVariables.yml \
   --extra-vars docker_volumes_mode=$DOCKER_VOLUMES_MODE \
+  --extra-vars docker_network_mode=$DOCKER_NETWORK_MODE \
   --extra-vars dockerComposeFileType=$DOCKER_COMPOSE_FILE \
   --extra-vars dataspectsSystem_control_folder_on_host=$CONTROL_FOLDER_PATH \
   --extra-vars mediawikiDomainNameInHostFile=$DOMAIN_NAME \
@@ -26,6 +27,9 @@ time ansible-playbook \
   --extra-vars registry_dataspects_com_user=$REGISTRY_DATASPECTS_COM_USER \
   --extra-vars registry_dataspects_com_password=$REGISTRY_DATASPECTS_COM_PASSWORD \
   --extra-vars platform=$PLATFORM \
+  --extra-vars wgMediaWikiMongoID=$MEDIAWIKI_MONGO_ID \
+  --extra-vars wgDataspectsApiKey=$DATASPECTS_API_KEY \
+  --extra-vars wgDataspectsApiURL=$DATASPECTS_API_URL \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
   $PRIVILEGE_ESCALATION \
       $RESOURCES_PATH/dataspectsSystem/ansible_playbooks/100_Prepare/100_create_dataspectsSystem_control_folder_on_host.yml \
