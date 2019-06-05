@@ -31,7 +31,7 @@ services:
   parsoid:
     image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
     environment:
-      PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{{ mediawikiDockerServiceName }}/w/api.php
+      PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}{{ mediawikiDockerServiceName }}{% endif %}/w/api.php
     network_mode: {{ docker_network_mode }}
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
@@ -46,7 +46,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
     environment:
-      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+      - "ELASTICSEARCH_HOSTS=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
     depends_on:
       - elasticsearch
     ports:
@@ -83,8 +83,7 @@ services:
       - "REDIS_HOST=redis"
       - "REDIS_PORT=6379"
       - "SESSION_SECRET={{ dataspectsUISessionSecret }}"
-      - "MONGODB_URI=mongodb://mongodb:27017/dataspects"
-      - "ES_URL=http://elasticsearch:9200"
+      - "MONGODB_URI=mongodb://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}mongodb{% endif %}:27017/dataspects"
       - "SMTP_SERVER={{ dataspectsUISMTPServer }}"
       - "SMTP_USERNAME={{ dataspectsUISMTPUsername }}"
       - "SMTP_PASSWORD={{ dataspectsUISMTPPassword }}"
@@ -94,7 +93,7 @@ services:
       - "OTP_DOMAIN={{ dataspectsUIOTPDomain }}"
       - "API_KEY={{ dataspectsUIAPIKey }}"
       - "TIKA_URL={{ dataspectsUITikaURL }}"
-      - "ES_NODE=http://elasticsearch:9200"
+      - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
 {{ comment_out_volumes }}volumes:
 {{ comment_out_volumes }}  mariadb_data:
 {{ comment_out_volumes }}    driver: local
