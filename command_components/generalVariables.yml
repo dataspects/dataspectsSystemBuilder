@@ -24,7 +24,7 @@ kibanaVersion: 7.1.1
 redisVersion: 5.0.5-alpine
 mongoVersion: 4.0.10
 dockerTikaserverVersion: "1.20"
-dockerDataspectsUIVersion: "latest"
+dockerDataspectsUIVersion: "0.8.0"
 dockerNetwork: "dataspects"
 
 # Docker UI Environment Variables ##############################################

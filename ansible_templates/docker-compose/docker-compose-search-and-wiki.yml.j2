@@ -80,7 +80,7 @@ services:
     network_mode: {{ docker_network_mode }}
     environment:
       - "NODE_ENV={{ dataspectsUINodeEnv }}"
-      - "REDIS_HOST=redis"
+      - "REDIS_HOST={% if docker_network_mode == 'host'%}127.0.0.1{% else %}redis{% endif %}"
       - "REDIS_PORT=6379"
       - "SESSION_SECRET={{ dataspectsUISessionSecret }}"
       - "MONGODB_URI=mongodb://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}mongodb{% endif %}:27017/dataspects"
