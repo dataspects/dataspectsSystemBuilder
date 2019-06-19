@@ -4,6 +4,8 @@
   gather_facts: False
   tasks:
 
+    # FIXME: Only run this if docker_network_mode IS NOT "host"
+
     ############################################################################
     # 310_configure_proxy ##########################################################
     - name: Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_nginx_conf path on host
