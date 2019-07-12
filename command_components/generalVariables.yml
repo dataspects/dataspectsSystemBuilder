@@ -18,13 +18,14 @@ redisPortOnHost: 6379
 mariadbVersion: 10.3.13
 dockerApachePhpDataspectsMediawikiVersion: 1.2
 dockerNginxVersion: 1.0.1
-dockerElasticsearchVersion: 7.1.1
+# https://www.docker.elastic.co/
+dockerElasticsearchVersion: 7.2.0
 dockerParsoidVersion: 0.10.0
-kibanaVersion: 7.1.1
+kibanaVersion: 7.2.0
 redisVersion: 5.0.5-alpine
 mongoVersion: 4.0.10
 dockerTikaserverVersion: "1.20"
-dockerDataspectsUIVersion: "0.8.0"
+dockerDataspectsUIVersion: "0.13.0"
 dockerNetwork: "dataspects"
 
 # Docker UI Environment Variables ##############################################

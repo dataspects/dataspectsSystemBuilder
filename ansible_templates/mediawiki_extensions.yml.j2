@@ -4,6 +4,7 @@ mediawiki_extensions:
     name: DataspectsMediaWikiFeeder
     localsettings_configs:
       - wfLoadExtension( 'DataspectsMediaWikiFeeder' );
+      - $wgRateLimits['edit']['ip'] = array( 1000, 1 );
       - $wgMediaWikiMongoID = "{{ wgMediaWikiMongoID }}";
       - $wgDataspectsApiKey = "{{ wgDataspectsApiKey }}";
       - $wgDataspectsApiURL = "{{ wgDataspectsApiURL }}";
