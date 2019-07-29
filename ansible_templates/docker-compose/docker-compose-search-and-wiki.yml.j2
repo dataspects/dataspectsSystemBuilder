@@ -8,7 +8,8 @@ services:
     volumes:
       - {{ manual_docker_volumes_location }}mariadb_data:/var/lib/mysql/
       - {{ manual_docker_volumes_location }}mediawiki_root:/datadump/mediawiki_root/
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   {{ mediawikiDockerServiceName }}:
     image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
     volumes:
@@ -17,7 +18,8 @@ services:
     depends_on:
       - db
       - parsoid
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   proxy:
     image: dataspects/docker-nginx:{{ dockerNginxVersion }}
     ports:
@@ -27,12 +29,14 @@ services:
       - {{ mediawikiDockerServiceName }}
     volumes:
       - {{ manual_docker_volumes_location }}nginx_conf:/etc/nginx/conf.d
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   parsoid:
     image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
     environment:
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}{{ mediawikiDockerServiceName }}{% endif %}/w/api.php
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
     environment:
@@ -42,7 +46,8 @@ services:
       - {{ manual_docker_volumes_location }}esdata:/usr/share/elasticsearch/data
     ports:
       - {{ elasticsearchPortOnHost }}:9200
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   kibana:
     image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
     environment:
@@ -51,24 +56,28 @@ services:
       - elasticsearch
     ports:
       - {{ kibanaPortOnHost }}:5601
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   tika:
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
     ports:
       - {{ tikaPortOnHost }}:9998
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   mongodb:
     image: mongo:{{ mongoVersion }}
     ports:
       - {{ mongodbPortOnHost }}:27017
     volumes:
       - {{ manual_docker_volumes_location }}mongo_data:/data/db
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   redis:
     image: redis:{{ redisVersion }}
     ports:
       - {{ redisPortOnHost }}:6379
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   ui:
     image: dataspects/ui:{{ dockerDataspectsUIVersion }}
     ports:
@@ -77,7 +86,8 @@ services:
       - mongodb
       - redis
       - elasticsearch
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
     environment:
       - "NODE_ENV={{ dataspectsUINodeEnv }}"
       - "REDIS_HOST={% if docker_network_mode == 'host'%}127.0.0.1{% else %}redis{% endif %}"
@@ -94,9 +104,14 @@ services:
       - "API_KEY={{ dataspectsUIAPIKey }}"
       - "TIKA_URL={{ dataspectsUITikaURL }}"
       - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
+      - "MEDIAWIKI_DATA_STORE_API_URL=http://mediawiki-datastore:3001"
+      - "MEDIAWIKI_DATA_STORE_API_MASTER_KEY=123456789"
+      - "REPOSITORY_DATA_STORE_API_URL=http://repository-datastore:3002"
+      - "REPOSITORY_DATA_STORE_API_MASTER_KEY=123456789"
   nats:
     image: nats:{{ natsVersion }}
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   mediawiki-datastore:
     image: dataspects/mediawiki-datastore:{{ mediawikiDatastoreVersion }}
     depends_on:
@@ -108,10 +123,11 @@ services:
       - "PORT=3001"
       - "NODE_ENV=production"
       - "NATS_URI=nats://nats:4222"
-      - "MONGODB_URI=mongodb://mongo:27017/mediawikis"
-      - "MASTER_API_KEY=abiifwef989834938jr4893n8"
+      - "MONGODB_URI=mongodb://mongodb:27017/mediawikis"
+      - "MASTER_API_KEY=123456789"
       - "API_KEY=cd"
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   mediawiki-indexer:
     image: dataspects/mediawiki-indexer:{{ mediawikiIndexerVersion }}
     depends_on:
@@ -123,7 +139,8 @@ services:
       - "ES_NODE=http://elastic:g6gWvTmsgGKRibtfgqKf@elasticsearch:9200"
       - "ES_INDEX=general"
       - "TIKA_URL=http://tika:9998"
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   repository-datastore:
     image: dataspects/repository-datastore:{{ repositoryDatastoreVersion }}
     depends_on:
@@ -135,10 +152,11 @@ services:
       - "PORT=3002"
       - "NODE_ENV=production"
       - "NATS_URI=nats://nats:4222"
-      - "MONGODB_URI=mongodb://mongo:27017/repositories"
-      - "MASTER_API_KEY=abiifwef989834938jr4893n8"
+      - "MONGODB_URI=mongodb://mongodb:27017/repositories"
+      - "MASTER_API_KEY=123456789"
       - "API_KEY=cd"
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
   repository-indexer:
     image: dataspects/repository-indexer:{{ repositoryIndexerVersion }}
     depends_on:
@@ -150,7 +168,12 @@ services:
       - "ES_NODE=http://elastic:g6gWvTmsgGKRibtfgqKf@elasticsearch:9200"
       - "ES_INDEX=general"
       - "TIKA_URL=http://tika:9998"
-    network_mode: {{ docker_network_mode }}
+    networks:
+      - dataspects
+networks:
+  dataspects:
+    name: dataspects
+    driver: bridge
 {{ comment_out_volumes }}volumes:
 {{ comment_out_volumes }}  mariadb_data:
 {{ comment_out_volumes }}    driver: local
