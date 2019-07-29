@@ -94,6 +94,63 @@ services:
       - "API_KEY={{ dataspectsUIAPIKey }}"
       - "TIKA_URL={{ dataspectsUITikaURL }}"
       - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
+  nats:
+    image: nats:{{ natsVersion }}
+    network_mode: {{ docker_network_mode }}
+  mediawiki-datastore:
+    image: dataspects/mediawiki-datastore:{{ mediawikiDatastoreVersion }}
+    depends_on:
+      - mongodb
+      - nats
+    ports:
+      - 3001:3001
+    environment:
+      - "PORT=3001"
+      - "NODE_ENV=production"
+      - "NATS_URI=nats://nats:4222"
+      - "MONGODB_URI=mongodb://mongo:27017/mediawikis"
+      - "MASTER_API_KEY=abiifwef989834938jr4893n8"
+      - "API_KEY=cd"
+    network_mode: {{ docker_network_mode }}
+  mediawiki-indexer:
+    image: dataspects/mediawiki-indexer:{{ mediawikiIndexerVersion }}
+    depends_on:
+      - nats
+      - elasticsearch
+      - tika
+    environment:
+      - "NATS_URI=nats://nats:4222"
+      - "ES_NODE=http://elastic:g6gWvTmsgGKRibtfgqKf@elasticsearch:9200"
+      - "ES_INDEX=general"
+      - "TIKA_URL=http://tika:9998"
+    network_mode: {{ docker_network_mode }}
+  repository-datastore:
+    image: dataspects/repository-datastore:{{ repositoryDatastoreVersion }}
+    depends_on:
+      - mongodb
+      - nats
+    ports:
+      - 3002:3002
+    environment:
+      - "PORT=3002"
+      - "NODE_ENV=production"
+      - "NATS_URI=nats://nats:4222"
+      - "MONGODB_URI=mongodb://mongo:27017/repositories"
+      - "MASTER_API_KEY=abiifwef989834938jr4893n8"
+      - "API_KEY=cd"
+    network_mode: {{ docker_network_mode }}
+  repository-indexer:
+    image: dataspects/repository-indexer:{{ repositoryIndexerVersion }}
+    depends_on:
+      - nats
+      - elasticsearch
+      - tika
+    environment:
+      - "NATS_URI=nats://nats:4222"
+      - "ES_NODE=http://elastic:g6gWvTmsgGKRibtfgqKf@elasticsearch:9200"
+      - "ES_INDEX=general"
+      - "TIKA_URL=http://tika:9998"
+    network_mode: {{ docker_network_mode }}
 {{ comment_out_volumes }}volumes:
 {{ comment_out_volumes }}  mariadb_data:
 {{ comment_out_volumes }}    driver: local

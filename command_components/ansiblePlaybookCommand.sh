@@ -33,7 +33,6 @@ time ansible-playbook \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
   $PRIVILEGE_ESCALATION \
       $RESOURCES_PATH/dataspectsSystem/ansible_playbooks/100_Prepare/100_create_dataspectsSystem_control_folder_on_host.yml \
-      $RESOURCES_PATH/dataspectsSystem/ansible_playbooks/100_Prepare/110_pull_private_Docker_images_from_registry_dataspects_com.yml \
       $RESOURCES_PATH/dataspectsSystem/ansible_playbooks/200_Docker-Compose/200_compile_and_copy_docker_compose_file.yml \
       $RESOURCES_PATH/dataspectsSystem/ansible_playbooks/200_Docker-Compose/210_run_docker_compose.yml \
       $RESOURCES_PATH/dataspectsSystem/ansible_playbooks/300_MediaWiki/300_install_mediawiki.yml \
