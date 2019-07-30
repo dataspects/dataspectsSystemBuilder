@@ -136,7 +136,7 @@ services:
       - tika
     environment:
       - "NATS_URI=nats://nats:4222"
-      - "ES_NODE=http://elastic:g6gWvTmsgGKRibtfgqKf@elasticsearch:9200"
+      - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
       - "ES_INDEX=general"
       - "TIKA_URL=http://tika:9998"
     networks:
@@ -165,7 +165,36 @@ services:
       - tika
     environment:
       - "NATS_URI=nats://nats:4222"
-      - "ES_NODE=http://elastic:g6gWvTmsgGKRibtfgqKf@elasticsearch:9200"
+      - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
+      - "ES_INDEX=general"
+      - "TIKA_URL=http://tika:9998"
+    networks:
+      - dataspects
+  document-datastore:
+    image: dataspects/document-datastore:{{ repositoryDatastoreVersion }}
+    depends_on:
+      - mongodb
+      - nats
+    ports:
+      - 3003:3003
+    environment:
+      - "PORT=3002"
+      - "NODE_ENV=production"
+      - "NATS_URI=nats://nats:4222"
+      - "MONGODB_URI=mongodb://mongodb:27017/repositories"
+      - "MASTER_API_KEY=123456789"
+      - "API_KEY=cd"
+    networks:
+      - dataspects
+  document-indexer:
+    image: dataspects/document-indexer:{{ repositoryIndexerVersion }}
+    depends_on:
+      - nats
+      - elasticsearch
+      - tika
+    environment:
+      - "NATS_URI=nats://nats:4222"
+      - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
       - "ES_INDEX=general"
       - "TIKA_URL=http://tika:9998"
     networks:

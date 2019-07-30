@@ -27,7 +27,7 @@ time ansible-playbook \
   --extra-vars registry_dataspects_com_user=$REGISTRY_DATASPECTS_COM_USER \
   --extra-vars registry_dataspects_com_password=$REGISTRY_DATASPECTS_COM_PASSWORD \
   --extra-vars platform=$PLATFORM \
-  --extra-vars wgMediaWikiMongoID=$MEDIAWIKI_MONGO_ID \
+  --extra-vars wgMediaWikiMongoID=$WG_MEDIAWIKI_MONGO_ID \
   --extra-vars wgDataspectsApiKey=$DATASPECTS_API_KEY \
   --extra-vars wgDataspectsApiURL=$DATASPECTS_API_URL \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \

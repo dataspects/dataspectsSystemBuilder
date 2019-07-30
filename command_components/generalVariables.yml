@@ -31,6 +31,8 @@ mediawikiDatastoreVersion: 0.0.1
 mediawikiIndexerVersion: 0.0.1
 repositoryDatastoreVersion: 0.0.2
 repositoryIndexerVersion: 0.0.1
+documentDatastoreVersion: 0.0.1
+documentIndexerVersion: 0.0.1
 dockerNetwork: "dataspects"
 
 # Docker UI Environment Variables ##############################################
