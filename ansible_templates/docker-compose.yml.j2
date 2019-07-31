@@ -12,6 +12,7 @@ services:
     networks:
       - dataspects
 {% else %}
+    network_mode: host
     ports:
       - 3306:3306
 {% endif %}
@@ -26,7 +27,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   proxy:
     image: dataspects/docker-nginx:{{ dockerNginxVersion }}
     ports:
@@ -39,7 +42,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   parsoid:
     image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
     environment:
@@ -47,7 +52,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
     environment:
@@ -60,7 +67,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   kibana:
     image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
     environment:
@@ -72,7 +81,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   tika:
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
     ports:
@@ -80,7 +91,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   mongodb:
     image: mongo:{{ mongoVersion }}
     ports:
@@ -90,7 +103,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   redis:
     image: redis:{{ redisVersion }}
     ports:
@@ -98,7 +113,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   ui:
     image: dataspects/ui:{{ dockerDataspectsUIVersion }}
     ports:
@@ -110,7 +127,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
     environment:
       - "NODE_ENV={{ dataspectsUINodeEnv }}"
       - "REDIS_HOST={% if docker_network_mode == 'host'%}127.0.0.1{% else %}redis{% endif %}"
@@ -136,7 +155,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   mediawiki-datastore:
     image: dataspects/mediawiki-datastore:{{ mediawikiDatastoreVersion }}
     depends_on:
@@ -145,7 +166,9 @@ services:
 {% if dataspectsUIHost == 'localhost'%}
     ports:
       - 3001:3001
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
     environment:
       - "PORT=3001"
       - "NODE_ENV=production"
@@ -156,7 +179,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   mediawiki-indexer:
     image: dataspects/mediawiki-indexer:{{ mediawikiIndexerVersion }}
     depends_on:
@@ -171,7 +196,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   repository-datastore:
     image: dataspects/repository-datastore:{{ repositoryDatastoreVersion }}
     depends_on:
@@ -180,7 +207,9 @@ services:
 {% if dataspectsUIHost == 'localhost'%}
     ports:
       - 3002:3002
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
     environment:
       - "PORT=3002"
       - "NODE_ENV=production"
@@ -191,7 +220,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
   repository-indexer:
     image: dataspects/repository-indexer:{{ repositoryIndexerVersion }}
     depends_on:
@@ -206,7 +237,9 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    network_mode: host
+{% endif %}
 {% if docker_network_mode == 'docker'%}
 networks:
   dataspects:

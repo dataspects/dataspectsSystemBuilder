@@ -26,7 +26,8 @@ time ansible-playbook \
   --extra-vars registry_dataspects_com_password=$REGISTRY_DATASPECTS_COM_PASSWORD \
   --extra-vars platform=$PLATFORM \
   --extra-vars wgMediaWikiMongoID=$WG_MEDIAWIKI_MONGO_ID \
-  --extra-vars wgDataspectsApiKey=$DATASPECTS_API_KEY \
+  --extra-vars mediawikiDatastoreAPIMasterKey=$MEDIAWIKI_DATA_STORE_API_MASTER_KEY \
+  --extra-vars mediawikiDatastoreAPIURL=$MEDIAWIKI_DATA_STORE_API_URL \
   --extra-vars wgDataspectsApiURL=$DATASPECTS_API_URL \
   --extra-vars dataspectsUIHost=$DATASPECTS_UI_HOST \
   --extra-vars dataspectsMediaWikiDatastore=$DATASPECTS_MEDIAWIKI_DATASTORE_HOST \

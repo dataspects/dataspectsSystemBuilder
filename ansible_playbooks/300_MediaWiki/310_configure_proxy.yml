@@ -36,5 +36,6 @@
       shell: docker-compose \
                --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
                  restart proxy
+      when: docker_network_mode == 'docker'
       tags:
         - 310_configure_proxy

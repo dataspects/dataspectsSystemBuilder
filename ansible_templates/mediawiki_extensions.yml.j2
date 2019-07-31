@@ -6,8 +6,8 @@ mediawiki_extensions:
       - wfLoadExtension( 'DataspectsMediaWikiFeeder' );
       - $wgRateLimits['edit']['ip'] = array( 1000, 1 );
       - $wgMediaWikiMongoID = "{{ wgMediaWikiMongoID }}";
-      - $wgDataspectsApiKey = "{{ wgDataspectsApiKey }}";
-      - $wgDataspectsApiURL = "{{ wgDataspectsApiURL }}";
+      - $wgDataspectsApiKey = "{{ mediawikiDatastoreAPIMasterKey }}";
+      - $wgDataspectsApiURL = "{{ mediawikiDatastoreAPIURL }}";
   - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageForms.git
     name: PageForms
     localsettings_configs:
