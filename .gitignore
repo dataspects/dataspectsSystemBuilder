@@ -3,4 +3,4 @@
 ubuntu-*.log
 secrets.sh
 custom*
-.retry
+*.retry

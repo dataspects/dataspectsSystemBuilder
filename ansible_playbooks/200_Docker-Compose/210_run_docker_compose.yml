@@ -9,6 +9,13 @@
                --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
                  up \
                    {% if docker_network_mode == 'host'%}--scale proxy=0{% endif %} \
+                   {% if dataspectsUIHost == 'localhost'%}--scale ui=0{% endif %} \
+                   {% if dataspectsMediaWikiDatastore == 'localhost'%}--scale mediawiki-datastore=0{% endif %} \
+                   {% if dataspectsMediaWikiIndexerHost == 'localhost'%}--scale mediawiki-indexer=0{% endif %} \
+                   {% if dataspectsRepositoryDatastoreHost == 'localhost'%}--scale repository-datastore=0{% endif %} \
+                   {% if dataspectsRepositoryIndexerHost == 'localhost'%}--scale repository-indexer=0{% endif %} \
+                   {% if dataspectsDocumentDatastoreHost == 'localhost'%}--scale document-datastore=0{% endif %} \
+                   {% if dataspectsDocumentIndexerHost == 'localhost'%}--scale document-indexer=0{% endif %} \
                    --detach
       tags:
         - 210_run_docker_compose

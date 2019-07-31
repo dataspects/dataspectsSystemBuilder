@@ -3,7 +3,6 @@
 : "${CONTROL_FOLDER_PATH:?MISSING}"
 : "${PLATFORM:?MISSING - must be one of linux|mac|windows}"
 : "${DOCKER_VOLUMES_MODE:?MISSING - must be one of automatic|manual}"
-: "${DOCKER_COMPOSE_FILE:?MISSING}"
 : "${DATASPECTS_API_KEY:?MISSING}"
 
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
@@ -15,7 +14,6 @@ time ansible-playbook \
   --extra-vars @$RESOURCES_PATH/dataspectsSystem/command_components/generalVariables.yml \
   --extra-vars docker_volumes_mode=$DOCKER_VOLUMES_MODE \
   --extra-vars docker_network_mode=$DOCKER_NETWORK_MODE \
-  --extra-vars dockerComposeFileType=$DOCKER_COMPOSE_FILE \
   --extra-vars dataspectsSystem_control_folder_on_host=$CONTROL_FOLDER_PATH \
   --extra-vars mediawikiDomainNameInHostFile=$DOMAIN_NAME \
   --extra-vars aws_access_key_id=$AWS_ACCESS_KEY_ID \
@@ -30,6 +28,13 @@ time ansible-playbook \
   --extra-vars wgMediaWikiMongoID=$WG_MEDIAWIKI_MONGO_ID \
   --extra-vars wgDataspectsApiKey=$DATASPECTS_API_KEY \
   --extra-vars wgDataspectsApiURL=$DATASPECTS_API_URL \
+  --extra-vars dataspectsUIHost=$DATASPECTS_UI_HOST \
+  --extra-vars dataspectsMediaWikiDatastore=$DATASPECTS_MEDIAWIKI_DATASTORE_HOST \
+  --extra-vars dataspectsMediaWikiIndexerHost=$DATASPECTS_MEDIAWIKI_INDEXER_HOST \
+  --extra-vars dataspectsRepositoryDatastoreHost=$DATASPECTS_REPOSITORY_DATASTORE_HOST \
+  --extra-vars dataspectsRepositoryIndexerHost=$DATASPECTS_REPOSITORY_INDEXER_HOST \
+  --extra-vars dataspectsDocumentDatastoreHost=$DATASPECTS_DOCUMENT_DATASTORE_HOST \
+  --extra-vars dataspectsDocumentIndexerHost=$DATASPECTS_DOCUMENT_INDEXER_HOST \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
   $PRIVILEGE_ESCALATION \
       $RESOURCES_PATH/dataspectsSystem/ansible_playbooks/100_Prepare/100_create_dataspectsSystem_control_folder_on_host.yml \
