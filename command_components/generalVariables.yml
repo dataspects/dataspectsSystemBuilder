@@ -10,12 +10,11 @@ kibanaPortOnHost: 5601
 elasticsearchPortOnHost: 9200
 tikaPortOnHost: 9998
 dataspectsUIPort: 3000
-dataspectsFeederServicePort: 3000
 mongodbPortOnHost: 27017
 redisPortOnHost: 6379
 
 # Docker Images ################################################################
-mariadbVersion: 10.3.13
+mariadbVersion: 10.4.6
 dockerApachePhpDataspectsMediawikiVersion: 1.2
 dockerNginxVersion: 1.0.1
 # https://www.docker.elastic.co/
