@@ -11,7 +11,10 @@ services:
 {% if docker_network_mode == 'docker'%}
     networks:
       - dataspects
-{% else %}{% endif %}
+{% else %}
+    ports:
+      - 3306:3306
+{% endif %}
   {{ mediawikiDockerServiceName }}:
     image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
     volumes:
