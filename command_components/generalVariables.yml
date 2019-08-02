@@ -24,11 +24,11 @@ kibanaVersion: 7.2.0
 redisVersion: 5.0.5-alpine
 mongoVersion: 4.0.10
 dockerTikaserverVersion: "1.20"
-dockerDataspectsUIVersion: "0.13.0"
+dockerDataspectsUIVersion: "0.22.0"
 natsVersion: "2.0.2-linux"
 mediawikiDatastoreVersion: 0.0.1
 mediawikiIndexerVersion: 0.0.1
-repositoryDatastoreVersion: 0.0.2
+repositoryDatastoreVersion: 0.2.0
 repositoryIndexerVersion: 0.0.1
 documentDatastoreVersion: 0.0.1
 documentIndexerVersion: 0.0.1

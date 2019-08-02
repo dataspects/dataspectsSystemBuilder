@@ -4,3 +4,4 @@ ubuntu-*.log
 secrets.sh
 custom*
 *.retry
+dsrepository-cli
