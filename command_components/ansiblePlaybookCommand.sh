@@ -16,6 +16,7 @@ time ansible-playbook \
   --extra-vars docker_network_mode=$DOCKER_NETWORK_MODE \
   --extra-vars dataspectsSystem_control_folder_on_host=$CONTROL_FOLDER_PATH \
   --extra-vars mediawikiDomainNameInHostFile=$DOMAIN_NAME \
+  --extra-vars systemPrefix=$SYSTEM_PREFIX \
   --extra-vars aws_access_key_id=$AWS_ACCESS_KEY_ID \
   --extra-vars aws_secret_access_key=$AWS_SECRET_ACCESS_KEY \
   --extra-vars ui_session_secret=$UI_SESSION_SECRET \

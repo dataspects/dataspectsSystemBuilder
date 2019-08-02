@@ -2,6 +2,7 @@
 version: "3.7"
 services:
   db:
+    container_name: {{ systemPrefix }}-db
     image: mariadb:{{ mariadbVersion }}
     environment:
       MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
@@ -10,13 +11,14 @@ services:
       - {{ manual_docker_volumes_location }}mediawiki_root:/datadump/mediawiki_root/
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
     ports:
       - 3306:3306
 {% endif %}
   {{ mediawikiDockerServiceName }}:
+    container_name: {{ systemPrefix }}-{{ mediawikiDockerServiceName }}
     image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
     volumes:
       - {{ manual_docker_volumes_location }}mediawiki_root:/var/www/html/
@@ -26,11 +28,12 @@ services:
       - parsoid
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   proxy:
+    container_name: {{ systemPrefix }}-proxy
     image: dataspects/docker-nginx:{{ dockerNginxVersion }}
     ports:
       - {{ nginxPortOnHost }}:80
@@ -41,21 +44,23 @@ services:
       - {{ manual_docker_volumes_location }}nginx_conf:/etc/nginx/conf.d
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   parsoid:
+    container_name: {{ systemPrefix }}-parsoid
     image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
     environment:
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}{{ mediawikiDockerServiceName }}{% endif %}/w/api.php
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   elasticsearch:
+    container_name: {{ systemPrefix }}-elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
     environment:
       - "ES_JAVA_OPTS=-Xms1024m -Xmx2048m"
@@ -66,11 +71,12 @@ services:
       - {{ elasticsearchPortOnHost }}:9200
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   kibana:
+    container_name: {{ systemPrefix }}-kibana
     image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
     environment:
       - "ELASTICSEARCH_HOSTS=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
@@ -80,21 +86,23 @@ services:
       - {{ kibanaPortOnHost }}:5601
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   tika:
+    container_name: {{ systemPrefix }}-tika
     image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
     ports:
       - {{ tikaPortOnHost }}:9998
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   mongo:
+    container_name: {{ systemPrefix }}-mongo
     image: mongo:{{ mongoVersion }}
     ports:
       - {{ mongodbPortOnHost }}:27017
@@ -102,21 +110,23 @@ services:
       - {{ manual_docker_volumes_location }}mongo_data:/data/db
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   redis:
+    container_name: {{ systemPrefix }}-redis
     image: redis:{{ redisVersion }}
     ports:
       - {{ redisPortOnHost }}:6379
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   ui:
+    container_name: {{ systemPrefix }}-ui
     image: dataspects/ui:{{ dockerDataspectsUIVersion }}
     ports:
       - {{ dataspectsUIPort }}:3000
@@ -126,7 +136,7 @@ services:
       - elasticsearch
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
@@ -151,14 +161,16 @@ services:
       - "REPOSITORY_DATA_STORE_API_URL=http://repository-datastore:3002"
       - "REPOSITORY_DATA_STORE_API_MASTER_KEY=123456789"
   nats:
+    container_name: {{ systemPrefix }}-nats
     image: nats:{{ natsVersion }}
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   mediawiki-datastore:
+    container_name: {{ systemPrefix }}-mediawiki-datastore
     image: dataspects/mediawiki-datastore:{{ mediawikiDatastoreVersion }}
     depends_on:
       - mongo
@@ -178,11 +190,12 @@ services:
       - "API_KEY=cd"
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   mediawiki-indexer:
+    container_name: {{ systemPrefix }}-mediawiki-indexer
     image: dataspects/mediawiki-indexer:{{ mediawikiIndexerVersion }}
     depends_on:
       - nats
@@ -195,11 +208,12 @@ services:
       - "TIKA_URL=http://tika:9998"
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   repository-datastore:
+    container_name: {{ systemPrefix }}-repository-datastore
     image: dataspects/repository-datastore:{{ repositoryDatastoreVersion }}
     depends_on:
       - mongo
@@ -219,11 +233,12 @@ services:
       - "API_KEY=cd"
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
   repository-indexer:
+    container_name: {{ systemPrefix }}-repository-indexer
     image: dataspects/repository-indexer:{{ repositoryIndexerVersion }}
     depends_on:
       - nats
@@ -236,7 +251,7 @@ services:
       - "TIKA_URL=http://tika:9998"
 {% if docker_network_mode == 'docker'%}
     networks:
-      - dataspects
+      - {{ systemPrefix }}
 {% else %}
     network_mode: host
 {% endif %}
