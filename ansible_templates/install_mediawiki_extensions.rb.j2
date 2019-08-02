@@ -2,7 +2,7 @@ require 'yaml'
 
 extensions = YAML.load_file("mediawiki_extensions.yml")
 @mediawiki_root = '.'
-mediawiki_container_name = '{{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1'
+mediawiki_container_name = '{{ systemPrefix }}-{{ mediawikiDockerServiceName }}'
 
 def append_to_localsettings s
   open("#{@mediawiki_root}/LocalSettings.php", "a") do |f|

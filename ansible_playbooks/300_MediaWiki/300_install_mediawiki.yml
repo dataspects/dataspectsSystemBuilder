@@ -47,13 +47,13 @@
         - 300_install_mediawiki
 
     - name: Install composer locally
-      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && ./install_composer.sh"
+      shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && ./install_composer.sh"
       tags:
         - 300_install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Run composer inside container
-      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c "cd /var/www/html/w && php composer.phar install"
+      shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && php composer.phar install"
       tags:
         - 300_install_mediawiki
 
@@ -69,7 +69,7 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install mediawiki inside container
-      shell: "docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash -c 'cd /var/www/html/w && ./install.sh'"
+      shell: "docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c 'cd /var/www/html/w && ./install.sh'"
       tags:
         - 300_install_mediawiki
 
@@ -100,7 +100,7 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Change admin user password
-      shell: docker exec {{ dataspectsSystem_control_folder_on_host | basename | lower }}_{{ mediawikiDockerServiceName }}_1 bash
+      shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: "{{ 'true' if platform == 'linux' else 'false' }}"
