@@ -160,6 +160,8 @@ services:
       - "MEDIAWIKI_DATA_STORE_API_MASTER_KEY=123456789"
       - "REPOSITORY_DATA_STORE_API_URL=http://repository-datastore:3002"
       - "REPOSITORY_DATA_STORE_API_MASTER_KEY=123456789"
+      - "DOCUMENT_DATA_STORE_API_URL=http://document-datastore:3002"
+      - "DOCUMENT_DATA_STORE_API_MASTER_KEY=123456789"
   nats:
     container_name: {{ systemPrefix }}-nats
     image: nats:{{ natsVersion }}
@@ -187,7 +189,7 @@ services:
       - "NATS_URI=nats://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}nats{% endif %}:4222"
       - "MONGODB_URI=mongodb://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}mongo{% endif %}:27017/mediawikis"
       - "MASTER_API_KEY=123456789"
-      - "API_KEY=cd"
+      - "API_KEY=987654321"
 {% if docker_network_mode == 'docker'%}
     networks:
       - {{ systemPrefix }}
@@ -230,7 +232,7 @@ services:
       - "NATS_URI=nats://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}nats{% endif %}:4222"
       - "MONGODB_URI=mongodb://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}mongo{% endif %}:27017/repositories"
       - "MASTER_API_KEY=123456789"
-      - "API_KEY=cd"
+      - "API_KEY=987654321"
 {% if docker_network_mode == 'docker'%}
     networks:
       - {{ systemPrefix }}
@@ -254,6 +256,49 @@ services:
       - {{ systemPrefix }}
 {% else %}
     network_mode: host
+{% endif %}
+document-datastore:
+  container_name: {{ systemPrefix }}-document-datastore
+  image: dataspects/document-datastore:{{ documentDatastoreVersion }}
+  depends_on:
+    - mongo
+    - nats
+{% if dataspectsUIHost == 'localhost'%}
+  ports:
+    - 3003:3003
+{% else %}
+  network_mode: host
+{% endif %}
+  environment:
+    - "PORT=3003"
+    - "NODE_ENV=development"
+    - "NATS_URI=nats://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}nats{% endif %}:4222"
+    - "MONGODB_URI=mongodb://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}mongo{% endif %}:27017/repositories"
+    - "MASTER_API_KEY=123456789"
+    - "API_KEY=987654321"
+{% if docker_network_mode == 'docker'%}
+  networks:
+    - {{ systemPrefix }}
+{% else %}
+  network_mode: host
+{% endif %}
+document-indexer:
+  container_name: {{ systemPrefix }}-document-indexer
+  image: dataspects/document-indexer:{{ documentIndexerVersion }}
+  depends_on:
+    - nats
+    - elasticsearch
+    - tika
+  environment:
+    - "NATS_URI=nats://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}nats{% endif %}:4222"
+    - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
+    - "ES_INDEX=general"
+    - "TIKA_URL=http://tika:9998"
+{% if docker_network_mode == 'docker'%}
+  networks:
+    - {{ systemPrefix }}
+{% else %}
+  network_mode: host
 {% endif %}
 {% if docker_network_mode == 'docker'%}
 networks:

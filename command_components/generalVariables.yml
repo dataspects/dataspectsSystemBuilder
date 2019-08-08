@@ -18,20 +18,20 @@ mariadbVersion: 10.4.6
 dockerApachePhpDataspectsMediawikiVersion: 1.2
 dockerNginxVersion: 1.0.1
 # https://www.docker.elastic.co/
-dockerElasticsearchVersion: 7.2.0
+dockerElasticsearchVersion: 7.3.0
 dockerParsoidVersion: 0.10.0
-kibanaVersion: 7.2.0
+kibanaVersion: 7.3.0
 redisVersion: 5.0.5-alpine
 mongoVersion: 4.0.10
 dockerTikaserverVersion: "1.20"
-dockerDataspectsUIVersion: "0.22.0"
+dockerDataspectsUIVersion: "0.26.0"
 natsVersion: "2.0.2-linux"
-mediawikiDatastoreVersion: 0.0.1
-mediawikiIndexerVersion: 0.0.1
-repositoryDatastoreVersion: 0.2.0
-repositoryIndexerVersion: 0.0.1
-documentDatastoreVersion: 0.0.1
-documentIndexerVersion: 0.0.1
+mediawikiDatastoreVersion: 0.1.0
+mediawikiIndexerVersion: 0.1.0
+repositoryDatastoreVersion: 0.4.0
+repositoryIndexerVersion: 0.5.0
+documentDatastoreVersion: 0.6.0
+documentIndexerVersion: 0.1.0
 dockerNetwork: "dataspects"
 
 # Docker UI Environment Variables ##############################################

@@ -5,3 +5,4 @@ secrets.sh
 custom*
 *.retry
 dsrepository-cli
+feed-this-folder-to-dataspects-repository-datastore.sh
