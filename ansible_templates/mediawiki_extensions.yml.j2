@@ -94,3 +94,7 @@ mediawiki_extensions:
       - cd /var/www/html/w; php composer.phar require jeroen/mediawiki-github "~1.4"
     localsettings_configs:
       - $egGitHubUrl = 'https://raw.githubusercontent.com';
+  - docker_commands:
+      - cd /var/www/html/w; php composer.phar require mediawiki/mermaid "~2.1"
+    localsettings_configs:
+      - wfLoadExtension( 'Mermaid' );
