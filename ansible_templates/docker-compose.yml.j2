@@ -156,6 +156,7 @@ services:
       - "API_KEY={{ dataspectsUIAPIKey }}"
       - "TIKA_URL={{ dataspectsUITikaURL }}"
       - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
+      - "APM_SERVER_URL=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}apm{% endif %}:8200"
       - "MEDIAWIKI_DATA_STORE_API_URL=http://mediawiki-datastore:3001"
       - "MEDIAWIKI_DATA_STORE_API_MASTER_KEY=123456789"
       - "REPOSITORY_DATA_STORE_API_URL=http://repository-datastore:3002"

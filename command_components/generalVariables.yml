@@ -26,8 +26,8 @@ mongoVersion: 4.0.10
 dockerTikaserverVersion: "1.20"
 dockerDataspectsUIVersion: "0.26.0"
 natsVersion: "2.0.2-linux"
-mediawikiDatastoreVersion: 0.1.0
-mediawikiIndexerVersion: 0.1.0
+mediawikiDatastoreVersion: 0.1.1
+mediawikiIndexerVersion: 0.1.1
 repositoryDatastoreVersion: 0.4.0
 repositoryIndexerVersion: 0.5.0
 documentDatastoreVersion: 0.6.0
