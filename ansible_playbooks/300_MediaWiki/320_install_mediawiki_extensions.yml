@@ -9,9 +9,11 @@
       shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
       register: volume_profile
       when: docker_volumes_mode == 'automatic'
+      become: yes
+      become_method: sudo
       tags:
         - 320_install_mediawiki_extensions
-    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).items()[0][1] }}
+    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).values() | first }}
       when: docker_volumes_mode == 'automatic'
       tags:
         - 320_install_mediawiki_extensions

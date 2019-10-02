@@ -3,7 +3,6 @@
 - hosts: localhost
   gather_facts: False
   tasks:
-
     - name: Run docker-compose
       shell: docker-compose \
                --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
@@ -17,5 +16,7 @@
                    {% if dataspectsDocumentDatastoreHost == 'localhost'%}--scale document-datastore=0{% endif %} \
                    {% if dataspectsDocumentIndexerHost == 'localhost'%}--scale document-indexer=0{% endif %} \
                    --detach
+      become: yes
+      become_method: sudo
       tags:
         - 210_run_docker_compose

@@ -9,9 +9,11 @@
       shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
       register: volume_profile
       when: docker_volumes_mode == 'automatic'
+      become: yes
+      become_method: sudo
       tags:
         - 300_install_mediawiki
-    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).items()[0][1] }}
+    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).values() | first }}
       when: docker_volumes_mode == 'automatic'
       tags:
         - 300_install_mediawiki
@@ -48,12 +50,14 @@
 
     - name: Install composer locally
       shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && ./install_composer.sh"
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: Run composer inside container
       shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && php composer.phar install"
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 
@@ -70,6 +74,7 @@
     # [[IsOperationType::VendorPackageOperation]]
     - name: Install mediawiki inside container
       shell: "docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c 'cd /var/www/html/w && ./install.sh'"
+      become: "{{ 'true' if platform == 'linux' else 'false' }}"
       tags:
         - 300_install_mediawiki
 

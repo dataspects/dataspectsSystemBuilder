@@ -3,7 +3,7 @@ version: "3.7"
 services:
   db:
     container_name: {{ systemPrefix }}-db
-    image: mariadb:{{ mariadbVersion }}
+    image: {{ lookup('env','DI_MARIADB') }}
     environment:
       MYSQL_ROOT_PASSWORD: {{ mysql_root_password }}
     volumes:
@@ -19,7 +19,7 @@ services:
 {% endif %}
   {{ mediawikiDockerServiceName }}:
     container_name: {{ systemPrefix }}-{{ mediawikiDockerServiceName }}
-    image: dataspects/docker-apache-php-dataspects-mediawiki:{{ dockerApachePhpDataspectsMediawikiVersion }}
+    image: {{ lookup('env','DI_DATASPECTS_APACHE_MEDIAWIKI') }}
     volumes:
       - {{ manual_docker_volumes_location }}mediawiki_root:/var/www/html/
 #      - {{ manual_docker_volumes_location }}mediawiki_conf:/etc/apache2/sites-available
@@ -34,7 +34,7 @@ services:
 {% endif %}
   proxy:
     container_name: {{ systemPrefix }}-proxy
-    image: dataspects/docker-nginx:{{ dockerNginxVersion }}
+    image: {{ lookup('env','DI_PROXY') }}
     ports:
       - {{ nginxPortOnHost }}:80
       - {{ nginxHttpsPortOnHost }}:443
@@ -50,7 +50,7 @@ services:
 {% endif %}
   parsoid:
     container_name: {{ systemPrefix }}-parsoid
-    image: dataspects/docker-parsoid:{{ dockerParsoidVersion }}
+    image: {{ lookup('env','DI_PARSOID') }}
     environment:
       PARSOID_DOMAIN_{{ mediawikiDomainNameInHostFile }}: http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}{{ mediawikiDockerServiceName }}{% endif %}/w/api.php
 {% if docker_network_mode == 'docker'%}
@@ -61,7 +61,7 @@ services:
 {% endif %}
   elasticsearch:
     container_name: {{ systemPrefix }}-elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:{{ dockerElasticsearchVersion }}
+    image: {{ lookup('env','DI_ELASTICSEARCH') }}
     environment:
       - "ES_JAVA_OPTS=-Xms1024m -Xmx2048m"
       - "discovery.type=single-node"
@@ -77,7 +77,7 @@ services:
 {% endif %}
   kibana:
     container_name: {{ systemPrefix }}-kibana
-    image: docker.elastic.co/kibana/kibana:{{ kibanaVersion }}
+    image: {{ lookup('env','DI_KIBANA') }}
     environment:
       - "ELASTICSEARCH_HOSTS=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
     depends_on:
@@ -92,7 +92,7 @@ services:
 {% endif %}
   tika:
     container_name: {{ systemPrefix }}-tika
-    image: logicalspark/docker-tikaserver:{{ dockerTikaserverVersion }}
+    image: {{ lookup('env','DI_TIKA') }}
     ports:
       - {{ tikaPortOnHost }}:9998
 {% if docker_network_mode == 'docker'%}
@@ -103,7 +103,7 @@ services:
 {% endif %}
   mongo:
     container_name: {{ systemPrefix }}-mongo
-    image: mongo:{{ mongoVersion }}
+    image: {{ lookup('env','DI_MONGODB') }}
     ports:
       - {{ mongodbPortOnHost }}:27017
     volumes:
@@ -116,7 +116,7 @@ services:
 {% endif %}
   redis:
     container_name: {{ systemPrefix }}-redis
-    image: redis:{{ redisVersion }}
+    image: {{ lookup('env','DI_REDIS') }}
     ports:
       - {{ redisPortOnHost }}:6379
 {% if docker_network_mode == 'docker'%}
@@ -127,7 +127,7 @@ services:
 {% endif %}
   ui:
     container_name: {{ systemPrefix }}-ui
-    image: dataspects/ui:{{ dockerDataspectsUIVersion }}
+    image: {{ lookup('env','DI_DATASPECTS_UI') }}
     ports:
       - {{ dataspectsUIPort }}:3000
     depends_on:
@@ -165,7 +165,7 @@ services:
       - "DOCUMENT_DATA_STORE_API_MASTER_KEY=123456789"
   nats:
     container_name: {{ systemPrefix }}-nats
-    image: nats:{{ natsVersion }}
+    image: {{ lookup('env','DI_NATS') }}
 {% if docker_network_mode == 'docker'%}
     networks:
       - {{ systemPrefix }}
@@ -174,7 +174,7 @@ services:
 {% endif %}
   mediawiki-datastore:
     container_name: {{ systemPrefix }}-mediawiki-datastore
-    image: dataspects/mediawiki-datastore:{{ mediawikiDatastoreVersion }}
+    image: {{ lookup('env','DI_DATASPECTS_MEDIAWIKI_DATASTORE') }}
     depends_on:
       - mongo
       - nats
@@ -199,7 +199,7 @@ services:
 {% endif %}
   mediawiki-indexer:
     container_name: {{ systemPrefix }}-mediawiki-indexer
-    image: dataspects/mediawiki-indexer:{{ mediawikiIndexerVersion }}
+    image: {{ lookup('env','DI_DATASPECTS_MEDIAWIKI_INDEXER') }}
     depends_on:
       - nats
       - elasticsearch
@@ -217,7 +217,7 @@ services:
 {% endif %}
   repository-datastore:
     container_name: {{ systemPrefix }}-repository-datastore
-    image: dataspects/repository-datastore:{{ repositoryDatastoreVersion }}
+    image: {{ lookup('env','DI_DATASPECTS_REPOSITORY_DATASTORE') }}
     depends_on:
       - mongo
       - nats
@@ -242,7 +242,7 @@ services:
 {% endif %}
   repository-indexer:
     container_name: {{ systemPrefix }}-repository-indexer
-    image: dataspects/repository-indexer:{{ repositoryIndexerVersion }}
+    image: {{ lookup('env','DI_DATASPECTS_REPOSITORY_INDEXER') }}
     depends_on:
       - nats
       - elasticsearch
@@ -260,7 +260,7 @@ services:
 {% endif %}
   document-datastore:
     container_name: {{ systemPrefix }}-document-datastore
-    image: dataspects/document-datastore:{{ documentDatastoreVersion }}
+    image: {{ lookup('env','DI_DATASPECTS_DOCUMENT_DATASTORE') }}
     depends_on:
       - mongo
       - nats
@@ -285,7 +285,7 @@ services:
 {% endif %}
   document-indexer:
     container_name: {{ systemPrefix }}-document-indexer
-    image: dataspects/document-indexer:{{ documentIndexerVersion }}
+    image: {{ lookup('env','DI_DATASPECTS_DOCUMENT_INDEXER') }}
     depends_on:
       - nats
       - elasticsearch

@@ -3,6 +3,6 @@
 ubuntu-*.log
 secrets.sh
 custom*
-*.retry
+.retry
 dsrepository-cli
 feed-this-folder-to-dataspects-repository-datastore.sh

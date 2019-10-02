@@ -3,7 +3,6 @@
 : "${CONTROL_FOLDER_PATH:?MISSING}"
 : "${PLATFORM:?MISSING - must be one of linux|mac|windows}"
 : "${DOCKER_VOLUMES_MODE:?MISSING - must be one of automatic|manual}"
-: "${DATASPECTS_API_KEY:?MISSING}"
 
 if [[ ! $UI_SESSION_SECRET ]]; then UI_SESSION_SECRET=dummy; fi
 if [[ ! $TIKA_USERNAME ]]; then TIKA_USERNAME=dummy; fi
@@ -22,7 +21,6 @@ time ansible-playbook \
   --extra-vars ui_session_secret=$UI_SESSION_SECRET \
   --extra-vars tika_username=$TIKA_USERNAME \
   --extra-vars tika_password=$TIKA_PASSWORD \
-  --extra-vars ui_feed_service_api_key=$DATASPECTS_API_KEY \
   --extra-vars registry_dataspects_com_user=$REGISTRY_DATASPECTS_COM_USER \
   --extra-vars registry_dataspects_com_password=$REGISTRY_DATASPECTS_COM_PASSWORD \
   --extra-vars platform=$PLATFORM \
