@@ -3,12 +3,11 @@
 - hosts: localhost
   gather_facts: False
   tasks:
-    - name: Run docker-compose
+    - name: 210 Run docker-compose
       shell: docker-compose \
                --file {{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml \
                  up \
                    {% if docker_network_mode == 'host'%}--scale proxy=0{% endif %} \
-                   {% if dataspectsUIHost == 'localhost'%}--scale ui=0{% endif %} \
                    {% if dataspectsMediaWikiDatastore == 'localhost'%}--scale mediawiki-datastore=0{% endif %} \
                    {% if dataspectsMediaWikiIndexerHost == 'localhost'%}--scale mediawiki-indexer=0{% endif %} \
                    {% if dataspectsRepositoryDatastoreHost == 'localhost'%}--scale repository-datastore=0{% endif %} \

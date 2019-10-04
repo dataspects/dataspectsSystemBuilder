@@ -9,7 +9,7 @@
       tags:
         - 200_compile_and_copy_docker_compose_file
 
-    - name: Set Docker volumes location
+    - name: 200 Set Docker volumes location
       set_fact:
         manual_docker_volumes_location: "{{ dataspectsSystem_control_folder_on_host }}/"
         comment_out_volumes: "#"
@@ -17,7 +17,7 @@
       tags:
         - 200_compile_and_copy_docker_compose_file
 
-    - name: Set Docker volumes location
+    - name: 200 Set Docker volumes location
       set_fact:
         manual_docker_volumes_location: ""
         comment_out_volumes: ""
@@ -30,7 +30,7 @@
       tags:
         - 200_compile_and_copy_docker_compose_file
 
-    - name: Copy docker-compose.yml file to {{ dataspectsSystem_control_folder_on_host }}
+    - name: 200 Copy docker-compose.yml file to {{ dataspectsSystem_control_folder_on_host }}
       template:
         src: ../../ansible_templates/docker-compose.yml.j2
         dest: "{{ dataspectsSystem_control_folder_on_host }}/docker-compose.yml"

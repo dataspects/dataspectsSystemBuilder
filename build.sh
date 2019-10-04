@@ -16,4 +16,5 @@ printf "\tINFO: Logging into docker.pkg.github.com as $GITHUB_PKG_USER\n"
 ################################################################################
 source ./command_components/ansiblePlaybookCommand.sh
 
+printf "\tINFO: MediaWiki URL is: http://$DOMAIN_NAME/w\n"
 printf "\tINFO: MediaWiki admin user password is: $MEDIAWIKI_ADMIN_PASSWORD\n"

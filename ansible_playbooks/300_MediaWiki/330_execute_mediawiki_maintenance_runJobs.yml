@@ -5,7 +5,8 @@
   tasks:
 
     # [[IsOperationType::RunDockerContainer]]
-    - name: 330_execute_mediawiki_maintenance_runJobs
+    - name: 330 execute_mediawiki_maintenance_runJobs
       shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c "php w/maintenance/runJobs.php && php w/extensions/SemanticMediaWiki/maintenance/rebuildData.php"
+      become: yes
       tags:
         - 330_execute_mediawiki_maintenance_runJobs

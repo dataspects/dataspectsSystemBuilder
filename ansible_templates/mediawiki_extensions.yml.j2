@@ -68,7 +68,7 @@ mediawiki_extensions:
   - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor.git
     name: VisualEditor
     in_extension_folder_commands:
-      - git checkout REL1_31
+      - git checkout {{ mediawiki_version }}
       - git submodule update --init
     localsettings_configs:
       - wfLoadExtension( 'VisualEditor' );
@@ -77,25 +77,21 @@ mediawiki_extensions:
       - $wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://parsoid:8000', 'domain' => '{{ mediawikiDomainNameInHostFile }}');
       - $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
   - docker_commands:
-      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '~3.0' --update-no-dev
+      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '{{ semantic_mediawiki_version }}' --update-no-dev
       - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
     localsettings_configs:
       - enableSemantics( 'localhost' );
       - $smwgLinksInValues = true;
   - docker_commands:
-      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '3.0.*' --update-no-dev
+      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '{{ semantic_result_formats_version }}' --update-no-dev
       - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
     localsettings_configs:
       - wfLoadExtension( 'SemanticResultFormats' );
-  # - repo: https://github.com/wikimedia/mediawiki-extensions-TemplateData.git
-  #   name: TemplateData
-  #   localsettings_configs:
-  #     - wfLoadExtension( 'TemplateData' );
   - docker_commands:
-      - cd /var/www/html/w; php composer.phar require jeroen/mediawiki-github "~1.4"
+      - cd /var/www/html/w; php composer.phar require jeroen/mediawiki-github "{{ mediawiki_github_version }}"
     localsettings_configs:
       - $egGitHubUrl = 'https://raw.githubusercontent.com';
   - docker_commands:
-      - cd /var/www/html/w; php composer.phar require mediawiki/mermaid "~2.1"
+      - cd /var/www/html/w; php composer.phar require mediawiki/mermaid "{{ mediawiki_mermaid_version }}"
     localsettings_configs:
       - wfLoadExtension( 'Mermaid' );

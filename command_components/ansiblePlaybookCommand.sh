@@ -13,10 +13,13 @@ time ansible-playbook \
   --extra-vars @./command_components/generalVariables.yml \
   --extra-vars mediawiki_version=$MEDIAWIKI_VERSION \
   --extra-vars mediawiki_name=$MEDIAWIKI_NAME \
+  --extra-vars semantic_mediawiki_version=$SEMANTIC_MEDIAWIKI_VERSION \
+  --extra-vars semantic_result_formats_version=$SEMANTIC_RESULTS_FORMATS_VERSION \
+  --extra-vars mediawiki_github_version=$MEDIAWIKI_GITHUB_VERSION \
+  --extra-vars mediawiki_mermaid_version=$MEDIAWIKI_MERMAID_VERSION \
   --extra-vars mediawiki_admin_user_password=$MEDIAWIKI_ADMIN_PASSWORD \
   --extra-vars docker_volumes_mode=$DOCKER_VOLUMES_MODE \
   --extra-vars docker_network_mode=$DOCKER_NETWORK_MODE \
-  --extra-vars dockerNetwork=$DOCKER_NETWORK_NAME \
   --extra-vars dataspectsSystem_control_folder_on_host=$CONTROL_FOLDER_PATH \
   --extra-vars mediawikiDomainNameInHostFile=$DOMAIN_NAME \
   --extra-vars systemPrefix=$SYSTEM_PREFIX \
@@ -32,7 +35,6 @@ time ansible-playbook \
   --extra-vars mediawikiDatastoreAPIMasterKey=$MEDIAWIKI_DATA_STORE_API_MASTER_KEY \
   --extra-vars mediawikiDatastoreAPIURL=$MEDIAWIKI_DATA_STORE_API_URL \
   --extra-vars wgDataspectsApiURL=$DATASPECTS_API_URL \
-  --extra-vars dataspectsUIHost=$DATASPECTS_UI_HOST \
   --extra-vars dataspectsMediaWikiDatastore=$DATASPECTS_MEDIAWIKI_DATASTORE_HOST \
   --extra-vars dataspectsMediaWikiIndexerHost=$DATASPECTS_MEDIAWIKI_INDEXER_HOST \
   --extra-vars dataspectsRepositoryDatastoreHost=$DATASPECTS_REPOSITORY_DATASTORE_HOST \

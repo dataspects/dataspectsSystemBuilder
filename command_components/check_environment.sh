@@ -1,11 +1,14 @@
 #!/bin/bash
 
+export DOMAIN_NAME="$(basename -- $CONTROL_FOLDER_PATH)"
+export SYSTEM_PREFIX="$(basename -- $CONTROL_FOLDER_PATH)"
+
 ################################################################################
 : "${DOCKER_NETWORK_MODE:?MISSING - must be one of docker|host}"
 printf "\tDOCKER_NETWORK_MODE = $DOCKER_NETWORK_MODE\n"
 if [ $DOCKER_NETWORK_MODE = "docker" ]
 then
-  printf "\t-> Using Docker network\n"
+  printf "\t-> Using Docker network "$SYSTEM_PREFIX"\n"
   printf "\t-> Starting proxy service\n"
 else
   printf "\t-> Skipping Docker network\n"
