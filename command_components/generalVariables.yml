@@ -13,8 +13,6 @@ dataspectsUIPort: 3000
 mongodbPortOnHost: 27017
 redisPortOnHost: 6379
 
-dockerNetwork: "dataspects"
-
 # Docker UI Environment Variables ##############################################
 dataspectsUINodeEnv: "develoment"
 dataspectsUISessionSecret: "ReplaceMePlease"
@@ -30,8 +28,3 @@ dataspectsUITikaURL: "http://tika:9998"
 
 # MariaDB ######################################################################
 mysql_root_password: mysqlrootpass
-
-# MediaWiki ####################################################################
-mediawiki_version: REL1_32
-mediawiki_name: dataspectsSystem Wiki
-mediawiki_admin_user_password: adminpass
