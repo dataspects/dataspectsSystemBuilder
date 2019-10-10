@@ -1,0 +1,91 @@
+{
+  "esQuery": {
+    "index": "",
+    "body": {
+      "_source": {
+        "includes": [
+          "HasEntityName",
+          "HasEntityURL",
+          "HasEntityType",
+          "HasEntityTitle",
+          "HasEntityBlurbTEXT",
+          "HasEntityBlurbHTML",
+          "HasEntityContentTEXT"
+        ],
+        "excludes": []
+      },
+      "from": "{{from}}",
+      "size": "{{size}}",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "query_string": {
+                "query": "{{queryString}}",
+                "fields": [
+                  "custom_all",
+                  "HasEntityTitle",
+                  "HasEntityBlurbTEXT",
+                  "HasEntityContentTEXT"
+                ]
+              }
+            },
+            {
+              "has_child": {
+                "type": "annotation",
+                "query": {
+                  "match_all": {}
+                },
+                "inner_hits": {
+                  "size": 100
+                }
+              }
+            }
+          ]
+        }
+      },
+      "highlight": {
+        "fields": {
+          "HasEntity*": {}
+        },
+        "no_match_size": 100,
+        "fragment_size": 50,
+        "number_of_fragments": 2
+      },
+      "explain": false,
+      "profile": false
+    }
+  },
+  "searchResultSpecials": [
+    {
+      "conditions": {
+        "must": {
+          "HasEntityType": [""]
+        }
+      },
+      "actions": [
+        {
+          "requestType": "actionRequest",
+          "title": "Disambiguation",
+          "query": {
+            "queryName": "must_match_directField",
+            "params": {
+              "directField": {
+                "name": "HasEntityTitle",
+                "value": ".search-result@@@hasentityname"
+              }
+            },
+            "return": "hit"
+          },
+          "view": "DisambiguationForEntityname",
+          "show_button": {
+            "conditions": {
+              "always": false
+            }
+          },
+          "execute": true
+        }
+      ]
+    }
+  ]
+}

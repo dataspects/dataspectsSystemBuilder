@@ -1,0 +1,109 @@
+{
+  "esQuery": {
+    "index": "",
+    "body": {
+      "_source": {
+        "includes": [
+          "HasEntityURL",
+          "HasEntityType",
+          "HasEntityName",
+          "HasEntityContentSOURCE"
+        ],
+        "excludes": []
+      },
+      "version": true,
+      "from": "{{from}}",
+      "size": "{{size}}",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "bool": {
+                "should": [
+                  {
+                    "query_string": {
+                      "default_field": "HasEntityName",
+                      "query": "{{queryString}}",
+                      "boost": "10"
+                    }
+                  },
+                  {
+                    "query_string": {
+                      "default_field": "HasEntityContentSOURCE",
+                      "query": "{{queryString}}"
+                    }
+                  }
+                ],
+                "filter": {
+                  "bool": {
+                    "should": [
+                      {
+                        "term": {
+                          "HasEntityType": "template"
+                        }
+                      },
+                      {
+                        "term": {
+                          "HasEntityType": "form"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "has_child": {
+                "type": "annotation",
+                "query": {
+                  "match_all": {}
+                },
+                "inner_hits": {
+                  "size": 100
+                }
+              }
+            }
+          ]
+        }
+      },
+      "highlight": {
+        "fields": {
+          "HasEntity*": {}
+        },
+        "no_match_size": 100
+      },
+      "explain": false,
+      "profile": false
+    }
+  },
+  "searchResultSpecials": [
+    {
+      "conditions": {
+        "must": {
+          "HasEntityType": ["Template", "Form"]
+        }
+      },
+      "actions": [
+        {
+          "requestType": "actionRequest",
+          "title": "Templates used:",
+          "query": {
+            "queryName": "must_match_subject_and_match_predicate",
+            "params": {
+              "subject": ".search-result@@@hit_id",
+              "predicate": "HasTemplateCall"
+            },
+            "return": "object"
+          },
+          "view": "TemplatesForWikitext",
+          "show_button": {
+            "conditions": {
+              "always": false
+            }
+          },
+          "execute": true
+        }
+      ]
+    }
+  ]
+}
