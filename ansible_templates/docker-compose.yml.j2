@@ -193,24 +193,6 @@ services:
     ports:
       - 3001:3001
 {% endif %}
-  mediawiki-indexer:
-    container_name: {{ systemPrefix }}-mediawiki-indexer
-    image: {{ lookup('env','DI_DATASPECTS_MEDIAWIKI_INDEXER') }}
-    depends_on:
-      - nats
-      - elasticsearch
-      - tika
-    environment:
-      - "NATS_URI=nats://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}nats{% endif %}:4222"
-      - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
-      - "ES_INDEX=general"
-      - "TIKA_URL=http://tika:9998"
-{% if docker_network_mode == 'docker'%}
-    networks:
-      - {{ systemPrefix }}
-{% else %}
-    network_mode: host
-{% endif %}
   repository-datastore:
     container_name: {{ systemPrefix }}-repository-datastore
     image: {{ lookup('env','DI_DATASPECTS_REPOSITORY_DATASTORE') }}
@@ -232,24 +214,6 @@ services:
     ports:
       - 3002:3002
 {% endif %}
-  repository-indexer:
-    container_name: {{ systemPrefix }}-repository-indexer
-    image: {{ lookup('env','DI_DATASPECTS_REPOSITORY_INDEXER') }}
-    depends_on:
-      - nats
-      - elasticsearch
-      - tika
-    environment:
-      - "NATS_URI=nats://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}nats{% endif %}:4222"
-      - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
-      - "ES_INDEX=general"
-      - "TIKA_URL=http://tika:9998"
-{% if docker_network_mode == 'docker'%}
-    networks:
-      - {{ systemPrefix }}
-{% else %}
-    network_mode: host
-{% endif %}
   document-datastore:
     container_name: {{ systemPrefix }}-document-datastore
     image: {{ lookup('env','DI_DATASPECTS_DOCUMENT_DATASTORE') }}
@@ -270,24 +234,6 @@ services:
     network_mode: host
     ports:
       - 3003:3003
-{% endif %}
-  document-indexer:
-    container_name: {{ systemPrefix }}-document-indexer
-    image: {{ lookup('env','DI_DATASPECTS_DOCUMENT_INDEXER') }}
-    depends_on:
-      - nats
-      - elasticsearch
-      - tika
-    environment:
-      - "NATS_URI=nats://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}nats{% endif %}:4222"
-      - "ES_NODE=http://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}elasticsearch{% endif %}:9200"
-      - "ES_INDEX=general"
-      - "TIKA_URL=http://tika:9998"
-{% if docker_network_mode == 'docker'%}
-    networks:
-      - {{ systemPrefix }}
-{% else %}
-    network_mode: host
 {% endif %}
 {% if docker_network_mode == 'docker'%}
 networks:
