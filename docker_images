@@ -1,12 +1,12 @@
-export DI_MONGODB=mongo:4.2.0
+export DI_MONGODB=mongo:4.2.1
 export DI_REDIS=redis:5.0.5-alpine
 export DI_MARIADB=mariadb:10.3.13
 export DI_DATASPECTS_APACHE_MEDIAWIKI=dataspects/docker-apache-php-dataspects-mediawiki:1.2
 export DI_PARSOID=dataspects/docker-parsoid:0.10.0
 export DI_DATASPECTS_UI=docker.pkg.github.com/dataspects/dataspects-ui/dataspects-ui:0.36.0
 export DI_PROXY=dataspects/docker-nginx:1.0.1
-export DI_ELASTICSEARCH=docker.elastic.co/elasticsearch/elasticsearch:7.4.0
-export DI_KIBANA=docker.elastic.co/kibana/kibana:7.4.0
+export DI_ELASTICSEARCH=docker.elastic.co/elasticsearch/elasticsearch:7.4.1
+export DI_KIBANA=docker.elastic.co/kibana/kibana:7.4.1
 export DI_APM=docker.elastic.co/apm/apm-server:7.4.0
 export DI_TIKA=logicalspark/docker-tikaserver:1.20
 export DI_NATS=nats:2.0.4-linux
