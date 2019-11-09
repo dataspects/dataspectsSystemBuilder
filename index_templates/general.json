@@ -272,6 +272,9 @@ PUT _template/general
       },
       "objectTEXT": {
         "type": "text"
+      },
+      "FacetTag": {
+        "type": "keyword"
       }
     }
   }
