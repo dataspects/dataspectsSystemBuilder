@@ -2,8 +2,9 @@ PUT _template/general
 {
   "index_patterns": [
     "mediawiki*",
-    "repository*",
-    "document*"
+    "code*",
+    "document*",
+    "dataspects*"
   ],
   "settings": {
     "index": {
