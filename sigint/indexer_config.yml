@@ -1,0 +1,24 @@
+---
+version: 1.0
+tasks:
+  - name: Analyze mainspace pages
+    actions:
+      - name: ResourceNameMatches
+        argument:
+            resourceName: actions.go
+        actions:
+          - name: EntitizeRegex
+            argument:
+                regex: 'case "([\w]*)": \/\/(.*)'
+                entity:
+                    HasEntityName: "Test"
+          - name: IndexFileHavingGeneralAnnotations
+            arguments:
+                regex: '\[\[(\w+)::(.*?)\]\]'
+                entity:
+                    HasEntityName: "Test"
+          - name: EntitizeRegex
+            argument:
+                regex: 'type (.*) (struct)'
+                entity:
+                    HasEntityName: "Test"
