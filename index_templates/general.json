@@ -41,7 +41,7 @@ PUT _template/general
               "my_edge_ngram_filter"
             ],
             "type": "custom",
-            "tokenizer": "camel_case"
+            "tokenizer": "TOKCamelCase"
           },
           "my_shingle2_analyzer": {
             "filter": [
@@ -49,7 +49,14 @@ PUT _template/general
               "my_shingle2_filter"
             ],
             "type": "custom",
-            "tokenizer": "camel_case"
+            "tokenizer": "TOKCamelCase"
+          },
+          "TOKCamelCaseFILLowerCase": {
+            "type": "custom",
+            "filter": [
+              "lowercase"
+            ],
+            "tokenizer": "TOKCamelCase"
           }
         },
         "tokenizer": {
@@ -63,7 +70,7 @@ PUT _template/general
             "type": "edge_ngram",
             "max_gram": "5"
           },
-          "camel_case": {
+          "TOKCamelCase": {
             "pattern": """([^\p{L}\d]+)|(?<=\D)(?=\d)|(?<=\d)(?=\D)|(?<=[\p{L}&&[^\p{Lu}]])(?=\p{Lu})|(?<=\p{Lu})(?=\p{Lu}[\p{L}&&[^\p{Lu}]])""",
             "type": "pattern"
           }
@@ -157,6 +164,11 @@ PUT _template/general
             "fielddata": true,
             "analyzer": "my_shingle2_analyzer",
             "type": "text"
+          },
+          "TOKCamelCaseFILLowerCase": {
+            "type": "text",
+            "analyzer": "TOKCamelCaseFILLowerCase",
+            "search_analyzer": "TOKCamelCaseFILLowerCase",
           }
         }
       },

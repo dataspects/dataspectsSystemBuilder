@@ -26,6 +26,7 @@
                   "custom_all",
                   "HasEntityTitle",
                   "HasEntityTitle.shingles2",
+                  "HasEntityTitle.TOKCamelCaseFILLowerCase",
                   "HasEntityBlurbTEXT",
                   "HasEntityContentTEXT"
                 ]
