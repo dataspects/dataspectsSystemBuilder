@@ -25,6 +25,7 @@
                 "fields": [
                   "custom_all",
                   "HasEntityTitle",
+                  "HasEntityTitle.shingles2",
                   "HasEntityBlurbTEXT",
                   "HasEntityContentTEXT"
                 ]

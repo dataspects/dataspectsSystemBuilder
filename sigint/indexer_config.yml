@@ -7,18 +7,21 @@ tasks:
         argument:
             resourceName: actions.go
         actions:
-          - name: EntitizeRegex
+          - name: EntitizeByRegex
             argument:
                 regex: 'case "([\w]*)": \/\/(.*)'
                 entity:
-                    HasEntityName: "Test"
-          - name: IndexFileHavingGeneralAnnotations
-            arguments:
+                    HasEntityName: _regex(match[0][1])
+                    HasEntityContentSource: _regex(match[0][2])
+          - name: IndexFileHavingRegex
+            argument:
                 regex: '\[\[(\w+)::(.*?)\]\]'
-                entity:
-                    HasEntityName: "Test"
-          - name: EntitizeRegex
+                turnRegexIntoAnnotations:
+                  predicate: _regex(match[1])
+                  object: _regex(match[2])
+          - name: EntitizeByRegex
             argument:
                 regex: 'type (.*) (struct)'
                 entity:
-                    HasEntityName: "Test"
+                    HasEntityName: _regex(match[0][1])
+                    HasEntityContentSource: _regex(match[0][2])
