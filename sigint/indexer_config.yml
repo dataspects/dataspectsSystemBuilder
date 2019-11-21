@@ -3,25 +3,21 @@ version: 1.0
 tasks:
   - name: Analyze mainspace pages
     actions:
-      - name: ResourceNameMatches
-        argument:
-            resourceName: actions.go
-        actions:
-          - name: EntitizeByRegex
-            argument:
-                regex: 'case "([\w]*)": \/\/(.*)'
-                entity:
-                    HasEntityName: _regex(match[0][1])
-                    HasEntityContentSource: _regex(match[0][2])
-          - name: IndexFileHavingRegex
-            argument:
-                regex: '\[\[(\w+)::(.*?)\]\]'
-                turnRegexIntoAnnotations:
-                  predicate: _regex(match[1])
-                  object: _regex(match[2])
-          - name: EntitizeByRegex
-            argument:
-                regex: 'type (.*) (struct)'
-                entity:
-                    HasEntityName: _regex(match[0][1])
-                    HasEntityContentSource: _regex(match[0][2])
+      entitizeByRegex:
+        - regex: 'case "([\w]*)": \/\/(.*)'
+          hasEntityName: 1
+          hasEntityContentSource: 2
+          predicate: HasArgument
+          object: 2
+      indexFileHavingRegexWithLocationPredicate:
+        - regex: '\[\[(\w+)::(.*?)\]\]'
+          predicate: 1
+          object: 2
+      indexFileHavingRegexWithStringPredicate:
+        - regex: '\[\[\w+::(.*?)\]\]'
+          predicate: HasColor
+          object: 1
+          actions:
+            fileContentMatchingRegex:
+              - regex: 'the[Ss]tring'
+                facetTag: foo

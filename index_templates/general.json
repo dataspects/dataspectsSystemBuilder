@@ -168,7 +168,7 @@ PUT _template/general
           "TOKCamelCaseFILLowerCase": {
             "type": "text",
             "analyzer": "TOKCamelCaseFILLowerCase",
-            "search_analyzer": "TOKCamelCaseFILLowerCase",
+            "search_analyzer": "TOKCamelCaseFILLowerCase"
           }
         }
       },
@@ -286,7 +286,7 @@ PUT _template/general
       "objectTEXT": {
         "type": "text"
       },
-      "FacetTag": {
+      "FacetTags": {
         "type": "keyword"
       }
     }
