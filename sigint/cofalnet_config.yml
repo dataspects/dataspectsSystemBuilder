@@ -6,13 +6,15 @@ tasks:
       wikitextContainingString:
         - string: syntaxhighlight
           facetTag: Pages containing syntaxhighlighting
+          sendToIndex: true
       wikitextHavingOneOfTheseTemplates:
         - templates: [AAAA-Ingestion, Argument, Audience, BusinessService, Concept, Concern, Configuration, Dashboard, DataspectsSystemModule, DesignPrinciple, Diagram, Feature, IndexingSetup, Onepager, Ontology, Presentation, Principle, Problem, Recipe, ResourceIndexerClass, ResourceIndexerModule, ResourceSiloType, ResourceType, Responsibility, Role, RubyGem, SearchContext, Setup, Solution, Start, Story, SystemComponent, Team, Tool, Untyped, UsabilityCondition, UseCase, UseCaseGoal]
           actionTemplate: template
-          facetTag: This is an entity
+          facetTag: Is an entity
           actions:
             - fieldInTemplateIsEmpty:
                 templateName: template
                 templateInstanceNumber: 0
                 fieldName: HasEntityBlurb
                 facetTag: No entity blurb
+                sendToIndex: true
