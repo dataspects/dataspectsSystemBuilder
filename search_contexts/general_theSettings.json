@@ -1,6 +1,35 @@
+
+
+
+
+
+
+
+
+
+"has_child": { "type": "annotation" } returns entities! --> inner_hits return ANNOTATIONS in inner_hits
+"has_parent": { "type": "entity" } returns annotations! --> inner_hits return ENTITIES in inner_hits
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {
   "esQuery": {
-    "index": "",
+    "index": "anonymous",
     "body": {
       "_source": {
         "includes": [
@@ -16,35 +45,20 @@
       },
       "from": "{{from}}",
       "size": "{{size}}",
-      "query": {
-        "bool": {
-          "must": [
+      "query": 
+        
             {
               "query_string": {
                 "query": "{{queryString}}",
                 "fields": [
                   "custom_all",
                   "HasEntityTitle",
-                  "HasEntityTitle.shingles2",
                   "HasEntityTitle.TOKCamelCaseFILLowerCase",
                   "HasEntityBlurbTEXT",
                   "HasEntityContentTEXT"
                 ]
-              }
-            },
-            {
-              "has_child": {
-                "type": "annotation",
-                "query": {
-                  "match_all": {}
-                },
-                "inner_hits": {
-                  "size": 100
-                }
-              }
+              
             }
-          ]
-        }
       },
       "highlight": {
         "fields": {

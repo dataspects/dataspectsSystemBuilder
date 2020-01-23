@@ -1,0 +1,11 @@
+---
+label: dataspects-ui
+regex: \.js$
+config:
+    tasks:
+        - name: Analyze dependencies
+          actions:
+            annotation:
+                - contentRegex: "require\\(['\"](.*)['\"]\\)"
+                  predicate: DependsOn
+                  object: 1

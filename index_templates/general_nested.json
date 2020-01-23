@@ -1,4 +1,4 @@
-PUT _template/general
+PUT _template/general_nested
 {
   "index_patterns": [
     "mediawiki*",
@@ -29,6 +29,11 @@ PUT _template/general
           }
         },
         "analyzer": {
+          "ds_content_standard": {
+            "char_filter" : ["html_strip"],
+            "filter" : ["lowercase", "stop"],
+            "tokenizer" : "standard"
+          },
           "my_autocomplete_search_analyzer": {
             "type": "custom",
             "tokenizer": "lowercase"
@@ -82,37 +87,8 @@ PUT _template/general
     }
   },
   "mappings": {
-    "_routing": {
-      "required": true
-    },
     "properties": {
       "HasEntityType": {
-        "type": "text",
-        "fields": {
-          "completion": {
-            "search_analyzer": "my_autocomplete_search_analyzer",
-            "analyzer": "my_autocomplete_index_analyzer",
-            "type": "text"
-          },
-          "lowercase_keyword": {
-            "analyzer": "my_lowercase_analyzer",
-            "type": "text"
-          },
-          "keyword": {
-            "type": "keyword"
-          }
-        }
-      },
-      "subject": {
-        "type": "text"
-      },
-      "MyType": {
-        "type": "join",
-        "relations": {
-          "entity": "annotation"
-        }
-      },
-      "predicate": {
         "type": "text",
         "fields": {
           "completion": {
@@ -143,13 +119,6 @@ PUT _template/general
         "store": false,
         "type": "text"
       },
-      "HasEntityContentSOURCE": {
-        "fielddata": true,
-        "analyzer": "standard",
-        "term_vector": "with_positions_offsets_payloads",
-        "store": false,
-        "type": "text"
-      },
       "HasEntityTitle": {
         "copy_to": [
           "custom_all"
@@ -175,12 +144,25 @@ PUT _template/general
           }
         }
       },
-      "HasEntityContentHTML": {
+      "HasEntityContentSOURCE": {
         "fielddata": true,
         "analyzer": "standard",
         "term_vector": "with_positions_offsets_payloads",
         "store": false,
         "type": "text"
+      },
+      "HasEntityContentHTML": {
+        "fielddata": true,
+        "analyzer": "standard",
+        "term_vector": "with_positions_offsets_payloads",
+        "store": false,
+        "type": "text",
+        "fields": {
+          "text": {
+            "type": "text",
+            "analyzer": "ds_content_standard"
+          }
+        }
       },
       "OriginatedFromResourceURL": {
         "index": true,
@@ -190,14 +172,6 @@ PUT _template/general
       "HasEntityURL": {
         "store": false,
         "type": "keyword"
-      },
-      "objectSOURCE": {
-        "type": "text",
-        "fields": {
-          "keyword": {
-            "type": "keyword"
-          }
-        }
       },
       "OriginatedFromResourceSiloID": {
         "type": "text",
@@ -246,14 +220,6 @@ PUT _template/general
         "store": false,
         "type": "text"
       },
-      "HasEntityContentTEXT": {
-        "copy_to": [],
-        "fielddata": true,
-        "analyzer": "standard",
-        "term_vector": "with_positions_offsets_payloads",
-        "store": false,
-        "type": "text"
-      },
       "HasEntityBlurbTEXT": {
         "copy_to": [
           "custom_all"
@@ -283,14 +249,44 @@ PUT _template/general
           }
         }
       },
-      "objectHTML": {
-        "type": "text"
-      },
-      "objectTEXT": {
-        "type": "text"
-      },
       "FacetTags": {
         "type": "keyword"
+      },
+      "annotations": {
+        "type": "nested",
+        "properties": {
+          "context": {
+            "type": "text"
+          },
+          "subject": {
+            "type": "text"
+          },
+          "predicate": {
+            "type": "text",
+            "fields": {
+              "completion": {
+                "search_analyzer": "my_autocomplete_search_analyzer",
+                "analyzer": "my_autocomplete_index_analyzer",
+                "type": "text"
+              },
+              "lowercase_keyword": {
+                "analyzer": "my_lowercase_analyzer",
+                "type": "text"
+              },
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "object": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
       }
     }
   }
