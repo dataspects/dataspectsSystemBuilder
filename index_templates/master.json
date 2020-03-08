@@ -13,13 +13,12 @@ PUT _template/general_nested
           "type": "standard"
         },
         "filter": {
-          "my_shingle2_filter": {
-            "max_shingle_size": "2",
+          "shingled_all": {
+            "max_shingle_size": "4",
             "min_shingle_size": "2",
             "token_separator": " ",
-            "output_unigrams": "false",
+            "output_unigrams": "true",
             "filler_token": "_",
-            "output_unigrams_if_no_shingles": "false",
             "type": "shingle"
           },
           "my_edge_ngram_filter": {
@@ -51,10 +50,10 @@ PUT _template/general_nested
             "type": "custom",
             "tokenizer": "TOKCamelCase"
           },
-          "my_shingle2_analyzer": {
+          "shingled_all": {
             "filter": [
               "lowercase",
-              "my_shingle2_filter"
+              "shingled_all"
             ],
             "type": "custom",
             "tokenizer": "TOKCamelCase"
@@ -121,7 +120,7 @@ PUT _template/general_nested
       },
       "HasEntityTitle": {
         "copy_to": [
-          "custom_all"
+          "shingled_all"
         ],
         "analyzer": "standard",
         "term_vector": "with_positions_offsets_payloads",
@@ -130,11 +129,6 @@ PUT _template/general_nested
           "completion": {
             "search_analyzer": "my_autocomplete_search_analyzer",
             "analyzer": "my_autocomplete_index_analyzer",
-            "type": "text"
-          },
-          "shingles2": {
-            "fielddata": true,
-            "analyzer": "my_shingle2_analyzer",
             "type": "text"
           },
           "TOKCamelCaseFILLowerCase": {
@@ -188,7 +182,7 @@ PUT _template/general_nested
       },
       "HasEntityKeywords": {
         "copy_to": [
-          "custom_all"
+          "shingled_all"
         ],
         "type": "keyword"
       },
@@ -222,15 +216,15 @@ PUT _template/general_nested
       },
       "HasEntityBlurbTEXT": {
         "copy_to": [
-          "custom_all"
+          "shingled_all"
         ],
         "analyzer": "standard",
         "term_vector": "with_positions_offsets_payloads",
         "type": "text"
       },
-      "custom_all": {
-        "analyzer": "standard",
-        "term_vector": "with_positions_offsets_payloads",
+      "shingled_all": {
+        "fielddata": true,
+        "analyzer": "shingled_all",
         "type": "text"
       },
       "OriginatedFromResourceSiloType": {
@@ -252,7 +246,7 @@ PUT _template/general_nested
       "FacetTags": {
         "type": "keyword"
       },
-      "annotations": {
+      "AATA": {
         "type": "nested",
         "properties": {
           "context": {
@@ -262,29 +256,27 @@ PUT _template/general_nested
             "type": "text"
           },
           "predicate": {
-            "type": "text",
-            "fields": {
-              "completion": {
-                "search_analyzer": "my_autocomplete_search_analyzer",
-                "analyzer": "my_autocomplete_index_analyzer",
-                "type": "text"
-              },
-              "lowercase_keyword": {
-                "analyzer": "my_lowercase_analyzer",
-                "type": "text"
-              },
-              "keyword": {
-                "type": "keyword"
-              }
-            }
+            "type": "text"
           },
           "object": {
-            "type": "text",
-            "fields": {
-              "keyword": {
-                "type": "keyword"
-              }
-            }
+            "type": "text"
+          }
+        }
+      },
+      "AATB": {
+        "type": "nested",
+        "properties": {
+          "context": {
+            "type": "text"
+          },
+          "subject": {
+            "type": "text"
+          },
+          "predicate": {
+            "type": "text"
+          },
+          "object": {
+            "type": "text"
           }
         }
       }

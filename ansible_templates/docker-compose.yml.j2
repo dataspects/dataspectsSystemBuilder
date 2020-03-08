@@ -101,19 +101,6 @@ services:
 {% else %}
     network_mode: host
 {% endif %}
-  mongo:
-    container_name: {{ systemPrefix }}-mongo
-    image: {{ lookup('env','DI_MONGODB') }}
-    ports:
-      - {{ mongodbPortOnHost }}:27017
-    volumes:
-      - {{ manual_docker_volumes_location }}mongo_data:/data/db
-{% if docker_network_mode == 'docker'%}
-    networks:
-      - {{ systemPrefix }}
-{% else %}
-    network_mode: host
-{% endif %}
   redis:
     container_name: {{ systemPrefix }}-redis
     image: {{ lookup('env','DI_REDIS') }}
@@ -131,7 +118,6 @@ services:
     ports:
       - {{ dataspectsUIPort }}:3000
     depends_on:
-      - mongo
       - redis
       - elasticsearch
 {% if docker_network_mode == 'docker'%}
@@ -145,7 +131,6 @@ services:
       - "REDIS_HOST={% if docker_network_mode == 'host'%}127.0.0.1{% else %}redis{% endif %}"
       - "REDIS_PORT=6379"
       - "SESSION_SECRET={{ dataspectsUISessionSecret }}"
-      - "MONGODB_URI=mongodb://{% if docker_network_mode == 'host'%}127.0.0.1{% else %}mongo{% endif %}:27017/dataspects"
       - "SMTP_SERVER={{ dataspectsUISMTPServer }}"
       - "SMTP_USERNAME={{ dataspectsUISMTPUsername }}"
       - "SMTP_PASSWORD={{ dataspectsUISMTPPassword }}"
@@ -172,6 +157,24 @@ services:
 {% else %}
     network_mode: host
 {% endif %}
+  neo4j:
+    container_name: dataspectssearch-neo4j
+    image: neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_dbms_unmanaged__extension__classes=semantics.extension=/rdf
+      - NEO4J_dbms_security_procedures_whitelist=apoc.*,semantics.*
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,semantics.\\\*
+      - NEO4J_AUTH=none
+      - NEO4J_dbms_active__database=ontorail3.db
+    volumes:
+      - $PWD/data:/data
+      - $PWD/plugins:/plugins
 networks:
   {{ systemPrefix }}:
     name: {{ systemPrefix }}
@@ -185,8 +188,6 @@ networks:
 {{ comment_out_volumes }} # mediawiki_conf:
 {{ comment_out_volumes }} #   driver: local
 {{ comment_out_volumes }}  nginx_conf:
-{{ comment_out_volumes }}    driver: local
-{{ comment_out_volumes }}  mongo_data:
 {{ comment_out_volumes }}    driver: local
 {{ comment_out_volumes }}  esdata:
 {{ comment_out_volumes }}    driver: local
