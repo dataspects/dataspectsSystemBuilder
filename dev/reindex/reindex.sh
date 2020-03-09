@@ -1,10 +1,10 @@
 #/bin/bash
 
-INDEX_TEMPLATE_NAME=generaldev
-INDEX_TEMPLATE_BODY=`cat indexTemplates/generaldev.json`
+INDEX_TEMPLATE_NAME=masterdev
+INDEX_TEMPLATE_BODY=`cat ./dataspectsSystemBuilder/index_templates/masterdev.json`
 
-SOURCE_INDEX=mediawiki_2
-TARGET_INDEX=generaldev
+SOURCE_INDEX=mediawiki_11
+TARGET_INDEX=mediawikidev
 
 curl -X PUT "localhost:9200/_template/$INDEX_TEMPLATE_NAME" -H 'Content-Type: application/json' -d "$INDEX_TEMPLATE_BODY"
 echo "Template PUT ---"
