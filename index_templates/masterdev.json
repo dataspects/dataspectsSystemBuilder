@@ -146,7 +146,7 @@
             "type": "text"
           },
           "predicate": {
-            "type": "keyword", /*Enable filtering for exact predicate*/
+            "type": "keyword", /* Enable filtering for exact predicate */
             "fields": {
               "annotationObjectTokens": {
                  /* Enable predicate tokens aggregation */
@@ -161,7 +161,15 @@
             "type": "text"
           },
           "object": {
-            "type": "text"
+            "type": "text",
+            "fields": {
+                "annotationObjectTokens": {
+                    /* Enable object tokens aggregation */
+                    "fielddata": true,
+                    "analyzer": "annotationObjectTokens0",
+                    "type": "text"
+                }
+            }
           }
         }
       },
@@ -190,7 +198,13 @@
             "type": "text"
           },
           "object": {
-            "type": "keyword"
+            "type": "text",
+            "fields": {
+                "annotationObjectTokens": {
+                    /* Enable object tokens aggregation */
+                    "type": "keyword"
+                }
+            }
           }
         }
       },
