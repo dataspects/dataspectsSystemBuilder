@@ -1,9 +1,10 @@
 PUT _template/master
 {
+  /* DSCBLEX2003090626 */
   "version": 2003090604,
   "order": 0,
   "index_patterns": [
-    "generaldev*"
+    "mediawiki*"
   ],
   "aliases" : {
     "anonymous": {},
@@ -145,7 +146,7 @@ PUT _template/master
         "analyzer": "standard",
         "type": "text"
       },
-      "AATA": {
+      "AATStandard": {
         "type": "nested",
         "properties": {
           "context": {
@@ -166,7 +167,7 @@ PUT _template/master
           }
         }
       },
-      "AATB": {
+      "AATA": {
         "type": "nested",
         "properties": {
           "context": {
@@ -176,14 +177,21 @@ PUT _template/master
             "type": "text"
           },
           "predicate": {
-            "type": "text"
+            "type": "text",
+            "fields": {
+              "annotationObjectTokens": {
+                "fielddata": true,
+                "analyzer": "annotationObjectTokens0",
+                "type": "text"
+              }
+            }
           },
           "smwPropertyType": {
             "analyzer": "standard",
             "type": "text"
           },
           "object": {
-            "type": "text"
+            "type": "keyword"
           }
         }
       },

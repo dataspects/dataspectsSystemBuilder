@@ -3,4 +3,4 @@ tasks:
       actions:
             wikitextContainingString:
                 - string: syntaxhighlight
-                    facetTag: syntaxhighlighting
+                  facetTag: syntaxhighlighting
