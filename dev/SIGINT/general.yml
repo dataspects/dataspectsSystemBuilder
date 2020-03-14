@@ -1,6 +1,13 @@
 tasks:
-    - name: Check pages for syntaxhighlighting
-      actions:
-            wikitextContainingString:
-                - string: syntaxhighlight
-                  facetTag: syntaxhighlighting
+  - name: Check pages for syntaxhighlighting
+    actions:
+      wikitextContainingString:
+        - string: syntaxhighlight
+          facetTag: syntaxhighlighting
+        - string: docker
+          facetTag: docker
+  - name: Check for floating properties
+    actions:
+      wikitextHavingOneOfTheseTemplates:
+        - templates: [ Property ]
+          facetTag: FloatingProperty

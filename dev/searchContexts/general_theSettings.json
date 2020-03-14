@@ -13,17 +13,15 @@
         ],
         "excludes": []
       },
-      "from": "{{from}}",
-      "size": "{{size}}",
+      "from": "{{.From}}",
+      "size": "{{.Size}}",
       "query": {
         "query_string": {
-          "query": "{{queryString}}",
+          "query": "{{.QueryString}}",
           "fields": [
-            "custom_all",
             "HasEntityTitle",
-            "HasEntityTitle.TOKCamelCaseFILLowerCase",
-            "HasEntityBlurbTEXT",
-            "HasEntityContentTEXT"
+            "HasEntityBlurbSOURCE",
+            "HasEntityContentSOURCE"
           ]
         }
       },
@@ -35,8 +33,8 @@
         "fragment_size": 50,
         "number_of_fragments": 2
       },
-      "explain": false,
-      "profile": false
+      "explain": true,
+      "profile": true
     }
   },
   "searchResultSpecials": [
