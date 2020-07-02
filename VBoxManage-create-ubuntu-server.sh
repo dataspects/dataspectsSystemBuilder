@@ -46,4 +46,4 @@ VBoxManage startvm $VMNAME
 
 ## Install
 ###############################
-## sudo apt install git docker-compose curl
+## sudo apt install git docker-compose curl ruby

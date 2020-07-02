@@ -1,1 +1,1 @@
-localhost ansible_port=2222 ansible_host=localhost ansible_user=dataspects ansible_password=dataspects ansible_sudo_pass=dataspects
+localhost ansible_port=2222 ansible_host=localhost ansible_user=dataspects ansible_password=password ansible_sudo_pass=password

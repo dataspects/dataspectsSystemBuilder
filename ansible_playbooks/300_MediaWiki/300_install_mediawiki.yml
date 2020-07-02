@@ -10,7 +10,7 @@
         chdir: "/home/dataspects/mediawiki_root"
       become: "true"
       tags:
-        - 300_install_mediawiki
+        - 300_clone_mediawiki
 
     - name: 300 Install core extensions and skins
       shell: "git submodule update --init --recursive"
@@ -18,7 +18,7 @@
         chdir: "/home/dataspects/mediawiki_root/w/"
       become: "true"
       tags:
-        - 300_install_mediawiki
+        - 300_clone_mediawiki
 
     - name: 300 Place composer install script
       template:
@@ -50,14 +50,14 @@
         mode: 0777
       become: "true"
       tags:
-        - 300_install_mediawiki
+        - 303_install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: 300 Install mediawiki inside container
       shell: "docker exec {{ mediawikiDockerServiceName }} bash -c 'cd /var/www/html/w && ./install.sh'"
       become: "true"
       tags:
-        - 300_install_mediawiki
+        - 303_install_mediawiki
 
     - name: 300 Add settings to LocalSettings.php
       lineinfile:
@@ -68,7 +68,7 @@
         - $wgFileExtensions[] = 'pdf';
       become: "true"
       tags:
-        - 300_install_mediawiki
+        - 304_adjust_localsettings
 
     #FIXME: This should replace, but it actually just adds!
     - name: 300 Replace settings in LocalSettings.php
@@ -81,8 +81,7 @@
         - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: "true"
       tags:
-        - 300_install_mediawiki
-        - t1811161102t
+        - 304_adjust_localsettings
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: 300 Change admin user password
@@ -91,7 +90,7 @@
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: "true"
       tags:
-        - 300_install_mediawiki
+        - 304_adjust_localsettings
 
     #FIXME: This should replace, but it actually just adds!
     - name: 300 Replace settings in LocalSettings.php
@@ -100,11 +99,11 @@
         regexp: '{{ item.orig }}'
         line: '{{ item.replace }}'
       with_items:
-        - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}:{{ nginxPortOnHost }}";' }
+        - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}:8080";' }
         - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: "true"
       tags:
-        - 300_install_mediawiki
+        - 304_adjust_localsettings
 
     # [[IsOperationType::FileSystemOperation]]
     - name: 300 Set permissions on mediawiki root
@@ -113,13 +112,11 @@
         owner: www-data
         recurse: yes
       become: "true"
-      when:
-        platform == 'linux'
       tags:
-        - 300_install_mediawiki
+        - 304_adjust_localsettings
 
     - name: 300 execute_mediawiki_maintenance_runJobs
       shell: docker exec {{ mediawikiDockerServiceName }} bash -c "php w/maintenance/runJobs.php"
-      become: yes
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 304_adjust_localsettings

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export MEDIAWIKI_VERSION=REL1_33
+export MEDIAWIKI_VERSION=REL1_34
 export SEMANTIC_MEDIAWIKI_VERSION=~3.1
 export SEMANTIC_RESULTS_FORMATS_VERSION=~3.1
 export MEDIAWIKI_GITHUB_VERSION=~1.4
@@ -9,12 +9,13 @@ export MEDIAWIKI_MERMAID_VERSION=~2.1
 export MEDIAWIKI_NAME=dataspects MediaWiki
 
 ANSIBLETAGS=(
-#   300_install_mediawiki
-  301_install_composer
-  302_run_composer
-  # 310_configure_proxy
-#   320_install_mediawiki_extensions
-#   330_execute_mediawiki_maintenance_runJobs
+  # 300_clone_mediawiki
+  # 301_install_composer
+  # 302_run_composer
+  # 303_install_mediawiki
+  # 304_adjust_localsettings
+  320_install_mediawiki_extensions
+  # 330_execute_mediawiki_maintenance_runJobs
 )
 
 ################################################################################
@@ -35,9 +36,5 @@ time ansible-playbook \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
   --become-method sudo \
       ./ansible_playbooks/300_MediaWiki/300_install_mediawiki.yml \
-    #   ./ansible_playbooks/300_MediaWiki/310_configure_proxy.yml \
-    #   ./ansible_playbooks/300_MediaWiki/320_install_mediawiki_extensions.yml \
-    #   ./ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml \
-    #   ./ansible_playbooks/800_Backup_and_Clone/800_install_backup_and_clone_functionality.yml \
-    #   ./ansible_playbooks/800_Backup_and_Clone/810_backup_and_clone.yml \
-    #   ./ansible_playbooks/900_Tools/900_compare.yml
+      ./ansible_playbooks/300_MediaWiki/320_install_mediawiki_extensions.yml \
+      ./ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml

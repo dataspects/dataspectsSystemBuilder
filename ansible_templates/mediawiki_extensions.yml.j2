@@ -1,13 +1,5 @@
 ---
 mediawiki_extensions:
-  - repo: https://github.com/dataspects/DataspectsMediaWikiFeeder.git
-    name: DataspectsMediaWikiFeeder
-    localsettings_configs:
-      - wfLoadExtension( 'DataspectsMediaWikiFeeder' );
-      - $wgRateLimits['edit']['ip'] = array( 1000, 1 );
-      - $wgMediaWikiMongoID = "{{ wgMediaWikiMongoID }}";
-      - $wgDataspectsApiKey = "{{ mediawikiDatastoreAPIMasterKey }}";
-      - $wgDataspectsApiURL = "{{ mediawikiDatastoreAPIURL }}";
   - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageForms.git
     name: PageForms
     localsettings_configs:
@@ -61,10 +53,10 @@ mediawiki_extensions:
     name: VEForAll
     localsettings_configs:
       - wfLoadExtension( 'VEForAll' );
-  - repo: https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion.git
-    name: LabeledSectionTransclusion
-    localsettings_configs:
-      - wfLoadExtension( 'LabeledSectionTransclusion' );
+  # - repo: https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion.git
+  #   name: LabeledSectionTransclusion
+  #   localsettings_configs:
+  #     - wfLoadExtension( 'LabeledSectionTransclusion' );
   - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor.git
     name: VisualEditor
     in_extension_folder_commands:
@@ -76,22 +68,22 @@ mediawiki_extensions:
       - $wgHiddenPrefs[] = 'visualeditor-enable';
       - $wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://parsoid:8000', 'domain' => '{{ mediawikiDomainNameInHostFile }}');
       - $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
-  - docker_commands:
-      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '{{ semantic_mediawiki_version }}' --update-no-dev
-      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
-    localsettings_configs:
-      - enableSemantics( 'localhost' );
-      - $smwgLinksInValues = true;
-  - docker_commands:
-      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '{{ semantic_result_formats_version }}' --update-no-dev
-      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
-    localsettings_configs:
-      - wfLoadExtension( 'SemanticResultFormats' );
-  - docker_commands:
-      - cd /var/www/html/w; php composer.phar require jeroen/mediawiki-github "{{ mediawiki_github_version }}"
-    localsettings_configs:
-      - $egGitHubUrl = 'https://raw.githubusercontent.com';
-  - docker_commands:
-      - cd /var/www/html/w; php composer.phar require mediawiki/mermaid "{{ mediawiki_mermaid_version }}"
-    localsettings_configs:
-      - wfLoadExtension( 'Mermaid' );
+  # - docker_commands:
+  #     - cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '{{ semantic_mediawiki_version }}' --update-no-dev
+  #     - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
+  #   localsettings_configs:
+  #     - enableSemantics( 'localhost' );
+  #     - $smwgLinksInValues = true;
+  # - docker_commands:
+  #     - cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '{{ semantic_result_formats_version }}' --update-no-dev
+  #     - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
+  #   localsettings_configs:
+  #     - wfLoadExtension( 'SemanticResultFormats' );
+  # - docker_commands:
+  #     - cd /var/www/html/w; php composer.phar require jeroen/mediawiki-github "{{ mediawiki_github_version }}"
+  #   localsettings_configs:
+  #     - $egGitHubUrl = 'https://raw.githubusercontent.com';
+  # - docker_commands:
+  #     - cd /var/www/html/w; php composer.phar require mediawiki/mermaid "{{ mediawiki_mermaid_version }}"
+  #   localsettings_configs:
+  #     - wfLoadExtension( 'Mermaid' );
