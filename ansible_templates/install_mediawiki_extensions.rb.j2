@@ -1,6 +1,9 @@
 require 'yaml'
 
-extensions = YAML.load_file("mediawiki_extensions.yml")
+extensions_by_composer = YAML.load_file("mediawiki_extensions_by_composer.yml")
+extensions_enable_only = YAML.load_file("mediawiki_extensions_enable_only.yml")
+extensions_from_repo = YAML.load_file("mediawiki_extensions_from_repo.yml")
+
 @mediawiki_root = '.'
 mediawiki_container_name = '{{ mediawikiDockerServiceName }}'
 
@@ -10,11 +13,14 @@ def append_to_localsettings s
   end
 end
 
-extensions['mediawiki_extensions'].each do |extension|
+extensions_by_composer['mediawiki_extensions'].each do |extension|
 
-  # Do we need to get the extension code?
-  if(extension.has_key?('repo'))
-    `git clone #{extension['repo']} #{@mediawiki_root}/extensions/#{extension['name']}`
+  # Add extension configurations to LocalSettings.php
+  # THIS NEEDS TO BE RUN BEFORE THE COMPOSER CALLS!
+  if(extension.has_key?('localsettings_configs'))
+    extension['localsettings_configs'].each do |config|
+      append_to_localsettings(config)
+    end
   end
 
   # Run Docker commands
@@ -22,6 +28,33 @@ extensions['mediawiki_extensions'].each do |extension|
     extension['docker_commands'].each do |docker_command|
       `docker exec --user www-data #{mediawiki_container_name} bash -c "#{docker_command}"`
     end
+  end
+
+end
+
+extensions_enable_only['mediawiki_extensions'].each do |extension|
+
+  # Run in-extension-folder commands
+  if(extension.has_key?('in_extension_folder_commands'))
+    extension['in_extension_folder_commands'].each do |in_extension_folder_command|
+      `cd #{@mediawiki_root}/extensions/#{extension['name']} && #{in_extension_folder_command} && cd #{@mediawiki_root}`
+    end
+  end
+
+  # Add extension configurations to LocalSettings.php
+  if(extension.has_key?('localsettings_configs'))
+    extension['localsettings_configs'].each do |config|
+      append_to_localsettings(config)
+    end
+  end
+
+end
+
+extensions_from_repo['mediawiki_extensions'].each do |extension|
+
+  # Do we need to get the extension code?
+  if(extension.has_key?('repo'))
+    `git clone #{extension['repo']} #{@mediawiki_root}/extensions/#{extension['name']}`
   end
 
   # Run in-extension-folder commands

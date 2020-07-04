@@ -23,3 +23,8 @@ Now it's ready to receive a MediaWiki installation.
 ## Provision MediaWiki
 
     admin@workstation:~/dataspectsSystemBuilder$ ./provision-mediawiki.sh
+
+## Connect
+
+    ssh -p 2222 dataspects@localhost
+

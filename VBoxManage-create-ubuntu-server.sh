@@ -40,10 +40,6 @@ VBoxManage startvm $VMNAME
 ###############################
 # VBoxManage controlvm $VMNAME poweroff
 
-## Connect
-###############################
-## ssh -p 2222 dataspects@localhost
-
 ## Install
 ###############################
 ## sudo apt install git docker-compose curl ruby

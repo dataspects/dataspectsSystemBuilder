@@ -1,0 +1,16 @@
+---
+mediawiki_extensions:
+  - name: ParserFunctions
+    localsettings_configs:
+      - wfLoadExtension( 'ParserFunctions' );
+      - $wgPFEnableStringFunctions = true;
+  - name: CategoryTree
+    localsettings_configs:
+      - wfLoadExtension( 'CategoryTree' );
+  - name: ReplaceText
+    localsettings_configs:
+      - wfLoadExtension( 'ReplaceText' );
+  - name: SyntaxHighlight_GeSHi
+    localsettings_configs:
+      - wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+    # chmod a+x /path/to/extensions/SyntaxHighlight_GeSHi/pygments/pygmentize

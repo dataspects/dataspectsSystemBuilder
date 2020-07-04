@@ -6,9 +6,13 @@
   
     - name: 320 Place MediaWiki extensions list
       template:
-        src: ../../ansible_templates/mediawiki_extensions.yml.j2
-        dest: "/home/dataspects/mediawiki_root/w/mediawiki_extensions.yml"
+        src: ../../ansible_templates/{{ item }}.yml.j2
+        dest: "/home/dataspects/mediawiki_root/w/{{ item }}.yml"
         mode: 0777
+      with_items:
+        - mediawiki_extensions_by_composer
+        - mediawiki_extensions_enable_only
+        - mediawiki_extensions_from_repo
       become: "true"
       tags:
         - 320_install_mediawiki_extensions
