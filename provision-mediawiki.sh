@@ -14,8 +14,8 @@ ANSIBLETAGS=(
   # 302_run_composer
   # 303_install_mediawiki
   # 304_adjust_localsettings
-  320_install_mediawiki_extensions
-  # 330_execute_mediawiki_maintenance_runJobs
+  # 320_install_mediawiki_extensions
+  330_execute_mediawiki_maintenance_runJobs
 )
 
 ################################################################################
