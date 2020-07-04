@@ -66,19 +66,8 @@
       with_items:
         - $wgArticlePath = '/wiki/$1';
         - $wgFileExtensions[] = 'pdf';
-      become: "true"
-      tags:
-        - 304_adjust_localsettings
-
-    #FIXME: This should replace, but it actually just adds!
-    - name: 300 Replace settings in LocalSettings.php
-      lineinfile:
-        path: "/home/dataspects/mediawiki_root/w/LocalSettings.php"
-        regexp: '{{ item.orig }}'
-        line: '{{ item.replace }}'
-      with_items:
-        - { orig: "^$wgServer = ", replace: '$wgServer = "http://local.mediawiki";' }
-        - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
+        - $wgMainCacheType = CACHE_NONE;
+        - $wgRateLimits['edit']['anon'] = [ 1, 1 ];
       become: "true"
       tags:
         - 304_adjust_localsettings

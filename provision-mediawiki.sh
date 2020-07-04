@@ -9,12 +9,12 @@ export MEDIAWIKI_MERMAID_VERSION=~2.1
 export MEDIAWIKI_NAME=dataspects MediaWiki
 
 ANSIBLETAGS=(
-  # 300_clone_mediawiki
-  # 301_install_composer
-  # 302_run_composer
-  # 303_install_mediawiki
-  # 304_adjust_localsettings
-  # 320_install_mediawiki_extensions
+  300_clone_mediawiki
+  301_install_composer
+  302_run_composer
+  303_install_mediawiki
+  304_adjust_localsettings
+  320_install_mediawiki_extensions
   330_execute_mediawiki_maintenance_runJobs
 )
 
