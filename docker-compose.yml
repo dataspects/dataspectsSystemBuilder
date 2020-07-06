@@ -7,7 +7,7 @@ services:
       - "ES_JAVA_OPTS=-Xms1024m -Xmx2048m"
       - "discovery.type=single-node"
     volumes: #FIXME esdata needs special permissions! Hack: chmod -R 777 ./elasticsearch_data
-      - /home/dataspects/elasticsearch_data:/usr/share/elasticsearch/data
+      - /home/ds/elasticsearch_data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     network_mode: host
@@ -31,20 +31,21 @@ services:
       - NEO4J_AUTH=none
       - NEO4J_dbms_active__database=dataspectsNeo4j.db
     volumes:
-      - /home/dataspects/neo4j_data:/data
+      - /home/ds/neo4j_data:/data
+    network_mode: host
   mediawiki:
     container_name: mediawiki
     image: dataspects/docker-apache-php-dataspects-mediawiki:1.3
     ports:
       - 80:80
     volumes:
-      - /home/dataspects/mediawiki_root:/var/www/html/
+      - /home/ds/mediawiki_root:/var/www/html/
     network_mode: host
   mysql:
     container_name: mysql
     image: mysql:8.0.20
     volumes:
-      - /home/dataspects/mysql_data:/var/lib/mysql
+      - /home/ds/mysql_data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=mysqlpassword
     network_mode: host

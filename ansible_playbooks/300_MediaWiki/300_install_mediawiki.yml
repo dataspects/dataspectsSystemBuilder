@@ -7,7 +7,7 @@
     - name: 300 Clone required mediawiki version
       shell: "git clone --branch {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
       args:
-        chdir: "/home/dataspects/mediawiki_root"
+        chdir: "/home/ds/mediawiki_root"
       become: "true"
       tags:
         - 300_clone_mediawiki
@@ -15,7 +15,7 @@
     - name: 300 Install core extensions and skins
       shell: "git submodule update --init --recursive"
       args:
-        chdir: "/home/dataspects/mediawiki_root/w/"
+        chdir: "/home/ds/mediawiki_root/w/"
       become: "true"
       tags:
         - 300_clone_mediawiki
@@ -23,7 +23,7 @@
     - name: 300 Place composer install script
       template:
         src: ../../ansible_templates/install_composer.sh
-        dest: "/home/dataspects/mediawiki_root/w/install_composer.sh"
+        dest: "/home/ds/mediawiki_root/w/install_composer.sh"
         mode: 0777
       become: "true"
       tags:
@@ -46,7 +46,7 @@
     - name: 300 Place mediawiki install script
       template:
         src: ../../ansible_templates/install_mediawiki.sh.j2
-        dest: "/home/dataspects/mediawiki_root/w/install.sh"
+        dest: "/home/ds/mediawiki_root/w/install.sh"
         mode: 0777
       become: "true"
       tags:
@@ -61,7 +61,7 @@
 
     - name: 300 Add settings to LocalSettings.php
       lineinfile:
-        path: "/home/dataspects/mediawiki_root/w/LocalSettings.php"
+        path: "/home/ds/mediawiki_root/w/LocalSettings.php"
         line: "{{ item }}"
       with_items:
         - $wgArticlePath = '/wiki/$1';
@@ -84,7 +84,7 @@
     #FIXME: This should replace, but it actually just adds!
     - name: 300 Replace settings in LocalSettings.php
       lineinfile:
-        path: "/home/dataspects/mediawiki_root/w/LocalSettings.php"
+        path: "/home/ds/mediawiki_root/w/LocalSettings.php"
         regexp: '{{ item.orig }}'
         line: '{{ item.replace }}'
       with_items:
@@ -97,7 +97,7 @@
     # [[IsOperationType::FileSystemOperation]]
     - name: 300 Set permissions on mediawiki root
       file:
-        path: "/home/dataspects/mediawiki_root/w/"
+        path: "/home/ds/mediawiki_root/w/"
         owner: www-data
         recurse: yes
       become: "true"

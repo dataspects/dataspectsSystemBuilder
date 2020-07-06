@@ -8,7 +8,7 @@ See [Setup "dataspectsSystem"](https://wiki.dataspects.com/wiki/C1898799575)
 
 ## SCP docker-compose.yml
 
-    admin@workstation:~/dataspectsSystemBuilder$ scp -P 2222 docker-compose.yml dataspects@localhost:/home/dataspects/
+    admin@workstation:~/dataspectsSystemBuilder$ scp -P 2222 docker-compose.yml dataspects@localhost:/home/ds/
 
 ## Run docker-compose
 
