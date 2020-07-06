@@ -1,5 +1,5 @@
-    docker login --username=yourhubusername --password=yourpassword
+    sudo docker login
 
-    docker build -t $DOCKER_ACC/$DOCKER_REPO:$IMG_TAG .
+    sudo docker build -t dataspects/php-apache:7.4.7 .
 
-    sudo docker push $DOCKER_ACC/$DOCKER_REPO:$IMG_TAG
+    sudo docker push dataspects/php-apache:7.4.7
