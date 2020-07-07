@@ -65,9 +65,11 @@
         line: "{{ item }}"
       with_items:
         - $wgArticlePath = '/wiki/$1';
+        - $wgServer = "http://{{ mediawikiDomainNameInHostFile }}:8080";
         - $wgFileExtensions[] = 'pdf';
         - $wgMainCacheType = CACHE_NONE;
         - $wgRateLimits['edit']['anon'] = [ 1, 1 ];
+        - $wgEnableUploads = true;
       become: "true"
       tags:
         - 304_adjust_localsettings
@@ -77,19 +79,6 @@
       shell: docker exec {{ mediawikiDockerServiceName }} bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
-      become: "true"
-      tags:
-        - 304_adjust_localsettings
-
-    #FIXME: This should replace, but it actually just adds!
-    - name: 300 Replace settings in LocalSettings.php
-      lineinfile:
-        path: "/home/ds/mediawiki_root/w/LocalSettings.php"
-        regexp: '{{ item.orig }}'
-        line: '{{ item.replace }}'
-      with_items:
-        - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}:8080";' }
-        - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
       become: "true"
       tags:
         - 304_adjust_localsettings

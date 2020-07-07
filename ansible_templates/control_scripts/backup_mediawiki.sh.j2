@@ -1,0 +1,16 @@
+#!/bin/sh
+
+sudo docker exec \
+    mediawiki \
+      mysqldump \
+        --password=mysqlpassword \
+        --user=root \
+        --host=127.0.0.1 \
+        --complete-insert \
+        --add-drop-database \
+        --add-drop-table \
+        --compact \
+        --create-options \
+        --no-create-db \
+        --result-file=/var/www/html/w/dump.sql \
+        mediawiki

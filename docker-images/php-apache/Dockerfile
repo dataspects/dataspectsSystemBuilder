@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
   unzip \
   wget \
   inetutils-ping \
-  mariadb-client-core-10.3 \
+  mariadb-client-10.5.4 \
   git \
   libicu-dev \
   python3 && \

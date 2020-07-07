@@ -35,7 +35,7 @@ services:
     network_mode: host
   mediawiki:
     container_name: mediawiki
-    image: dataspects/php-apache:7.4.7
+    image: dataspects/php-apache:7.4.7_200707
     ports:
       - 80:80
     volumes:
@@ -43,7 +43,7 @@ services:
     network_mode: host
   mysql:
     container_name: mysql
-    image: mysql:8.0.20
+    image: mariadb:10.3.23
     volumes:
       - /home/ds/mysql_data:/var/lib/mysql
     environment:

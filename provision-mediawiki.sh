@@ -6,7 +6,7 @@ export SEMANTIC_RESULTS_FORMATS_VERSION=~3.1
 export MEDIAWIKI_GITHUB_VERSION=~1.4
 export MEDIAWIKI_MERMAID_VERSION=~2.1
 
-export MEDIAWIKI_NAME=dataspects MediaWiki
+export MEDIAWIKI_NAME=dataspectsMediaWiki
 
 ANSIBLETAGS=(
   300_clone_mediawiki
@@ -16,6 +16,7 @@ ANSIBLETAGS=(
   304_adjust_localsettings
   320_install_mediawiki_extensions
   330_execute_mediawiki_maintenance_runJobs
+  340_install_maintenance_functionality
 )
 
 ################################################################################
@@ -32,9 +33,10 @@ time ansible-playbook \
   --extra-vars mediawiki_github_version=$MEDIAWIKI_GITHUB_VERSION \
   --extra-vars mediawiki_mermaid_version=$MEDIAWIKI_MERMAID_VERSION \
   --extra-vars mediawiki_admin_user_password=$MEDIAWIKI_ADMIN_PASSWORD \
-  --extra-vars mediawikiDomainNameInHostFile=$DOMAIN_NAME \
+  --extra-vars mediawikiDomainNameInHostFile=dserver \
   --tags $(IFS=, eval 'echo "${ANSIBLETAGS[*]}"') \
   --become-method sudo \
       ./ansible_playbooks/300_MediaWiki/300_install_mediawiki.yml \
       ./ansible_playbooks/300_MediaWiki/320_install_mediawiki_extensions.yml \
-      ./ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml
+      ./ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml \
+      ./ansible_playbooks/300_MediaWiki/340_install_maintenance_functionality.yml

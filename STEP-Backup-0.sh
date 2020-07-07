@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Run this ds@dserver:/home/ds
+
+APACHE_CONTAINER_NAME=mediawiki
+BACKUP_DIR=backup
+
+wget https://releases.wikimedia.org/mediawiki/1.33/mediawiki-$NEW_VERSION.tar.gz
+
+mkdir mediawiki_root/new
+read -p "Untar? (y/n)" -n 1 -r; echo
+tar -xzf mediawiki-$NEW_VERSION.tar.gz -C mediawiki_root/new
+read -p "Rename? (y/n)" -n 1 -r; echo
+mv mediawiki_root/new/mediawiki-$NEW_VERSION/* mediawiki_root/new/
+read -p "Remove empty? (y/n)" -n 1 -r; echo
+rm -r mediawiki_root/new/mediawiki-$NEW_VERSION
+
+read -p "Copy over? (y/n)" -n 1 -r; echo
+cp mediawiki_root/w/LocalSettings.php mediawiki_root/new/
+cp -r mediawiki_root/w/images mediawiki_root/new/
+cp -r mediawiki_root/w/extensions mediawiki_root/new/
+cp -r mediawiki_root/w/composer.phar mediawiki_root/new/
+
+read -p "Rename? (y/n)" -n 1 -r; echo
+mv mediawiki_root/w mediawiki_root/1_32_3
+mv mediawiki_root/new mediawiki_root/w
+
+read -p "Run composer? (y/n)" -n 1 -r; echo
+docker exec $APACHE_CONTAINER_NAME bash -c "cd w && php composer.phar require mediawiki/semantic-media-wiki ~3.1"
+docker exec $APACHE_CONTAINER_NAME bash -c "cd w && php composer.phar require mediawiki/semantic-result-formats ~3.1"
+docker exec $APACHE_CONTAINER_NAME bash -c "cd w && php composer.phar require jeroen/mediawiki-github ~1.4"
+
+read -p "Run update.php? (y/n)" -n 1 -r; echo
+docker exec $APACHE_CONTAINER_NAME bash -c "php w/maintenance/update.php --skip-external-dependencies"

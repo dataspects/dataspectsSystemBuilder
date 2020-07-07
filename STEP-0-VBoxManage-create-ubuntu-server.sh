@@ -7,6 +7,7 @@
 # VBoxManage list ostypes
 
 VMNAME=dataspectsServer200706
+HOSTPATH=/home/lex/dsServerHome # Create this first!
 
 VMDISK=/home/lex/VirtualBoxDrives/$VMNAME.vdi
 DISKSIZE=1048576
@@ -29,5 +30,7 @@ VBoxManage storageattach $VMNAME --storagectl "SATA Controller" --port 0 --devic
 
 VBoxManage storagectl $VMNAME --name "IDE Controller" --add ide
 VBoxManage storageattach $VMNAME --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium $ISO
+
+# VBoxManage sharedfolder add $VMNAME --name "dsServerHome" --hostpath $HOSTPATH
 
 VBoxManage startvm $VMNAME
