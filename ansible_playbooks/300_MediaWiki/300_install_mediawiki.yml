@@ -58,6 +58,16 @@
       become: "true"
       tags:
         - 303_install_mediawiki
+    
+    # [[IsOperationType::FileSystemOperation]]
+    - name: 300 Place run_jobs_continuously.sh script
+      template:
+        src: ../../ansible_templates/run_jobs_continuously.sh.j2
+        dest: "/home/ds/mediawiki_root/w/run_jobs_continuously.sh"
+        mode: 0777
+      become: "true"
+      tags:
+        - 303_install_mediawiki
 
     - name: 300 Add settings to LocalSettings.php
       lineinfile:

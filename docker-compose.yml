@@ -53,5 +53,5 @@ services:
     container_name: parsoid
     image: dataspects/docker-parsoid:0.10.0
     environment:
-      - PARSOID_DOMAIN_dataspects=http://127.0.0.1/w/api.php
+      - PARSOID_DOMAIN_localhost=http://localhost/w/api.php
     network_mode: host
