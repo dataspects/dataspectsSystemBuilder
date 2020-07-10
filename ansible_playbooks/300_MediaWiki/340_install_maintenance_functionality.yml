@@ -11,7 +11,18 @@
       mode: 0777
     with_items:
       - backup_mediawiki.sh
+      - restore_mediawiki.sh
       - upgrade_mediawiki.sh
+    tags:
+      - 340_install_maintenance_functionality
+  
+  - name: Create maintenance folders
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items:
+      - /home/ds/restic-backup-repository
+      - /home/ds/restic-restore-folder
     tags:
       - 340_install_maintenance_functionality
 

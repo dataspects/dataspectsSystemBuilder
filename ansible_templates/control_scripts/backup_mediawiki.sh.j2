@@ -9,20 +9,20 @@ HOST_SSH_PORT=22
 
 ######
 # STEP 1: Mount restic-backup-repository/ on host
-
 printf "dserver backup: Trying to mount (sshfs) restic-backup-repository on host...\n"
 sudo sshfs -o nonempty -o allow_other -p $HOST_SSH_PORT $RESTIC_BACKUP_REPOSITORY_ON_HOST /home/ds/restic-backup-repository
 printf "dserver backup: restic-backup-repository mounted (sshfs).\n"
 
 ######
-# STEP 2: Run restic backup
+# STEP 2: Dump database
+printf "dserver backup: Trying to mysqldump mediawiki...\n"
+sudo docker exec mediawiki bash -c \
+  "mysqldump -h 127.0.0.1 -u mediawiki -pmediawikipass \
+  mediawiki > /var/www/html/w/db.sql"
+printf "dserver backup: mysqldump mediawiki completed.\n"
 
+######
+# STEP 3: Run restic backup
 printf "dserver backup: Trying to run restic backup...\n"
 restic -r restic-backup-repository --verbose backup mediawiki_root/w/
 printf "dserver backup: Completed running restic backup.\n"
-
-######
-# STEP 3: Unmount restic-backup-repository/ on host
-printf "dserver backup: Trying to unmount restic-backup-repository...\n"
-sudo umount restic-backup-repository
-printf "dserver backup: Unmounted restic-backup-repository.\n"
