@@ -108,3 +108,12 @@
       become: "true"
       tags:
         - 304_adjust_localsettings
+
+    - name: 300 place INITIAL_INSTRUCTIONS
+      template:
+        src: ../../ansible_templates/INITIAL_INSTRUCTIONS.j2
+        dest: "/home/ds/INITIAL_INSTRUCTIONS"
+        mode: 0777
+      become: "true"
+      tags:
+        - 305_place_INITIAL_INSTRUCTIONS
