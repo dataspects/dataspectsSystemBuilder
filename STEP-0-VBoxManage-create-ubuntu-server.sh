@@ -20,10 +20,9 @@ VBoxManage modifyvm $VMNAME --cpus 4 --memory 4096 --vram 12
 VBoxManage modifyvm $VMNAME --nic1 nat --bridgeadapter1 $NETWORKINTERFACE
 VBoxManage modifyvm $VMNAME --natpf1 "ssh,tcp,,2222,,22"
 VBoxManage modifyvm $VMNAME --natpf1 "mediawiki,tcp,,8080,,80"
+VBoxManage modifyvm $VMNAME --natpf1 "search,tcp,,8081,,81"
 VBoxManage modifyvm $VMNAME --natpf1 "api,tcp,,17465,,3001"
 VBoxManage modifyvm $VMNAME --natpf1 "kibana,tcp,,20065,,5601"
-VBoxManage modifyvm $VMNAME --natpf1 "gatsbydev,tcp,,22464,,8000"
-VBoxManage modifyvm $VMNAME --natpf1 "gatsbypro,tcp,,23464,,9000"
 VBoxManage createhd --filename $VMDISK --size $DISKSIZE --variant Standard
 VBoxManage storagectl $VMNAME --name "SATA Controller" --add sata --bootable on
 VBoxManage storageattach $VMNAME --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium $VMDISK
