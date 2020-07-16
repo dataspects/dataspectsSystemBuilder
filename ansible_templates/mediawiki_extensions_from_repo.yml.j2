@@ -58,3 +58,9 @@ mediawiki_extensions:
       - $wgHiddenPrefs[] = 'visualeditor-enable';
       - $wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://localhost:8000', 'domain' => 'localhost');
       - $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
+  - repo: https://github.com/enterprisemediawiki/WatchAnalytics.git
+    name: WatchAnalytics
+    localsettings_configs:
+      - wfLoadExtension( 'WatchAnalytics' );
+    docker_commands:
+      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
