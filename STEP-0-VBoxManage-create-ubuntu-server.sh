@@ -23,6 +23,10 @@ VBoxManage modifyvm $VMNAME --natpf1 "mediawiki,tcp,,8080,,80"
 VBoxManage modifyvm $VMNAME --natpf1 "search,tcp,,8081,,81"
 VBoxManage modifyvm $VMNAME --natpf1 "api,tcp,,17465,,3001"
 VBoxManage modifyvm $VMNAME --natpf1 "kibana,tcp,,20065,,5601"
+VBoxManage modifyvm $VMNAME --natpf1 "neo4j-browser,tcp,,27474,,7474"
+VBoxManage modifyvm $VMNAME --natpf1 "bolt,tcp,,27687,,7687"
+VBoxManage modifyvm $VMNAME --natpf1 "gatsby-dev,tcp,,22464,,8000"
+VBoxManage modifyvm $VMNAME --natpf1 "gatsby-prod,tcp,,23464,,9000"
 VBoxManage createhd --filename $VMDISK --size $DISKSIZE --variant Standard
 VBoxManage storagectl $VMNAME --name "SATA Controller" --add sata --bootable on
 VBoxManage storageattach $VMNAME --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium $VMDISK

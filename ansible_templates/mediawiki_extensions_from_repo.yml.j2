@@ -23,10 +23,14 @@ mediawiki_extensions:
     localsettings_configs:
       - wfLoadExtension( 'Scribunto' );
       - $wgScribuntoDefaultEngine = 'luastandalone';
-  - repo: https://github.com/dataspects/MWExtension-DataspectsSearch.git
-    name: DataspectsSearch
+  - repo: https://github.com/dataspects/DataspectsMediaWikiFeeder.git
+    name: DataspectsMediaWikiFeeder
     localsettings_configs:
-      - wfLoadExtension( 'DataspectsSearch' );
+      - wfLoadExtension( 'DataspectsMediaWikiFeeder' );
+      - $wgRateLimits['edit']['ip'] = array( 1000, 1 );
+      - $wgDataspectsMediaWikiID = "";
+      - $wgDataspectsApiKey = "";
+      - $wgDataspectsApiURL = "http://localhost:3001/mediawikis/";
   - repo: https://github.com/wikimedia/mediawiki-extensions-Arrays.git
     name: Arrays
     localsettings_configs:
