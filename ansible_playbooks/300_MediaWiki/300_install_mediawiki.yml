@@ -4,141 +4,116 @@
   gather_facts: False
   tasks:
 
-    ############################################################################
-    - name: 300 Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root path on host
-      shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
-      register: volume_profile
-      when: docker_volumes_mode == 'automatic'
-      become: yes
-      become_method: sudo
-      tags:
-        - 300_install_mediawiki
-    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).values() | first }}
-      when: docker_volumes_mode == 'automatic'
-      tags:
-        - 300_install_mediawiki
-    - set_fact: mountpoint={{ manual_docker_volumes_location }}mediawiki_root
-      when: docker_volumes_mode == 'manual'
-      tags:
-        - 300_install_mediawiki
-    ############################################################################
-
     - name: 300 Clone required mediawiki version
       shell: "git clone --branch {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
       args:
-        chdir: "{{ mountpoint }}"
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+        chdir: "/home/ds/mediawiki_root"
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 300_clone_mediawiki
 
     - name: 300 Install core extensions and skins
       shell: "git submodule update --init --recursive"
       args:
-        chdir: "{{ mountpoint }}/w/"
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+        chdir: "/home/ds/mediawiki_root/w/"
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 300_clone_mediawiki
 
     - name: 300 Place composer install script
       template:
         src: ../../ansible_templates/install_composer.sh
-        dest: "{{ mountpoint }}/w/install_composer.sh"
+        dest: "/home/ds/mediawiki_root/w/install_composer.sh"
         mode: 0777
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 301_install_composer
 
     - name: 300 Install composer locally
-      shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && ./install_composer.sh"
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && ./install_composer.sh"
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 301_install_composer
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: 300 Run composer inside container
-      shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && php composer.phar install"
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && php composer.phar install"
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 302_run_composer
 
     # [[IsOperationType::FileSystemOperation]]
     - name: 300 Place mediawiki install script
       template:
         src: ../../ansible_templates/install_mediawiki.sh.j2
-        dest: "{{ mountpoint }}/w/install.sh"
+        dest: "/home/ds/mediawiki_root/w/install.sh"
         mode: 0777
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 303_install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: 300 Install mediawiki inside container
-      shell: "docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c 'cd /var/www/html/w && ./install.sh'"
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      shell: "docker exec {{ mediawikiDockerServiceName }} bash -c 'cd /var/www/html/w && ./install.sh'"
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 303_install_mediawiki
+    
+    # [[IsOperationType::FileSystemOperation]]
+    - name: 300 Place run_jobs_continuously.sh script
+      template:
+        src: ../../ansible_templates/run_jobs_continuously.sh.j2
+        dest: "/home/ds/mediawiki_root/w/run_jobs_continuously.sh"
+        mode: 0777
+      become: "true"
+      tags:
+        - 303_install_mediawiki
 
     - name: 300 Add settings to LocalSettings.php
       lineinfile:
-        path: "{{ mountpoint }}/w/LocalSettings.php"
+        path: "/home/ds/mediawiki_root/w/LocalSettings.php"
         line: "{{ item }}"
       with_items:
         - $wgArticlePath = '/wiki/$1';
+        - $wgServer = "http://{{ mediawikiDomainNameInHostFile }}:8080";
         - $wgFileExtensions[] = 'pdf';
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+        - $wgMainCacheType = CACHE_NONE;
+        - $wgRateLimits['edit']['anon'] = [ 1, 1 ];
+        - $wgEnableUploads = true;
+      become: "true"
       tags:
-        - 300_install_mediawiki
-
-    #FIXME: This should replace, but it actually just adds!
-    - name: 300 Replace settings in LocalSettings.php
-      lineinfile:
-        path: "{{ mountpoint }}/w/LocalSettings.php"
-        regexp: '{{ item.orig }}'
-        line: '{{ item.replace }}'
-      with_items:
-        - { orig: "^$wgServer = ", replace: '$wgServer = "http://local.mediawiki";' }
-        - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
-      tags:
-        - 300_install_mediawiki
-        - t1811161102t
+        - 304_adjust_localsettings
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: 300 Change admin user password
-      shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash
+      shell: docker exec {{ mediawikiDockerServiceName }} bash
                -c "cd /var/www/html/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      become: "true"
       tags:
-        - 300_install_mediawiki
-
-    #FIXME: This should replace, but it actually just adds!
-    - name: 300 Replace settings in LocalSettings.php
-      lineinfile:
-        path: "{{ mountpoint }}/w/LocalSettings.php"
-        regexp: '{{ item.orig }}'
-        line: '{{ item.replace }}'
-      with_items:
-        - { orig: "^$wgServer = ", replace: '$wgServer = "http://{{ mediawikiDomainNameInHostFile }}:{{ nginxPortOnHost }}";' }
-        - { orig: "^$wgEnableUploads = ", replace: '$wgEnableUploads = true;' }
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
-      tags:
-        - 300_install_mediawiki
+        - 304_adjust_localsettings
 
     # [[IsOperationType::FileSystemOperation]]
     - name: 300 Set permissions on mediawiki root
       file:
-        path: "{{ mountpoint }}/w/"
+        path: "/home/ds/mediawiki_root/w/"
         owner: www-data
         recurse: yes
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
-      when:
-        platform == 'linux'
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 304_adjust_localsettings
 
     - name: 300 execute_mediawiki_maintenance_runJobs
-      shell: docker exec {{ systemPrefix }}-{{ mediawikiDockerServiceName }} bash -c "php w/maintenance/runJobs.php"
-      become: yes
+      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "php w/maintenance/runJobs.php"
+      become: "true"
       tags:
-        - 300_install_mediawiki
+        - 304_adjust_localsettings
+
+    - name: 300 place INITIAL_INSTRUCTIONS
+      template:
+        src: ../../ansible_templates/INITIAL_INSTRUCTIONS.j2
+        dest: "/home/ds/INITIAL_INSTRUCTIONS"
+        mode: 0777
+      become: "true"
+      tags:
+        - 305_place_INITIAL_INSTRUCTIONS

@@ -1,12 +1,12 @@
 php maintenance/install.php \
-  --dbname=wikidb \
-  --dbserver={% if docker_network_mode == 'host'%}127.0.0.1{% else %}db{% endif %} \
+  --dbname=mediawiki \
+  --dbserver=127.0.0.1 \
   --installdbuser=root \
-  --installdbpass="{{ mysql_root_password }}" \
+  --installdbpass="mysqlpassword" \
   --dbuser=mediawiki \
   --dbpass=mediawikipass \
   --server="http://localhost" \
   --scriptpath=/w \
   --lang=en \
-  --pass=adminpass \
+  --pass=ds \
 "{{ mediawiki_name }}" "Admin"

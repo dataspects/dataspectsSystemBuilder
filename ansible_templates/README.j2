@@ -1,0 +1,16 @@
+From https://restic.readthedocs.io/en/stable/010_introduction.html
+------------------------------------------------------------------
+
+- Initialize a restic repository:
+
+    ds@dserver:~$ restic init --repo restic-backup-repository/
+
+
+- List all snapshots in restic repository:
+
+    ds@dserver:~$ restic -r restic-backup-repository/ snapshots
+
+
+- Check a restic repository integrity and consistency
+
+    ds@dserver:~$ restic -r restic-backup-repository/ check

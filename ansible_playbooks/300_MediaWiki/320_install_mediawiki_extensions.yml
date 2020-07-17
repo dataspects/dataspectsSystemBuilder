@@ -3,60 +3,43 @@
 - hosts: localhost
   gather_facts: False
   tasks:
-
-    ############################################################################
-    - name: 320 Register {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root path on host
-      shell: docker volume inspect {{ dataspectsSystem_control_folder_on_host | basename | lower }}_mediawiki_root
-      register: volume_profile
-      when: docker_volumes_mode == 'automatic'
-      become: yes
-      become_method: sudo
-      tags:
-        - 320_install_mediawiki_extensions
-    - set_fact: mountpoint={{ dict(volume_profile.stdout | from_json | json_query('[].[Name,Mountpoint]')).values() | first }}
-      when: docker_volumes_mode == 'automatic'
-      tags:
-        - 320_install_mediawiki_extensions
-    - set_fact: mountpoint={{ manual_docker_volumes_location }}mediawiki_root
-      when: docker_volumes_mode == 'manual'
-      tags:
-        - 320_install_mediawiki_extensions
-    ############################################################################
-
+  
     - name: 320 Place MediaWiki extensions list
       template:
-        src: ../../ansible_templates/mediawiki_extensions.yml.j2
-        dest: "{{ mountpoint }}/w/mediawiki_extensions.yml"
+        src: ../../ansible_templates/{{ item }}.yml.j2
+        dest: "/home/ds/mediawiki_root/w/{{ item }}.yml"
         mode: 0777
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      with_items:
+        - mediawiki_extensions_by_composer
+        - mediawiki_extensions_enable_only
+        - mediawiki_extensions_from_repo
+      become: "true"
       tags:
         - 320_install_mediawiki_extensions
 
     - name: 320 Place MediaWiki extensions install script
       template:
         src: ../../ansible_templates/install_mediawiki_extensions.rb.j2
-        dest: "{{ mountpoint }}/w/install_mediawiki_extensions.rb"
+        dest: "/home/ds/mediawiki_root/w/install_mediawiki_extensions.rb"
         mode: 0777
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+      become: "true"
       tags:
         - 320_install_mediawiki_extensions
 
     - name: 320 Install MediaWiki extensions
       shell: ruby install_mediawiki_extensions.rb
       args:
-        chdir: "{{ mountpoint }}/w/"
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
+        chdir: "/home/ds/mediawiki_root/w/"
+      become: "true"
       tags:
         - 320_install_mediawiki_extensions
 
     # [[IsOperationType::FileSystemOperation]]
     - name: 320 Set permissions on mediawiki root
       file:
-        path: "{{ mountpoint }}/w/"
+        path: "/home/ds/mediawiki_root/w/"
         owner: www-data
         recurse: yes
-      become: "{{ 'true' if platform == 'linux' else 'false' }}"
-      when:
-        platform == 'linux'
+      become: "true"
       tags:
         - 320_install_mediawiki_extensions

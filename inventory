@@ -1,1 +1,1 @@
-localhost
+localhost ansible_port=2222 ansible_host=localhost ansible_user=ds ansible_password=ds ansible_sudo_pass=ds

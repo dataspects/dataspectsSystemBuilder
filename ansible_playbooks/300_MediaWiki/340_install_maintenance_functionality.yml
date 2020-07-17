@@ -1,0 +1,51 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+  - name: Place maintenance scripts
+    template:
+      src: ../../ansible_templates/control_scripts/{{ item }}.j2
+      dest: "/home/ds/{{ item }}"
+      mode: 0777
+    with_items:
+      - backup_mediawiki.sh
+      - restore_mediawiki.sh
+      - upgrade_mediawiki.sh
+    tags:
+      - 340_install_maintenance_functionality
+  
+  - name: Create maintenance folders
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items:
+      - /home/ds/restic-backup-repository
+      - /home/ds/restic-restore-folder
+    tags:
+      - 340_install_maintenance_functionality
+
+#   # Cloning
+
+#   - name: Create dataspectsSystem_control_folder_on_host/cloning
+#     file:
+#       path: "{{ dataspectsSystem_control_folder_on_host }}/cloning/"
+#       state: directory
+#     tags:
+#       - 800_install_clone_functionality
+
+#   - name: Copy docker-compose.yml file to {{ dataspectsSystem_control_folder_on_host }}
+#     template:
+#       src: ../../ansible_templates/docker-compose-clone.yml.j2
+#       dest: "{{ dataspectsSystem_control_folder_on_host }}/cloning/docker-compose.yml"
+#     tags:
+#       - 800_install_clone_functionality
+
+#   - name: Place clone_dataspectsSystem_from_backup.rb
+#     template:
+#       src: ../../ansible_templates/control_scripts/clone_dataspectsSystem_from_backup.rb.j2
+#       dest: "{{ dataspectsSystem_control_folder_on_host }}/cloning/clone_dataspectsSystem_from_backup.rb"
+#       mode: 0777
+#     tags:
+#       - 800_install_clone_functionality
