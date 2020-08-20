@@ -7,7 +7,7 @@
   - name: Place python3 webserver script
     template:
       src: ../../ansible_templates/control_scripts/dataspects_search.sh.j2
-      dest: "/home/ds/dataspects_search.sh"
+      dest: "/home/dserver/dataspects_search.sh"
       mode: 0777
     tags:
       - 500_install_dataspects_search
@@ -17,6 +17,6 @@
       path: "{{ item }}"
       state: directory
     with_items:
-      - /home/ds/search
+      - /home/dserver/search
     tags:
       - 500_install_dataspects_search

@@ -7,7 +7,7 @@
     - name: 320 Place MediaWiki extensions list
       template:
         src: ../../ansible_templates/{{ item }}.yml.j2
-        dest: "/home/ds/mediawiki_root/w/{{ item }}.yml"
+        dest: "/home/dserver/mediawiki_root/w/{{ item }}.yml"
         mode: 0777
       with_items:
         - mediawiki_extensions_by_composer
@@ -20,7 +20,7 @@
     - name: 320 Place MediaWiki extensions install script
       template:
         src: ../../ansible_templates/install_mediawiki_extensions.rb.j2
-        dest: "/home/ds/mediawiki_root/w/install_mediawiki_extensions.rb"
+        dest: "/home/dserver/mediawiki_root/w/install_mediawiki_extensions.rb"
         mode: 0777
       become: "true"
       tags:
@@ -29,7 +29,7 @@
     - name: 320 Install MediaWiki extensions
       shell: ruby install_mediawiki_extensions.rb
       args:
-        chdir: "/home/ds/mediawiki_root/w/"
+        chdir: "/home/dserver/mediawiki_root/w/"
       become: "true"
       tags:
         - 320_install_mediawiki_extensions
@@ -37,7 +37,7 @@
     # [[IsOperationType::FileSystemOperation]]
     - name: 320 Set permissions on mediawiki root
       file:
-        path: "/home/ds/mediawiki_root/w/"
+        path: "/home/dserver/mediawiki_root/w/"
         owner: www-data
         recurse: yes
       become: "true"

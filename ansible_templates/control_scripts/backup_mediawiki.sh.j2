@@ -10,7 +10,7 @@ HOST_SSH_PORT=22
 ######
 # STEP 1: Mount restic-backup-repository/ on host
 printf "dserver backup: Trying to mount (sshfs) restic-backup-repository on host...\n"
-sudo sshfs -o nonempty -o allow_other -p $HOST_SSH_PORT $RESTIC_BACKUP_REPOSITORY_ON_HOST /home/ds/restic-backup-repository
+sudo sshfs -o nonempty -o allow_other -p $HOST_SSH_PORT $RESTIC_BACKUP_REPOSITORY_ON_HOST /home/dserver/restic-backup-repository
 printf "dserver backup: restic-backup-repository mounted (sshfs).\n"
 
 ######

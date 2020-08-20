@@ -7,7 +7,7 @@
   - name: Place maintenance scripts
     template:
       src: ../../ansible_templates/control_scripts/{{ item }}.j2
-      dest: "/home/ds/{{ item }}"
+      dest: "/home/dserver/{{ item }}"
       mode: 0777
     with_items:
       - backup_mediawiki.sh
@@ -21,8 +21,8 @@
       path: "{{ item }}"
       state: directory
     with_items:
-      - /home/ds/restic-backup-repository
-      - /home/ds/restic-restore-folder
+      - /home/dserver/restic-backup-repository
+      - /home/dserver/restic-restore-folder
     tags:
       - 340_install_maintenance_functionality
 

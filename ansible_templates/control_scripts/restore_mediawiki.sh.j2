@@ -12,19 +12,19 @@ HOST_SSH_PORT=22
 ######
 # STEP 1: Mount restic-backup-repository/ on host
 printf "dserver backup: Trying to mount (sshfs) restic-backup-repository on host...\n"
-sudo sshfs -o nonempty -o allow_other -p $HOST_SSH_PORT $RESTIC_BACKUP_REPOSITORY_ON_HOST /home/ds/restic-backup-repository
+sudo sshfs -o nonempty -o allow_other -p $HOST_SSH_PORT $RESTIC_BACKUP_REPOSITORY_ON_HOST /home/dserver/restic-backup-repository
 printf "dserver backup: restic-backup-repository mounted (sshfs).\n"
 
 ######
 # STEP 2: Mount restic-restore-folder/ on host
 printf "dserver backup: Trying to mount (sshfs) restic-restore-folder on host...\n"
-sudo sshfs -o nonempty -o allow_other -p $HOST_SSH_PORT $RESTIC_RESTORE_REPOSITORY_ON_HOST /home/ds/restic-restore-folder
+sudo sshfs -o nonempty -o allow_other -p $HOST_SSH_PORT $RESTIC_RESTORE_REPOSITORY_ON_HOST /home/dserver/restic-restore-folder
 printf "dserver backup: restic-restore-folder mounted (sshfs).\n"
 
 ######
 # STEP 3: Restore backup
 printf "dserver backup: Trying to restore $SNAPSHOT_ID...\n"
-restic -r /home/ds/restic-backup-repository restore $SNAPSHOT_ID --target /home/ds/restic-restore-folder
+restic -r /home/dserver/restic-backup-repository restore $SNAPSHOT_ID --target /home/dserver/restic-restore-folder
 printf "dserver backup: Restored $SNAPSHOT_ID.\n"
 
 ######
@@ -38,7 +38,7 @@ sudo docker exec mediawiki bash -c \
   create mediawiki"
 printf "dserver backup: new mediawiki emptied.\n"
 printf "dserver backup: Trying to copy db.sql dump into mediawiki_root/w...\n"
-sudo cp /home/ds/restic-restore-folder/mediawiki_root/w/db.sql /home/ds/mediawiki_root/w/
+sudo cp /home/dserver/restic-restore-folder/mediawiki_root/w/db.sql /home/dserver/mediawiki_root/w/
 printf "dserver backup: db.sql dump copied into mediawiki_root/w.\n"
 printf "dserver backup: Trying to restore db.sql...\n"
 sudo docker exec mediawiki bash -c \
@@ -49,15 +49,15 @@ printf "dserver backup: db.sql restored.\n"
 ######
 # STEP 5: Restore LocalSettings, images
 printf "dserver backup: Trying to make a security copy of the new LocalSettings.php...\n"
-sudo mv /home/ds/mediawiki_root/w/LocalSettings.php /home/ds/mediawiki_root/w/LocalSettings.php_FROM_FRESH_INSTALLATION
+sudo mv /home/dserver/mediawiki_root/w/LocalSettings.php /home/dserver/mediawiki_root/w/LocalSettings.php_FROM_FRESH_INSTALLATION
 printf "dserver backup: Security copy of the new LocalSettings.php completed.\n"
 
 printf "dserver backup: Trying to copy backed up LocalSettings.php into mediawiki_root/w...\n"
-sudo cp /home/ds/restic-restore-folder/mediawiki_root/w/LocalSettings.php /home/ds/mediawiki_root/w/LocalSettings.php
+sudo cp /home/dserver/restic-restore-folder/mediawiki_root/w/LocalSettings.php /home/dserver/mediawiki_root/w/LocalSettings.php
 printf "dserver backup: Backed up LocalSettings.php copied into mediawiki_root/w.\n"
 
 printf "dserver backup: Trying to copy backed up images/ into mediawiki_root/w...\n"
-sudo cp -r /home/ds/restic-restore-folder/mediawiki_root/w/images /home/ds/mediawiki_root/w/
+sudo cp -r /home/dserver/restic-restore-folder/mediawiki_root/w/images /home/dserver/mediawiki_root/w/
 printf "dserver backup: Backed up images copied into mediawiki_root/w.\n"
 
 ######

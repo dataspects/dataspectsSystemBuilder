@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # ds@dserver:~$ mkdir search
-# user@host:~$  scp -P 2222 -r /home/lex/search/public/* ds@dserver:/home/ds/search
-# ds@dserver:~$ sudo python3 -m http.server 81 --directory /home/ds/search
+# user@host:~$  scp -P 2222 -r /home/lex/search/public/* ds@dserver:/home/dserver/search
+# ds@dserver:~$ sudo python3 -m http.server 81 --directory /home/dserver/search
 
 # SEE https://github.com/neo4j-drivers/seabolt/releases
 # ds@dserver:~$ wget https://github.com/neo4j-drivers/seabolt/releases/download/v1.7.4/seabolt-1.7.4-Linux-ubuntu-18.04.deb
