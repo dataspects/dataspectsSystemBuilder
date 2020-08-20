@@ -18,7 +18,7 @@ ANSIBLETAGS=(
   320_install_mediawiki_extensions
   330_execute_mediawiki_maintenance_runJobs
   340_install_maintenance_functionality
-  500_install_dataspects_search
+  # 500_install_dataspects_search
 )
 
 ################################################################################

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-# HOST: sudo sshfs -o nonempty -o allow_other -p 2222 ds@localhost:/home/ds /home/lex/dsServerHome
+# user@host:~/dataspectsSystemBuilder$ sshfs -o nonempty -p 2222 dserver@localhost:/home/dserver /home/lex/dsServerHome

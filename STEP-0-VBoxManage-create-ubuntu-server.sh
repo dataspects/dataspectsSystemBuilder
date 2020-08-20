@@ -6,13 +6,13 @@
 # VBoxManage list -l runningvms
 # VBoxManage list ostypes
 
-VMNAME=dataspectsServer200706
+VMNAME=dataspectsServer200820
 HOSTPATH=/home/lex/dsServerHome # Create this first!
+ISO=/home/lex/Downloads/ubuntu-20.04-live-server-amd64.iso
+NETWORKINTERFACE=enp0s31f6
 
 VMDISK=/home/lex/VirtualBoxDrives/$VMNAME.vdi
 DISKSIZE=1048576
-ISO=/home/lex/Downloads/ubuntu-20.04-live-server-amd64.iso
-NETWORKINTERFACE=enp0s31f6
 
 VBoxManage createvm --name $VMNAME --ostype Ubuntu_64 --register
 VBoxManage modifyvm $VMNAME --cpus 4 --memory 4096 --vram 12
