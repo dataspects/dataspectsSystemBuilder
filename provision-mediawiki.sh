@@ -18,7 +18,6 @@ ANSIBLETAGS=(
   320_install_mediawiki_extensions
   330_execute_mediawiki_maintenance_runJobs
   340_install_maintenance_functionality
-  # 500_install_dataspects_search
 )
 
 ################################################################################
@@ -41,5 +40,4 @@ time ansible-playbook \
       ./ansible_playbooks/300_MediaWiki/300_install_mediawiki.yml \
       ./ansible_playbooks/300_MediaWiki/320_install_mediawiki_extensions.yml \
       ./ansible_playbooks/300_MediaWiki/330_execute_mediawiki_maintenance_runJobs.yml \
-      ./ansible_playbooks/300_MediaWiki/340_install_maintenance_functionality.yml \
-      ./ansible_playbooks/500_dataspects/500_install_dataspects_search.yml
+      ./ansible_playbooks/300_MediaWiki/340_install_maintenance_functionality.yml

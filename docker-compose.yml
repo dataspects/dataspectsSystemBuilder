@@ -43,7 +43,7 @@ services:
     network_mode: host
   mysql:
     container_name: mysql
-    image: mariadb:10.3.23
+    image: mariadb:10.5.5
     volumes:
       - /home/dserver/mysql_data:/var/lib/mysql
     environment:

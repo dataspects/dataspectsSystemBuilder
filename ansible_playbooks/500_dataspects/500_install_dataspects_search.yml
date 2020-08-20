@@ -12,11 +12,12 @@
     tags:
       - 500_install_dataspects_search
   
-  - name: Create dataspects search root folder
+  - name: Create dataspects root folders
     file:
       path: "{{ item }}"
       state: directory
     with_items:
       - /home/dserver/search
+      - /home/dserver/go/src/github.com/dataspects
     tags:
       - 500_install_dataspects_search
