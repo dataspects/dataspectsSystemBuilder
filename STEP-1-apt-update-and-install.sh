@@ -6,4 +6,5 @@ ssh -p 2222 dserver@localhost
 # dserver@dserver:~$ sudo snap install go --classic
 
 # dserver@dserver:~$ sudo apt install virtualbox-guest-utils virtualbox-guest-additions-iso
+# Following step not necessary?
 # dserver@dserver:~$ sudo mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /media/ && sudo /media/VBoxLinuxAdditions.run

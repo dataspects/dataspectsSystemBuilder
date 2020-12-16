@@ -22,7 +22,7 @@
 
     - name: 300 Place composer install script
       template:
-        src: ../../ansible_templates/install_composer.sh
+        src: ../../ansible_templates/install_composer.sh.j2
         dest: "/home/dserver/mediawiki_root/w/install_composer.sh"
         mode: 0777
       become: "true"
@@ -80,6 +80,7 @@
         - $wgMainCacheType = CACHE_NONE;
         - $wgRateLimits['edit']['anon'] = [ 1, 1 ];
         - $wgEnableUploads = true;
+        - $wgShowExceptionDetails = true;
       become: "true"
       tags:
         - 304_adjust_localsettings

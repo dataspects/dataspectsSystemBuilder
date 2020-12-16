@@ -58,9 +58,19 @@ mediawiki_extensions:
       - $wgHiddenPrefs[] = 'visualeditor-enable';
       - $wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://localhost:8000', 'domain' => 'localhost');
       - $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
-  - repo: https://github.com/enterprisemediawiki/WatchAnalytics.git
-    name: WatchAnalytics
+  # - repo: https://github.com/enterprisemediawiki/WatchAnalytics.git
+  #   name: WatchAnalytics
+  #   localsettings_configs:
+  #     - wfLoadExtension( 'WatchAnalytics' );
+  #   docker_commands:
+  #     - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
+  - repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange.git
+    name: PageExchange
     localsettings_configs:
-      - wfLoadExtension( 'WatchAnalytics' );
+      - wfLoadExtension( 'PageExchange' );
     docker_commands:
       - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
+  - repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams.git
+    name: FlexDiagrams
+    localsettings_configs:
+      - wfLoadExtension( 'FlexDiagrams' );

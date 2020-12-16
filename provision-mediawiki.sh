@@ -1,7 +1,9 @@
 #!/bin/bash
 
-export MEDIAWIKI_VERSION=REL1_34
-export SEMANTIC_MEDIAWIKI_VERSION=~3.1
+export COMPOSER_VERSION=1.10.19
+
+export MEDIAWIKI_VERSION=REL1_35
+export SEMANTIC_MEDIAWIKI_VERSION=~3.2
 export SEMANTIC_RESULTS_FORMATS_VERSION=~3.1
 export MEDIAWIKI_GITHUB_VERSION=~1.4
 export MEDIAWIKI_MERMAID_VERSION=~2.1
@@ -27,6 +29,7 @@ export MEDIAWIKI_ADMIN_PASSWORD=123adminpass456
 time ansible-playbook \
   --inventory ./inventory \
   --extra-vars mediawikiDockerServiceName=mediawiki \
+  --extra-vars composer_version=$COMPOSER_VERSION \
   --extra-vars mediawiki_version=$MEDIAWIKI_VERSION \
   --extra-vars mediawiki_name=$MEDIAWIKI_NAME \
   --extra-vars semantic_mediawiki_version=$SEMANTIC_MEDIAWIKI_VERSION \

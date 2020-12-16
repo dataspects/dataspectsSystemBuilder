@@ -8,5 +8,5 @@ php maintenance/install.php \
   --server="http://localhost" \
   --scriptpath=/w \
   --lang=en \
-  --pass=ds \
+  --pass={{ mediawiki_admin_user_password }} \
 "{{ mediawiki_name }}" "Admin"
