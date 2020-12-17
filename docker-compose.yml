@@ -49,9 +49,9 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=mysqlpassword
     network_mode: host
-  parsoid:
-    container_name: parsoid
-    image: dataspects/docker-parsoid:0.10.0
-    environment:
-      - PARSOID_DOMAIN_localhost=http://localhost/w/api.php
-    network_mode: host
+  # parsoid:
+  #   container_name: parsoid
+  #   image: dataspects/docker-parsoid:0.10.0
+  #   environment:
+  #     - PARSOID_DOMAIN_localhost=http://localhost/w/api.php
+  #   network_mode: host
