@@ -6,7 +6,7 @@
 # VBoxManage list -l runningvms
 # VBoxManage list ostypes
 
-VMNAME=dserver201216
+VMNAME=dserver210122
 HOSTPATH=/home/lex/dsServerHome # Create this first!
 ISO=/home/lex/Downloads/ubuntu-20.04.1-live-server-amd64.iso
 NETWORKINTERFACE=enp0s31f6
@@ -15,7 +15,7 @@ VMDISK=/home/lex/VirtualBoxDrives/$VMNAME.vdi
 DISKSIZE=1048576
 
 VBoxManage createvm --name $VMNAME --ostype Ubuntu_64 --register
-VBoxManage modifyvm $VMNAME --cpus 4 --memory 4096 --vram 12
+VBoxManage modifyvm $VMNAME --cpus 8 --memory 8192 --vram 12
 # Check 'ip addr' on host
 VBoxManage modifyvm $VMNAME --nic1 nat --bridgeadapter1 $NETWORKINTERFACE
 VBoxManage modifyvm $VMNAME --natpf1 "ssh,tcp,,2222,,22"
@@ -37,3 +37,5 @@ VBoxManage storageattach $VMNAME --storagectl "IDE Controller" --port 0 --device
 # VBoxManage sharedfolder add $VMNAME --name "dsServerHome" --hostpath $HOSTPATH
 
 VBoxManage startvm $VMNAME
+
+# Set everything to "dserver"
