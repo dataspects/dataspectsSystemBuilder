@@ -21,4 +21,11 @@ ssh -p 2222 dserver@localhost "tar --exclude '.*' \
   -czvf $MEDIAWIKI_CANASTA_DISTRIBUTION_FOLDER/mediawiki-root-w-folder.tar.gz \
   $BASE_MEDIAWIKI_ROOT_FOLDER"
 
+# Download
 scp -P 2222 dserver@localhost:/home/dserver/mediawiki-root-w-folder.tar.gz .
+
+# Upload
+scp -P 2222 docker-compose.yml \
+  mediawiki-root-w-folder.tar.gz \
+  install-distribution-package.sh \
+  dserver@localhost:/home/dserver/
