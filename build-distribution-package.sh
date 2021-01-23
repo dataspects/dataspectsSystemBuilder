@@ -25,7 +25,7 @@ ssh -p 2222 dserver@localhost "tar --exclude '.*' \
 scp -P 2222 dserver@localhost:/home/dserver/mediawiki-root-w-folder.tar.gz .
 
 # Upload
-scp -P 2222 docker-compose.yml \
-  mediawiki-root-w-folder.tar.gz \
-  install-distribution-package.sh \
-  dserver@localhost:/home/dserver/
+# scp -P 2222 docker-compose.yml \
+#   mediawiki-root-w-folder.tar.gz \
+#   install-distribution-package.sh \
+#   dserver@localhost:/home/dserver/

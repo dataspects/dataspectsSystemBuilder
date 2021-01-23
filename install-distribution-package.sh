@@ -11,8 +11,15 @@ MYSQL_USER=mediawiki
 MYSQL_USER_PASSWORD=mediawikipass
 MYSQL_ROOT_PASSWORD=mysqlpassword
 
+# THIS REQUIRES:
+#
+#   - docker-compose.yml
+#   - mediawiki-root-w-folder.tar.gz
+
 echo "Run docker-compose..."
-sudo -S docker-compose down && sudo -S docker-compose up -d && sudo -S chown -R dserver:www-data mediawiki_root
+sudo -S docker-compose down \
+  && sudo -S docker-compose up -d \
+  && sudo -S chown -R dserver:www-data mediawiki_root
 sleep 5
 echo "Extract..."
 tar -xzvf $MEDIAWIKI_CANASTA_DISTRIBUTION_FOLDER/mediawiki-root-w-folder.tar.gz
@@ -23,9 +30,9 @@ sleep 5
 echo "Create database and user..."
 sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
   "mysql -h $MYSQL_HOST -u root -p$MYSQL_ROOT_PASSWORD \
-  -e \" CREATE DATABASE mediawiki;
-        CREATE USER 'mediawiki'@'127.0.0.1' IDENTIFIED BY 'mediawikipass';
-        GRANT ALL PRIVILEGES ON mediawiki.* TO 'mediawiki'@'127.0.0.1'; \""
+  -e \" CREATE DATABASE $DATABASE_NAME;
+        CREATE USER '$MYSQL_USER'@'$MYSQL_HOST' IDENTIFIED BY '$MYSQL_USER_PASSWORD';
+        GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$MYSQL_USER'@'$MYSQL_HOST'; \""
 echo "Import database..."
 sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
   "mysql -h $MYSQL_HOST -u root -p$MYSQL_ROOT_PASSWORD \
