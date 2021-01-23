@@ -20,17 +20,12 @@ sleep 5
 echo "Move..."
 mv home/dserver/mediawiki_root/w $BASE_MEDIAWIKI_ROOT_FOLDER && rm -r home
 sleep 5
-echo "Create database..."
+echo "Create database and user..."
 sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
   "mysql -h $MYSQL_HOST -u root -p$MYSQL_ROOT_PASSWORD \
-  -e 'CREATE DATABASE mediawiki;'"
-echo "Create user..."
-sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
-  "mysql -h $MYSQL_HOST -u root -p$MYSQL_ROOT_PASSWORD \
-  -e \"CREATE USER 'mediawiki'@'127.0.0.1' IDENTIFIED BY 'mediawikipass';\""
-sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
-  "mysql -h $MYSQL_HOST -u root -p$MYSQL_ROOT_PASSWORD \
-  -e \"GRANT ALL PRIVILEGES ON mediawiki.* TO 'mediawiki'@'127.0.0.1';\""
+  -e \" CREATE DATABASE mediawiki;
+        CREATE USER 'mediawiki'@'127.0.0.1' IDENTIFIED BY 'mediawikipass';
+        GRANT ALL PRIVILEGES ON mediawiki.* TO 'mediawiki'@'127.0.0.1'; \""
 echo "Import database..."
 sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
   "mysql -h $MYSQL_HOST -u root -p$MYSQL_ROOT_PASSWORD \
