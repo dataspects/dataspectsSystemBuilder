@@ -1,10 +1,11 @@
 #!/bin/bash
 
-BASE_MEDIAWIKI_ROOT_FOLDER=/home/dserver/mediawiki_root
-MEDIAWIKI_CANASTA_DISTRIBUTION_FOLDER=/home/dserver
+SYSTEM_ROOT_FOLDER=/home/lex/Canasta # No trailing / !
+SYSTEM_ROOT_FOLDER_OWNER=lex
 
-APACHE_CONTAINER_NAME=mediawiki
+####################################
 
+APACHE_CONTAINER_NAME=mediawiki_canasta
 MYSQL_HOST=127.0.0.1
 DATABASE_NAME=mediawiki
 MYSQL_USER=mediawiki
@@ -16,16 +17,26 @@ MYSQL_ROOT_PASSWORD=mysqlpassword
 #   - docker-compose.yml
 #   - mediawiki-root-w-folder.tar.gz
 
+requiredFiles=( "docker-compose.yml" "mediawiki-root-w-folder.tar.gz" )
+
+for file in "${requiredFiles[@]}"
+do
+  if [ ! -e "$file" ]; then
+    echo "$file is missing!"
+    exit 1
+  fi
+done
+
 echo "Run docker-compose..."
 sudo -S docker-compose down \
   && sudo -S docker-compose up -d \
-  && sudo -S chown -R dserver:www-data mediawiki_root
+  && sudo -S chown -R $SYSTEM_ROOT_FOLDER_OWNER:www-data mediawiki_root
 sleep 5
 echo "Extract..."
-tar -xzvf $MEDIAWIKI_CANASTA_DISTRIBUTION_FOLDER/mediawiki-root-w-folder.tar.gz
+tar -xzvf $SYSTEM_ROOT_FOLDER/mediawiki-root-w-folder.tar.gz
 sleep 5
 echo "Move..."
-mv home/dserver/mediawiki_root/w $BASE_MEDIAWIKI_ROOT_FOLDER && rm -r home
+mv home/dserver/mediawiki_root/w $SYSTEM_ROOT_FOLDER/mediawiki_root && rm -r home
 sleep 5
 echo "Create database and user..."
 sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
@@ -40,3 +51,5 @@ sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
 echo "Update..."
 sudo -S docker exec $APACHE_CONTAINER_NAME /bin/bash -c \
   'cd w; php maintenance/update.php'
+
+echo "http://localhost:80"

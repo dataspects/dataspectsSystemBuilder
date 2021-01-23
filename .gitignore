@@ -7,3 +7,5 @@ custom*
 dsrepository-cli
 feed-this-folder-to-dataspects-repository-datastore.sh
 mediawiki-root-w-folder.tar.gz
+mediawiki_root
+mysql_data

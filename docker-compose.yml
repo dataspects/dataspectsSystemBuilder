@@ -34,18 +34,18 @@ services:
   #     - /home/dserver/neo4j_data:/data
   #   network_mode: host
   mediawiki:
-    container_name: mediawiki
+    container_name: mediawiki_canasta
     image: dataspects/php-apache:7.4.7_200707
     ports:
       - 80:80
     volumes:
-      - /home/dserver/mediawiki_root:/var/www/html/
+      - ./mediawiki_root:/var/www/html/
     network_mode: host
   mysql:
-    container_name: mysql
+    container_name: mysql_canasta
     image: mariadb:10.5.5
     volumes:
-      - /home/dserver/mysql_data:/var/lib/mysql
+      - ./mysql_data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=mysqlpassword
     network_mode: host
