@@ -1,9 +1,14 @@
 #!/bin/bash
 
-SYSTEM_ROOT_FOLDER=/home/lex/Canasta # No trailing / !
-SYSTEM_ROOT_FOLDER_OWNER=lex
+# Configure ########################
+
+SYSTEM_ROOT_FOLDER=/home/dserver # No trailing / !
+SYSTEM_ROOT_FOLDER_OWNER=dserver
 
 ####################################
+
+MEDIAWIKI_DISTRIBUTION_ARCHIVE=mediawiki-root-w-folder.tar.gz
+MEDIAWIKI_ROOT_FOLDER=$SYSTEM_ROOT_FOLDER/mediawiki_root/w
 
 APACHE_CONTAINER_NAME=mediawiki_canasta
 MYSQL_HOST=127.0.0.1
@@ -12,12 +17,7 @@ MYSQL_USER=mediawiki
 MYSQL_USER_PASSWORD=mediawikipass
 MYSQL_ROOT_PASSWORD=mysqlpassword
 
-# THIS REQUIRES:
-#
-#   - docker-compose.yml
-#   - mediawiki-root-w-folder.tar.gz
-
-requiredFiles=( "docker-compose.yml" "mediawiki-root-w-folder.tar.gz" )
+requiredFiles=( "docker-compose.yml" "$MEDIAWIKI_DISTRIBUTION_ARCHIVE" )
 
 for file in "${requiredFiles[@]}"
 do
@@ -33,10 +33,8 @@ sudo -S docker-compose down \
   && sudo -S chown -R $SYSTEM_ROOT_FOLDER_OWNER:www-data mediawiki_root
 sleep 5
 echo "Extract..."
-tar -xzvf $SYSTEM_ROOT_FOLDER/mediawiki-root-w-folder.tar.gz
-sleep 5
-echo "Move..."
-mv home/dserver/mediawiki_root/w $SYSTEM_ROOT_FOLDER/mediawiki_root && rm -r home
+mkdir $MEDIAWIKI_ROOT_FOLDER
+tar -xzvf $SYSTEM_ROOT_FOLDER/$MEDIAWIKI_DISTRIBUTION_ARCHIVE -C $MEDIAWIKI_ROOT_FOLDER
 sleep 5
 echo "Create database and user..."
 sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
