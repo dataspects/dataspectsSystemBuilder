@@ -7,7 +7,7 @@ SYSTEM_ROOT_FOLDER_OWNER=dserver
 
 ####################################
 
-MEDIAWIKI_DISTRIBUTION_ARCHIVE=mediawiki-root-w-folder-1.35.0-3.2.1.tar.gz
+MEDIAWIKI_CANASTA_ARCHIVE=mediawiki-root-w-folder-1.35.0-3.2.1.tar.gz
 MEDIAWIKI_ROOT_FOLDER=$SYSTEM_ROOT_FOLDER/mediawiki_root
 
 APACHE_CONTAINER_NAME=mediawiki_canasta
@@ -17,7 +17,7 @@ MYSQL_USER=mediawiki
 MYSQL_USER_PASSWORD=mediawikipass
 MYSQL_ROOT_PASSWORD=mysqlpassword
 
-requiredFiles=( "docker-compose.yml" "$MEDIAWIKI_DISTRIBUTION_ARCHIVE" )
+requiredFiles=( "docker-compose.yml" "$MEDIAWIKI_CANASTA_ARCHIVE" )
 for file in "${requiredFiles[@]}"
 do
   if [ ! -e "$file" ]; then
@@ -33,7 +33,7 @@ sudo -S docker-compose down \
 sleep 5
 echo "Extract..."
 mkdir --parents $MEDIAWIKI_ROOT_FOLDER/w
-tar -xzf $SYSTEM_ROOT_FOLDER/$MEDIAWIKI_DISTRIBUTION_ARCHIVE -C $MEDIAWIKI_ROOT_FOLDER/w
+tar -xzf $SYSTEM_ROOT_FOLDER/$MEDIAWIKI_CANASTA_ARCHIVE -C $MEDIAWIKI_ROOT_FOLDER/w
 sleep 5
 echo "Ensure permissions..."
 sudo chown -R www-data $MEDIAWIKI_ROOT_FOLDER/w/images
