@@ -10,6 +10,8 @@ export MEDIAWIKI_MERMAID_VERSION=~2.1
 
 export MEDIAWIKI_NAME=dataspectsMediaWiki
 
+export APACHE_CONTAINER_NAME=mediawiki_canasta
+
 ANSIBLETAGS=(
   300_clone_mediawiki
   301_install_composer
@@ -28,7 +30,7 @@ export MEDIAWIKI_ADMIN_PASSWORD=123adminpass456
 
 time ansible-playbook \
   --inventory ./inventory \
-  --extra-vars mediawikiDockerServiceName=mediawiki \
+  --extra-vars mediawikiDockerServiceName=$APACHE_CONTAINER_NAME \
   --extra-vars composer_version=$COMPOSER_VERSION \
   --extra-vars mediawiki_version=$MEDIAWIKI_VERSION \
   --extra-vars mediawiki_name=$MEDIAWIKI_NAME \
