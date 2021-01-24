@@ -2,7 +2,7 @@
 
 MEDIAWIKI_ROOT_FOLDER=/home/dserver/mediawiki_root/w
 MEDIAWIKI_CANASTA_DISTRIBUTION_FOLDER=/home/dserver
-MEDIAWIKI_DISTRIBUTION_ARCHIVE=mediawiki-root-w-folder.tar.gz
+MEDIAWIKI_DISTRIBUTION_ARCHIVE=mediawiki-root-w-folder-1.35.1-3.2.2.tar.gz
 MEDIAWIKI_DATABASE_DUMP=db.sql
 
 APACHE_CONTAINER_NAME=mediawiki_canasta
@@ -23,7 +23,7 @@ ssh -p 2222 dserver@localhost "cd $MEDIAWIKI_ROOT_FOLDER && tar --exclude '.*' \
   -czvf $MEDIAWIKI_CANASTA_DISTRIBUTION_FOLDER/$MEDIAWIKI_DISTRIBUTION_ARCHIVE *"
 
 # Download
-# scp -P 2222 dserver@localhost:/home/dserver/$MEDIAWIKI_DISTRIBUTION_ARCHIVE .
+scp -P 2222 dserver@localhost:/home/dserver/$MEDIAWIKI_DISTRIBUTION_ARCHIVE .
 
 # Upload
 # scp -P 2222 docker-compose.yml \
