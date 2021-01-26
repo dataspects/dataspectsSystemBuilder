@@ -1,4 +1,4 @@
-FROM php:7.4.7-apache
+FROM php:7.4.14-apache
 
 RUN apt-get update && apt-get install -y \
   imagemagick \
@@ -16,8 +16,9 @@ RUN apt-get update && apt-get install -y \
   unzip \
   wget \
   inetutils-ping \
-  mariadb-client-10.5.4 \
+  mariadb-client \
   git \
+  certbot \
   libicu-dev \
   python3 && \
   rm -rf /var/lib/apt/lists/* && \
