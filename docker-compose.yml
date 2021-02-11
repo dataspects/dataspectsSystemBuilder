@@ -1,26 +1,26 @@
 version: "3.7"
 services:
-  # elasticsearch:
-  #   container_name: elasticsearch
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
-  #   environment:
-  #     - "ES_JAVA_OPTS=-Xms1024m -Xmx2048m"
-  #     - "discovery.type=single-node"
-  #   volumes: #FIXME esdata needs special permissions! Hack: chmod -R 777 ./elasticsearch_data
-  #     - /home/dserver/elasticsearch_data:/usr/share/elasticsearch/data
-  #   ports:
-  #     - 9200:9200
-  #   network_mode: host
-  # kibana:
-  #   container_name: kibana
-  #   image: docker.elastic.co/kibana/kibana:7.10.1
-  #   environment:
-  #     - "ELASTICSEARCH_HOSTS=http://127.0.0.1:9200"
-  #   depends_on:
-  #     - elasticsearch
-  #   ports:
-  #     - 5601:5601
-  #   network_mode: host
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    environment:
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx2048m"
+      - "discovery.type=single-node"
+    volumes: #FIXME esdata needs special permissions! Hack: chmod -R 777 ./elasticsearch_data
+      - /home/dserver/elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    network_mode: host
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://127.0.0.1:9200"
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+    network_mode: host
   # neo4j:
   #   container_name: neo4j
   #   image: neo4j:4.2.1
@@ -35,7 +35,7 @@ services:
   #   network_mode: host
   mediawiki:
     container_name: mediawiki_canasta
-    image: dataspects/php-apache:7.4.7_200707
+    image: dataspects/php-apache:7.4.7_210126
     ports:
       - 80:80
     volumes:

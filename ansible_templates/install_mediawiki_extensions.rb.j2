@@ -52,8 +52,10 @@ end
 
 extensions_from_repo['mediawiki_extensions'].each do |extension|
 
-  # Do we need to get the extension code?
-  if(extension.has_key?('repo'))
+  # Do we require a certain branch?
+  if(extension.has_key?('branch'))
+    `git clone --branch #{extension['branch']} #{extension['repo']} #{@mediawiki_root}/extensions/#{extension['name']}`
+  elsif(extension.has_key?('repo'))
     `git clone #{extension['repo']} #{@mediawiki_root}/extensions/#{extension['name']}`
   end
 

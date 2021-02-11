@@ -84,3 +84,15 @@ mediawiki_extensions:
     name: MagicNoCache
     localsettings_configs:
       - wfLoadExtension( 'MagicNoCache' );
+  - repo: https://github.com/wikimedia/mediawiki-extensions-Elastica.git
+    name: Elastica
+    branch: REL1_35
+    localsettings_configs:
+      - wfLoadExtension( 'Elastica' );
+    docker_commands:
+      - cd /var/www/html/w; php composer.phar install --no-dev
+  - repo: https://github.com/wikimedia/mediawiki-extensions-CirrusSearch.git
+    name: CirrusSearch
+    branch: REL1_35
+    localsettings_configs:
+      - wfLoadExtension( 'CirrusSearch' );
