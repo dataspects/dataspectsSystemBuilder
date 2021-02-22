@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
   docker-php-ext-install ldap && \
   pecl install apcu && \
   docker-php-ext-enable apcu
+RUN chown -R www-data:www-data /var/www/html
 
 COPY conf/httpd.conf /etc/apache2/sites-available/000-default.conf
 COPY conf/php.ini /usr/local/etc/php
