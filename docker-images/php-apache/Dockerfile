@@ -1,6 +1,7 @@
 FROM php:7.4.14-apache
 
 RUN apt-get update && apt-get install -y \
+  restic \
   imagemagick \
   ghostscript \
   xpdf-utils \
