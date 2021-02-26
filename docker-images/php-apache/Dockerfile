@@ -19,6 +19,8 @@ RUN apt-get update && apt-get install -y \
   inetutils-ping \
   mariadb-client \
   git \
+  lynx \
+  vim \
   certbot \
   libicu-dev \
   python3 && \
