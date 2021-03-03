@@ -38,6 +38,8 @@ RUN apt-get update && apt-get install -y \
 
 # MWMSafeMode
 COPY w /var/www/html/w
+RUN sed -i "s/# This file was automatically generated/echo '<div style=\"background-color:red;clear:both;\"><a href=\"https:\/\/mwstake.org\/mwstake\/wiki\/MWStake_MediaWiki_Manager\">MWM Safe Mode<\/a><\/div>'; # This file was automatically generated/g" /var/www/html/w/LocalSettings.php
+RUN chgrp www-data /var/www/html/w/index.php
 RUN chmod -R 777 /var/www/html
 COPY conf/httpd.conf /etc/apache2/sites-available/000-default.conf
 COPY conf/php.ini /usr/local/etc/php
