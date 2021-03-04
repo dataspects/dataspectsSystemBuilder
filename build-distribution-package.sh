@@ -12,6 +12,9 @@ DATABASE_NAME=mediawiki
 MYSQL_USER=mediawiki
 MYSQL_USER_PASSWORD=mediawikipass
 
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# TODO: ADD $wgSiteNotice = '================ MWM Safe Mode ================';
+
 # Dump database
 # TODO: Add mariadb-client-10.1 to Apache container
 ssh -p 2222 dserver@localhost "sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \

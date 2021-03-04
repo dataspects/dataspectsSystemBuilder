@@ -9,4 +9,4 @@ feed-this-folder-to-dataspects-repository-datastore.sh
 mediawiki-root-w-folder-*.tar.gz
 mediawiki_root
 mysql_data
-docker-images/php-apache/w
+docker-images/mediawiki/versions

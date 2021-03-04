@@ -1,5 +1,5 @@
-FROM php:7.4.14-apache
-
+FROM php:7.4.15-apache
+ARG CURRENTW
 RUN apt-get update && apt-get install -y \
   restic \
   imagemagick \
@@ -37,9 +37,8 @@ RUN apt-get update && apt-get install -y \
   docker-php-ext-enable apcu
 
 # MWMSafeMode
-COPY w /var/www/html/w
-RUN sed -i "s/# This file was automatically generated/echo '<div style=\"background-color:red;clear:both;\"><a href=\"https:\/\/mwstake.org\/mwstake\/wiki\/MWStake_MediaWiki_Manager\">MWM Safe Mode<\/a><\/div>'; # This file was automatically generated/g" /var/www/html/w/LocalSettings.php
-RUN chgrp www-data /var/www/html/w/index.php
-RUN chmod -R 777 /var/www/html
+COPY $CURRENTW /var/www/html/w
+RUN chgrp -R www-data /var/www/html
+RUN chmod -R 770 /var/www/html
 COPY conf/httpd.conf /etc/apache2/sites-available/000-default.conf
 COPY conf/php.ini /usr/local/etc/php
