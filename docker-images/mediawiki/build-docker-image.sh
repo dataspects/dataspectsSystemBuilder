@@ -21,5 +21,13 @@ do
         -t dataspects/$IMAGENAME:${versions[$p]} \
         --build-arg CURRENTW=versions/${versions[$p]} \
         .
-    # sudo docker push dataspects/$IMAGENAME:${versions[$p]}
+    sudo docker push dataspects/$IMAGENAME:${versions[$p]}
 done
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# $wgDBtype = "mysql";
+# $wgDBserver = "mysql";
+# $wgDBname = "mediawiki";
+# $wgDBuser = "mediawiki";
+# $wgDBpassword = "wgdbpassword";
+# $wgSiteNotice = '================ MWM Safe Mode ================';
