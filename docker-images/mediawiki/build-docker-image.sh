@@ -6,12 +6,11 @@ packages=(
 )
 
 versions=(
-    "1.35.0-2103040820"
-    "1.35.1-2103040820"
+    "1.35.0-2103211629"
+    "1.35.1-2103211629"
 )
 
 # rm -rf versions/*
-# sudo docker login
 for p in ${!packages[@]}
 do
     # mkdir --parents versions/${versions[$p]}
@@ -21,6 +20,8 @@ do
         -t dataspects/$IMAGENAME:${versions[$p]} \
         --build-arg CURRENTW=versions/${versions[$p]} \
         .
+    echo "Pushing Docker image..."
+    sudo docker login
     sudo docker push dataspects/$IMAGENAME:${versions[$p]}
 done
 
@@ -30,4 +31,4 @@ done
 # $wgDBname = "mediawiki";
 # $wgDBuser = "mediawiki";
 # $wgDBpassword = "wgdbpassword";
-# $wgSiteNotice = '================ MWM Safe Mode ================';
+# $wgSiteNotice = "================ MWM Safe Mode ================";
