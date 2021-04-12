@@ -6,8 +6,8 @@ packages=(
 )
 
 versions=(
-    "1.35.0-2103211629"
-    "1.35.1-2103211629"
+    "1.35.0-2104121740"
+    "1.35.1-2104121740"
 )
 
 # rm -rf versions/*
@@ -27,8 +27,9 @@ done
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # $wgDBtype = "mysql";
-# $wgDBserver = "mysql";
-# $wgDBname = "mediawiki";
-# $wgDBuser = "mediawiki";
-# $wgDBpassword = "wgdbpassword";
+# $wgDBserver = getenv("MYSQL_HOST");
+# $wgDBname = getenv("DATABASE_NAME");
+# $wgDBuser = getenv("MYSQL_USER");
+# $wgDBpassword = getenv("WG_DB_PASSWORD");
 # $wgSiteNotice = "================ MWM Safe Mode ================";
+# $wgReadOnly = true; 
