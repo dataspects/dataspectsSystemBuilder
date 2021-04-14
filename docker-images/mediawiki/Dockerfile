@@ -1,6 +1,7 @@
-FROM php:7.4.15-apache
+FROM php:7.4.16-apache
 ARG CURRENTW
 RUN apt-get update && apt-get install -y \
+  sqlite3 \
   restic \
   imagemagick \
   ghostscript \
