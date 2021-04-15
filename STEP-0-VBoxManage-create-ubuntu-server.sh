@@ -19,7 +19,7 @@ VBoxManage modifyvm $VMNAME --cpus 8 --memory 8192 --vram 12
 # Check 'ip addr' on host
 VBoxManage modifyvm $VMNAME --nic1 nat --bridgeadapter1 $NETWORKINTERFACE
 VBoxManage modifyvm $VMNAME --natpf1 "ssh,tcp,,2222,,22"
-VBoxManage modifyvm $VMNAME --natpf1 "mediawiki,tcp,,8080,,80"
+VBoxManage modifyvm $VMNAME --natpf1 "mediawiki,tcp,,4443,,4443"
 VBoxManage modifyvm $VMNAME --natpf1 "search,tcp,,8081,,81"
 VBoxManage modifyvm $VMNAME --natpf1 "api,tcp,,17465,,3001"
 VBoxManage modifyvm $VMNAME --natpf1 "kibana,tcp,,20065,,5601"
