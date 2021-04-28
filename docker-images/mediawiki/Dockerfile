@@ -39,8 +39,8 @@ RUN apt-get update && apt-get install -y \
   pecl install apcu && \
   docker-php-ext-enable apcu
 
-# MWMSafeMode
 COPY $CURRENTW /var/www/html/w
+# CreateCampEMWCon2021: Container internal permissions?
 RUN chgrp -R www-data /var/www/html
 RUN chmod -R 770 /var/www/html
 COPY conf/httpd.conf /etc/apache2/sites-available/000-default.conf
