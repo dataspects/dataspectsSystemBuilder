@@ -6,8 +6,11 @@
 # VBoxManage list -l runningvms
 # VBoxManage list ostypes
 
-VMNAME=DSERVER210917
-HOSTPATH=/home/lex/dsServerHome # Create this first!
+if [[ -z "${VMNAME}" ]]; then
+  echo "VMNAME not set!"
+  exit
+fi
+
 ISO=/home/lex/Downloads/ubuntu-20.04.3-live-server-amd64.iso
 NETWORKINTERFACE=enp0s31f6
 
@@ -35,8 +38,4 @@ VBoxManage storageattach $VMNAME --storagectl "SATA Controller" --port 0 --devic
 VBoxManage storagectl $VMNAME --name "IDE Controller" --add ide
 VBoxManage storageattach $VMNAME --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium $ISO
 
-# VBoxManage sharedfolder add $VMNAME --name "dsServerHome" --hostpath $HOSTPATH
-
 VBoxManage startvm $VMNAME
-
-# Set everything to "dserver"
