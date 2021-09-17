@@ -6,9 +6,9 @@
 # VBoxManage list -l runningvms
 # VBoxManage list ostypes
 
-VMNAME=MWM210409
+VMNAME=DSERVER210917
 HOSTPATH=/home/lex/dsServerHome # Create this first!
-ISO=/home/lex/Downloads/ubuntu-20.04.2-live-server-amd64.iso
+ISO=/home/lex/Downloads/ubuntu-20.04.3-live-server-amd64.iso
 NETWORKINTERFACE=enp0s31f6
 
 VMDISK=/home/lex/VirtualBoxDrives/$VMNAME.vdi
