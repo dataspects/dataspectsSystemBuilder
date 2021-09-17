@@ -22,6 +22,8 @@ ssh -t -p 2222 dserver@localhost \
     && sudo apt-get -y upgrade  && sudo apt-get -y install podman'
 
 # On host
+VBoxManage controlvm $VMNAME poweroff
+
 VBoxManage sharedfolder add $VMNAME -automount \
     --name "system_root" \
     --hostpath "/home/lex/dserver-system_root" \
@@ -35,7 +37,6 @@ VBoxManage sharedfolder add $VMNAME -automount \
     --hostpath "/home/lex/mediawiki-cli" \
     --auto-mount-point "/home/dserver/mediawiki-cli"
 
-VBoxManage controlvm $VMNAME poweroff
 VBoxManage startvm $VMNAME
 
 # Following step not necessary?
