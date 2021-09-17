@@ -30,14 +30,14 @@
         - 301_install_composer
 
     - name: 300 Install composer locally
-      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && ./install_composer.sh"
+      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && ./install_composer.sh"
       become: "true"
       tags:
         - 301_install_composer
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: 300 Run composer inside container
-      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd /var/www/html/w && php composer.phar install"
+      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && php composer.phar install"
       become: "true"
       tags:
         - 302_run_composer
@@ -54,7 +54,7 @@
 
     # [[IsOperationType::VendorPackageOperation]]
     - name: 300 Install mediawiki inside container
-      shell: "docker exec {{ mediawikiDockerServiceName }} bash -c 'cd /var/www/html/w && ./install.sh'"
+      shell: "docker exec {{ mediawikiDockerServiceName }} bash -c 'cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && ./install.sh'"
       become: "true"
       tags:
         - 303_install_mediawiki
@@ -88,7 +88,7 @@
     # [[IsOperationType::VendorPackageOperation]]
     - name: 300 Change admin user password
       shell: docker exec {{ mediawikiDockerServiceName }} bash
-               -c "cd /var/www/html/w/maintenance &&
+               -c "cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
       become: "true"
       tags:

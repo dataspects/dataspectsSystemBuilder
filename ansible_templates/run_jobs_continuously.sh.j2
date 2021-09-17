@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MW_INSTALL_PATH=/var/www/html/w
+MW_INSTALL_PATH=$SYSTEM_ROOT_FOLDER_IN_CONTAINER/w
 RUNJOBS=$MW_INSTALL_PATH/maintenance/runJobs.php
 echo Starting job service...
 # Wait a minute after the server starts up to give other processes time to get started

@@ -18,7 +18,7 @@ printf "dserver backup: restic-backup-repository mounted (sshfs).\n"
 printf "dserver backup: Trying to mysqldump mediawiki...\n"
 sudo docker exec mediawiki bash -c \
   "mysqldump -h 127.0.0.1 -u mediawiki -pmediawikipass \
-  mediawiki > /var/www/html/w/db.sql"
+  mediawiki > $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w/db.sql"
 printf "dserver backup: mysqldump mediawiki completed.\n"
 
 ######

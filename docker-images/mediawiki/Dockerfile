@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
   pecl install apcu && \
   docker-php-ext-enable apcu
 
-COPY $CURRENTW /var/www/html/w
+COPY $CURRENTW $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w
 # CreateCampEMWCon2021: Container internal permissions?
 RUN chgrp -R www-data /var/www/html
 RUN chmod -R 770 /var/www/html
