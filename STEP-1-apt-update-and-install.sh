@@ -22,7 +22,8 @@ ssh -t -p 2222 dserver@localhost \
     && systemctl --user enable docker \
     && sudo loginctl enable-linger $(whoami) \
     && docker context use rootless \
-    && sudo apt install docker-compose'
+    && sudo apt install docker-compose \
+    && echo "export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock" >> ~/.profile'
 
 # # On host
 VBoxManage controlvm $VMNAME poweroff
