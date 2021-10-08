@@ -25,6 +25,10 @@ ssh -t -p 2222 dserver@localhost \
     && sudo apt install docker-compose \
     && echo "export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock" >> ~/.profile'
 
+# sudo vi /etc/default/grub
+# GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"
+# sudo update-grub
+
 # # On host
 VBoxManage controlvm $VMNAME poweroff
 
