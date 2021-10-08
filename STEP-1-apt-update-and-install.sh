@@ -11,17 +11,20 @@ ssh -t -p 2222 dserver@localhost \
     | sudo apt-key add - && echo "deb https://dl.yarnpkg.com/debian/ stable main" \
     | sudo tee /etc/apt/sources.list.d/yarn.list \
     && sudo apt update && sudo apt -y upgrade \
-    && sudo apt -y install git tree curl ruby lynx restic net-tools sshfs wget pkg-config jq yarn virtualbox-guest-utils virtualbox-guest-additions-iso sqlite3 jq \
+    && sudo apt -y install git tree curl ruby lynx restic net-tools sshfs wget pkg-config jq yarn virtualbox-guest-utils virtualbox-guest-additions-iso sqlite3 jq uidmap \
     && sudo snap install go --classic \
-    && sudo usermod -aG vboxsf $(whoami) \
-    && . /etc/os-release \
-    && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" \
-    | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list \
-    && curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key \
-    | sudo apt-key add - && sudo apt-get update \
-    && sudo apt-get -y upgrade  && sudo apt-get -y install podman'
+    && sudo usermod -aG vboxsf $(whoami)'
 
-# On host
+ssh -t -p 2222 dserver@localhost \
+    'curl -sSL https://get.docker.com | sh \
+    && sudo systemctl disable --now docker.service docker.socket \
+    && dockerd-rootless-setuptool.sh install \
+    && systemctl --user enable docker \
+    && sudo loginctl enable-linger $(whoami) \
+    && docker context use rootless \
+    && sudo apt install docker-compose'
+
+# # On host
 VBoxManage controlvm $VMNAME poweroff
 
 sleep 10
@@ -46,3 +49,11 @@ VBoxManage startvm $VMNAME
 
 # https://techoverflow.net/2021/01/05/how-to-install-podman-on-ubuntu-20-04-in-25-seconds/
 
+# PODMAN
+#  \
+#     && . /etc/os-release \
+#     && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" \
+#     | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list \
+#     && curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key \
+#     | sudo apt-key add - && sudo apt-get update \
+#     && sudo apt-get -y upgrade  && sudo apt-get -y install podman
