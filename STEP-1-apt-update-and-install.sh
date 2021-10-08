@@ -24,14 +24,16 @@ ssh -t -p 2222 dserver@localhost \
 # On host
 VBoxManage controlvm $VMNAME poweroff
 
+sleep 10
+
 VBoxManage sharedfolder add $VMNAME -automount \
     --name "system_root" \
     --hostpath "/home/lex/dserver-system_root" \
     --auto-mount-point "/home/dserver/system_root"
 VBoxManage sharedfolder add $VMNAME -automount \
-    --name "mediawiki-manager" \
-    --hostpath "/home/lex/mediawiki-manager" \
-    --auto-mount-point "/home/dserver/mediawiki-manager"
+    --name "mediawiki-installer" \
+    --hostpath "/home/lex/mediawiki-installer" \
+    --auto-mount-point "/home/dserver/mediawiki-installer"
 VBoxManage sharedfolder add $VMNAME -automount \
     --name "mediawiki-cli" \
     --hostpath "/home/lex/mediawiki-cli" \

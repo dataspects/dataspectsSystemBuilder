@@ -15,9 +15,9 @@
 ## Install MediaWiki
 
 1.  dserver@dserver:~/**mediawiki-cli**$ `./check-and-complete-environment.sh`
-2.  dserver@dserver:~/**mediawiki-manager**$ `./report-podman.sh`
-3.  dserver@dserver:~/**mediawiki-manager**$ `vi my-system.env`
-4.  dserver@dserver:~/**mediawiki-manager**$ `ENVmwman=my-system.env ENVmwcli=../mediawiki-cli/my-system.env ./install-system/install-system-Ubuntu-20.04.sh`
+2.  dserver@dserver:~/**mediawiki-installer**$ `./report-podman.sh`
+3.  dserver@dserver:~/**mediawiki-installer**$ `vi my-system.env`
+4.  dserver@dserver:~/**mediawiki-installer**$ `ENVmwins=my-system.env ENVmwcli=../mediawiki-cli/my-system.env ./install-system/install-system-Ubuntu-20.04.sh`
 
 ## Links
 
