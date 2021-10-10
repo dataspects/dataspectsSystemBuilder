@@ -8,7 +8,6 @@
       shell: "git clone --branch {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
       args:
         chdir: "{{ system_root }}"
-      become: "true"
       tags:
         - 300_clone_mediawiki
 
@@ -16,60 +15,63 @@
       shell: "git submodule update --init --recursive"
       args:
         chdir: "{{ system_root }}/w/"
-      become: "true"
+      tags:
+        - 300_clone_mediawiki
+    
+    - name: Change file ownership, group and permissions
+      ansible.builtin.file:
+        path: /home/dserver/system_root/w
+        owner: www-data
+        group: dserver
+        mode: 0777
+      become: true
       tags:
         - 300_clone_mediawiki
 
-    - name: 300 Place composer install script
+    - name: 301 Place composer install script
       template:
         src: ../../ansible_templates/install_composer.sh.j2
         dest: "{{ system_root }}/w/install_composer.sh"
         mode: 0777
-      become: "true"
       tags:
         - 301_install_composer
 
-    - name: 300 Install composer locally
-      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && ./install_composer.sh"
-      become: "true"
+    - name: 301 Install composer locally
+      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd {{ system_root_folder_in_container }}/w && ./install_composer.sh"
       tags:
         - 301_install_composer
 
     # [[IsOperationType::VendorPackageOperation]]
-    - name: 300 Run composer inside container
-      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && php composer.phar install"
-      become: "true"
+    - name: 302 Run composer inside container
+      shell: docker exec {{ mediawikiDockerServiceName }} bash -c "cd {{ system_root_folder_in_container }}/w && php composer.phar install"
       tags:
         - 302_run_composer
 
     # [[IsOperationType::FileSystemOperation]]
-    - name: 300 Place mediawiki install script
+    - name: 303 Place mediawiki install script
       template:
         src: ../../ansible_templates/install_mediawiki.sh.j2
         dest: "{{ system_root }}/w/install.sh"
         mode: 0777
-      become: "true"
       tags:
         - 303_install_mediawiki
 
     # [[IsOperationType::VendorPackageOperation]]
-    - name: 300 Install mediawiki inside container
-      shell: "docker exec {{ mediawikiDockerServiceName }} bash -c 'cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && ./install.sh'"
-      become: "true"
+    - name: 303 Install mediawiki inside container
+      shell: "docker exec {{ mediawikiDockerServiceName }} bash -c 'cd {{ system_root_folder_in_container }}/w && ./install.sh'"
       tags:
         - 303_install_mediawiki
     
     # [[IsOperationType::FileSystemOperation]]
-    - name: 300 Place run_jobs_continuously.sh script
+    - name: 303 Place run_jobs_continuously.sh script
       template:
         src: ../../ansible_templates/run_jobs_continuously.sh.j2
         dest: "{{ system_root }}/w/run_jobs_continuously.sh"
         mode: 0777
-      become: "true"
       tags:
         - 303_install_mediawiki
 
-    - name: 300 Add settings to LocalSettings.php
+    - name: 304 Add settings to LocalSettings.php
       lineinfile:
         path: "{{ system_root }}/w/LocalSettings.php"
         line: "{{ item }}"
@@ -81,40 +83,36 @@
         - $wgRateLimits['edit']['anon'] = [ 1, 1 ];
         - $wgEnableUploads = true;
         - $wgShowExceptionDetails = true;
-      become: "true"
       tags:
         - 304_adjust_localsettings
 
     # [[IsOperationType::VendorPackageOperation]]
-    - name: 300 Change admin user password
+    - name: 304 Change admin user password
       shell: docker exec {{ mediawikiDockerServiceName }} bash
-               -c "cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w/maintenance &&
+               -c "cd {{ system_root_folder_in_container }}/w/maintenance &&
                    php changePassword.php --user='admin' --password='{{ mediawiki_admin_user_password }}'"
-      become: "true"
       tags:
         - 304_adjust_localsettings
 
     # [[IsOperationType::FileSystemOperation]]
-    - name: 300 Set permissions on mediawiki root
+    - name: 304 Set permissions on mediawiki root
       file:
         path: "{{ system_root }}/w/"
         owner: www-data
         recurse: yes
-      become: "true"
+      become: true
       tags:
         - 304_adjust_localsettings
 
-    - name: 300 execute_mediawiki_maintenance_runJobs
+    - name: 304 execute_mediawiki_maintenance_runJobs
       shell: docker exec {{ mediawikiDockerServiceName }} bash -c "php w/maintenance/runJobs.php"
-      become: "true"
       tags:
         - 304_adjust_localsettings
 
-    - name: 300 place INITIAL_INSTRUCTIONS
+    - name: 305 place INITIAL_INSTRUCTIONS
       template:
         src: ../../ansible_templates/INITIAL_INSTRUCTIONS.j2
         dest: "/home/dserver/INITIAL_INSTRUCTIONS"
         mode: 0777
-      become: "true"
       tags:
         - 305_place_INITIAL_INSTRUCTIONS

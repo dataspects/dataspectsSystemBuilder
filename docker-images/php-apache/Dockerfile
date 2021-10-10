@@ -42,3 +42,4 @@ RUN chgrp -R www-data /var/www/html
 RUN chmod -R 770 /var/www/html
 COPY conf/httpd.conf /etc/apache2/sites-available/000-default.conf
 COPY conf/php.ini /usr/local/etc/php
+COPY conf/ports.conf /etc/apache2/ports.conf

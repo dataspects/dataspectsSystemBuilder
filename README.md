@@ -21,13 +21,17 @@ Check
     user@workstation:~$ sudo docker image ls | grep php-apache
     https://hub.docker.com/r/dataspects/php-apache/tags
 
-### docker-compose
+### docker-compose-base
+
+This step is prepared as Ansible tag "200_place_docker_compose"
+
+    user@workstation:~/dataspectsSystemBuilder$ scp -P 2222 docker-compose-base.yml dserver@localhost:/home/dserver/
+    dserver@dserver:~$ docker-compose --file docker-compose-base.yml up -d
+
 
 ### Provision MediaWiki
 
     user@workstation:~/dataspectsSystemBuilder$ provision-mediawiki.sh
-
-
 
 ## Build Docker image for MediaWiki
 

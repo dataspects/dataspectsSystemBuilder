@@ -2,12 +2,11 @@ version: "3.7"
 services:
   mediawiki:
     container_name: mediawiki
-    image: dataspects/php-apache:7.4.16_211010
+    image: dataspects/php-apache:7.4.16_211011
     ports:
-      - 80:80
+      - 8080:8080
     volumes:
-      - ./mediawiki_root:/var/www/html/
-    network_mode: host
+      - ./system_root:/var/www/html/
   mariadb:
     container_name: mariadb
     image: mariadb:10.5.5
@@ -15,4 +14,3 @@ services:
       - ./mysql_data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=mysqlpassword
-    network_mode: host

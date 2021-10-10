@@ -1,0 +1,20 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: 200 Copy docker-compose-base.yml
+      template:
+        src: ../../ansible_templates/docker-compose-base.yml.j2
+        dest: "/home/dserver/docker-compose-base.yml"
+        mode: 0777
+      tags:
+        - 200_place_docker_compose
+    
+    - name: 200 Run docker-compose
+      shell: "docker-compose --file docker-compose-base.yml up -d"
+      args:
+        chdir: "/home/dserver"
+      tags:
+        - 200_place_docker_compose
