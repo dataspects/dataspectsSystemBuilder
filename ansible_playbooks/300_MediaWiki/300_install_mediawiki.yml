@@ -7,7 +7,7 @@
     - name: 300 Clone required mediawiki version
       shell: "git clone --branch {{ mediawiki_version }} --depth 1 --single-branch https://github.com/wikimedia/mediawiki.git w/"
       args:
-        chdir: "/home/dserver/mediawiki_root"
+        chdir: "{{ system_root }}"
       become: "true"
       tags:
         - 300_clone_mediawiki
@@ -15,7 +15,7 @@
     - name: 300 Install core extensions and skins
       shell: "git submodule update --init --recursive"
       args:
-        chdir: "/home/dserver/mediawiki_root/w/"
+        chdir: "{{ system_root }}/w/"
       become: "true"
       tags:
         - 300_clone_mediawiki
@@ -23,7 +23,7 @@
     - name: 300 Place composer install script
       template:
         src: ../../ansible_templates/install_composer.sh.j2
-        dest: "/home/dserver/mediawiki_root/w/install_composer.sh"
+        dest: "{{ system_root }}/w/install_composer.sh"
         mode: 0777
       become: "true"
       tags:
@@ -46,7 +46,7 @@
     - name: 300 Place mediawiki install script
       template:
         src: ../../ansible_templates/install_mediawiki.sh.j2
-        dest: "/home/dserver/mediawiki_root/w/install.sh"
+        dest: "{{ system_root }}/w/install.sh"
         mode: 0777
       become: "true"
       tags:
@@ -63,7 +63,7 @@
     - name: 300 Place run_jobs_continuously.sh script
       template:
         src: ../../ansible_templates/run_jobs_continuously.sh.j2
-        dest: "/home/dserver/mediawiki_root/w/run_jobs_continuously.sh"
+        dest: "{{ system_root }}/w/run_jobs_continuously.sh"
         mode: 0777
       become: "true"
       tags:
@@ -71,7 +71,7 @@
 
     - name: 300 Add settings to LocalSettings.php
       lineinfile:
-        path: "/home/dserver/mediawiki_root/w/LocalSettings.php"
+        path: "{{ system_root }}/w/LocalSettings.php"
         line: "{{ item }}"
       with_items:
         - $wgArticlePath = '/wiki/$1';
@@ -97,7 +97,7 @@
     # [[IsOperationType::FileSystemOperation]]
     - name: 300 Set permissions on mediawiki root
       file:
-        path: "/home/dserver/mediawiki_root/w/"
+        path: "{{ system_root }}/w/"
         owner: www-data
         recurse: yes
       become: "true"

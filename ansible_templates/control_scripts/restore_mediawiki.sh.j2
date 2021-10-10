@@ -38,7 +38,7 @@ sudo docker exec mediawiki bash -c \
   create mediawiki"
 printf "dserver backup: new mediawiki emptied.\n"
 printf "dserver backup: Trying to copy db.sql dump into mediawiki_root/w...\n"
-sudo cp /home/dserver/restic-restore-folder/mediawiki_root/w/db.sql /home/dserver/mediawiki_root/w/
+sudo cp /home/dserver/restic-restore-folder/mediawiki_root/w/db.sql {{ system_root }}/w/
 printf "dserver backup: db.sql dump copied into mediawiki_root/w.\n"
 printf "dserver backup: Trying to restore db.sql...\n"
 sudo docker exec mediawiki bash -c \
@@ -49,15 +49,15 @@ printf "dserver backup: db.sql restored.\n"
 ######
 # STEP 5: Restore LocalSettings, images
 printf "dserver backup: Trying to make a security copy of the new LocalSettings.php...\n"
-sudo mv /home/dserver/mediawiki_root/w/LocalSettings.php /home/dserver/mediawiki_root/w/LocalSettings.php_FROM_FRESH_INSTALLATION
+sudo mv {{ system_root }}/w/LocalSettings.php {{ system_root }}/w/LocalSettings.php_FROM_FRESH_INSTALLATION
 printf "dserver backup: Security copy of the new LocalSettings.php completed.\n"
 
 printf "dserver backup: Trying to copy backed up LocalSettings.php into mediawiki_root/w...\n"
-sudo cp /home/dserver/restic-restore-folder/mediawiki_root/w/LocalSettings.php /home/dserver/mediawiki_root/w/LocalSettings.php
+sudo cp /home/dserver/restic-restore-folder/mediawiki_root/w/LocalSettings.php {{ system_root }}/w/LocalSettings.php
 printf "dserver backup: Backed up LocalSettings.php copied into mediawiki_root/w.\n"
 
 printf "dserver backup: Trying to copy backed up images/ into mediawiki_root/w...\n"
-sudo cp -r /home/dserver/restic-restore-folder/mediawiki_root/w/images /home/dserver/mediawiki_root/w/
+sudo cp -r /home/dserver/restic-restore-folder/mediawiki_root/w/images {{ system_root }}/w/
 printf "dserver backup: Backed up images copied into mediawiki_root/w.\n"
 
 ######

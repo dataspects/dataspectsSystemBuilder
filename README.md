@@ -10,6 +10,25 @@
 3. Restart VMNAME.
 4. user@host:~/dataspectsSystemBuilder$ `VMNAME=DSERVER210917 ./STEP-1-apt-update-and-install.sh`
 
+## Build MediaWiki
+
+### Build base dataspects/php:7.4.16-apache container
+
+    user@workstation:~/dataspectsSystemBuilder/docker-images/php-apache$ build-php-apache-docker-image.sh
+
+Check
+
+    user@workstation:~$ sudo docker image ls | grep php-apache
+    https://hub.docker.com/r/dataspects/php-apache/tags
+
+### docker-compose
+
+### Provision MediaWiki
+
+    user@workstation:~/dataspectsSystemBuilder$ provision-mediawiki.sh
+
+
+
 ## Build Docker image for MediaWiki
 
 ## Install MediaWiki

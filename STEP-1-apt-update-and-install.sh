@@ -15,6 +15,7 @@ ssh -t -p 2222 dserver@localhost \
     && sudo snap install go --classic \
     && sudo usermod -aG vboxsf $(whoami)'
 
+# Rootless Docker
 ssh -t -p 2222 dserver@localhost \
     'curl -sSL https://get.docker.com | sh \
     && sudo systemctl disable --now docker.service docker.socket \

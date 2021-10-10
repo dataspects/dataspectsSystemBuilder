@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MEDIAWIKI_ROOT_FOLDER=/home/dserver/mediawiki_root/w
+MEDIAWIKI_ROOT_FOLDER={{ system_root }}/w
 MEDIAWIKI_CANASTA_DISTRIBUTION_FOLDER=/home/dserver
 MEDIAWIKI_CANASTA_ARCHIVE=mediawiki-root-w-folder-1.35.1-3.2.2.tar.gz
 MEDIAWIKI_DATABASE_DUMP=db.sql

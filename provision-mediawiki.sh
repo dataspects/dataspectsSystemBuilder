@@ -2,8 +2,9 @@
 
 export COMPOSER_VERSION=1.10.19
 
-export MEDIAWIKI_VERSION=1.35.1
-export SEMANTIC_MEDIAWIKI_VERSION=3.2.2
+export SYSTEM_ROOT=/home/dserver/system_root
+export MEDIAWIKI_VERSION=1.36.2
+export SEMANTIC_MEDIAWIKI_VERSION=3.2.3
 export SEMANTIC_RESULTS_FORMATS_VERSION=~3.1
 export MEDIAWIKI_GITHUB_VERSION=~1.4
 export MEDIAWIKI_MERMAID_VERSION=~2.1
@@ -34,6 +35,7 @@ time ansible-playbook \
   --extra-vars composer_version=$COMPOSER_VERSION \
   --extra-vars mediawiki_version=$MEDIAWIKI_VERSION \
   --extra-vars mediawiki_name=$MEDIAWIKI_NAME \
+  --extra-vars system_root=$SYSTEM_ROOT \
   --extra-vars semantic_mediawiki_version=$SEMANTIC_MEDIAWIKI_VERSION \
   --extra-vars semantic_result_formats_version=$SEMANTIC_RESULTS_FORMATS_VERSION \
   --extra-vars mediawiki_github_version=$MEDIAWIKI_GITHUB_VERSION \
