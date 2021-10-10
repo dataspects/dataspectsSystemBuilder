@@ -47,7 +47,7 @@ sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
 echo "Import database..."
 sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
   "mysql -h $MYSQL_HOST -u root -p$MYSQL_ROOT_PASSWORD \
-  mediawiki < $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w/db.sql"
+  mediawiki < /var/www/html/w/db.sql"
 echo "Update..."
 sudo -S docker exec $APACHE_CONTAINER_NAME /bin/bash -c \
   'cd w; php maintenance/update.php'

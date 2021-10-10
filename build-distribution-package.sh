@@ -19,7 +19,7 @@ MYSQL_USER_PASSWORD=mediawikipass
 # TODO: Add mariadb-client-10.1 to Apache container
 ssh -p 2222 dserver@localhost "sudo -S docker exec $APACHE_CONTAINER_NAME bash -c \
   'mysqldump -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_USER_PASSWORD \
-  $DATABASE_NAME > $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w/$MEDIAWIKI_DATABASE_DUMP'"
+  $DATABASE_NAME > /var/www/html/w/$MEDIAWIKI_DATABASE_DUMP'"
 
 # Exclude .git
 ssh -p 2222 dserver@localhost "cd $MEDIAWIKI_ROOT_FOLDER && tar --exclude '.*' \

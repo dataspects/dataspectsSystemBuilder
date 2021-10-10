@@ -21,9 +21,9 @@ ANSIBLETAGS=(
   302_run_composer
   303_install_mediawiki
   304_adjust_localsettings
-  # 305_place_INITIAL_INSTRUCTIONS
-  # 320_install_mediawiki_extensions
-  # 330_execute_mediawiki_maintenance_runJobs
+  305_place_INITIAL_INSTRUCTIONS
+  320_install_mediawiki_extensions
+  330_execute_mediawiki_maintenance_runJobs
   # 340_install_maintenance_functionality
 )
 
@@ -38,7 +38,7 @@ time ansible-playbook \
   --extra-vars mediawiki_version=$MEDIAWIKI_VERSION \
   --extra-vars mediawiki_name=$MEDIAWIKI_NAME \
   --extra-vars system_root=$SYSTEM_ROOT \
-  --extra-vars system_root_folder_in_container=$SYSTEM_ROOT_FOLDER_IN_CONTAINER \
+  --extra-vars system_root_folder_in_container=/var/www/html \
   --extra-vars semantic_mediawiki_version=$SEMANTIC_MEDIAWIKI_VERSION \
   --extra-vars semantic_result_formats_version=$SEMANTIC_RESULTS_FORMATS_VERSION \
   --extra-vars mediawiki_github_version=$MEDIAWIKI_GITHUB_VERSION \

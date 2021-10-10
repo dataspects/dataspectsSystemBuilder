@@ -1,22 +1,22 @@
 ---
 mediawiki_extensions:
   - docker_commands:
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w; php composer.phar require mediawiki/semantic-media-wiki '{{ semantic_mediawiki_version }}' --update-no-dev
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && php maintenance/update.php --skip-external-dependencies
+      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-media-wiki '{{ semantic_mediawiki_version }}' --update-no-dev
+      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
     localsettings_configs:
       - enableSemantics( 'localhost' );
       - $smwgLinksInValues = true;
       - $smwgEnableUpdateJobs = false;
   - docker_commands:
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w; php composer.phar require mediawiki/semantic-result-formats '{{ semantic_result_formats_version }}' --update-no-dev
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && php maintenance/update.php --skip-external-dependencies
+      - cd /var/www/html/w; php composer.phar require mediawiki/semantic-result-formats '{{ semantic_result_formats_version }}' --update-no-dev
+      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
     localsettings_configs:
       - wfLoadExtension( 'SemanticResultFormats' );
   - docker_commands:
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w; php composer.phar require jeroen/mediawiki-github "{{ mediawiki_github_version }}"
+      - cd /var/www/html/w; php composer.phar require jeroen/mediawiki-github "{{ mediawiki_github_version }}"
     localsettings_configs:
       - $egGitHubUrl = 'https://raw.githubusercontent.com';
   - docker_commands:
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w; php composer.phar require mediawiki/mermaid "{{ mediawiki_mermaid_version }}"
+      - cd /var/www/html/w; php composer.phar require mediawiki/mermaid "{{ mediawiki_mermaid_version }}"
     localsettings_configs:
       - wfLoadExtension( 'Mermaid' );

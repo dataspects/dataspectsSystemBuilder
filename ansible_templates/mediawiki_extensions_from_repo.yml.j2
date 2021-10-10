@@ -47,29 +47,18 @@ mediawiki_extensions:
   #   name: LabeledSectionTransclusion
   #   localsettings_configs:
   #     - wfLoadExtension( 'LabeledSectionTransclusion' );
-  # - repo: https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor.git
-  #   name: VisualEditor
-  #   in_extension_folder_commands:
-  #     - git checkout {{ mediawiki_version }}
-  #     - git submodule update --init
-  #   localsettings_configs:
-  #     - wfLoadExtension( 'VisualEditor' );
-  #     - $wgDefaultUserOptions['visualeditor-enable'] = 1;
-  #     - $wgHiddenPrefs[] = 'visualeditor-enable';
-  #     - $wgVirtualRestConfig['modules']['parsoid'] = array('url' => 'http://localhost:8000', 'domain' => 'localhost');
-  #     - $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
   # - repo: https://github.com/enterprisemediawiki/WatchAnalytics.git
   #   name: WatchAnalytics
   #   localsettings_configs:
   #     - wfLoadExtension( 'WatchAnalytics' );
   #   docker_commands:
-  #     - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && php maintenance/update.php --skip-external-dependencies
+  #     - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
   - repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/PageExchange.git
     name: PageExchange
     localsettings_configs:
       - wfLoadExtension( 'PageExchange' );
     docker_commands:
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && php maintenance/update.php --skip-external-dependencies
+      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
   - repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams.git
     name: FlexDiagrams
     localsettings_configs:
@@ -79,20 +68,8 @@ mediawiki_extensions:
     localsettings_configs:
       - wfLoadExtension( 'Cargo' );
     docker_commands:
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && php maintenance/update.php --skip-external-dependencies
+      - cd /var/www/html/w && php maintenance/update.php --skip-external-dependencies
   - repo: https://github.com/wikimedia/mediawiki-extensions-MagicNoCache.git
     name: MagicNoCache
     localsettings_configs:
       - wfLoadExtension( 'MagicNoCache' );
-  - repo: https://github.com/wikimedia/mediawiki-extensions-Elastica.git
-    name: Elastica
-    branch: REL1_35
-    localsettings_configs:
-      - wfLoadExtension( 'Elastica' );
-    docker_commands:
-      - cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w; php composer.phar install --no-dev
-  - repo: https://github.com/wikimedia/mediawiki-extensions-CirrusSearch.git
-    name: CirrusSearch
-    branch: REL1_35
-    localsettings_configs:
-      - wfLoadExtension( 'CirrusSearch' );

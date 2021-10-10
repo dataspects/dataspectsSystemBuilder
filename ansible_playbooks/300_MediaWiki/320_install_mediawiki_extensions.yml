@@ -13,7 +13,6 @@
         - mediawiki_extensions_by_composer
         - mediawiki_extensions_enable_only
         - mediawiki_extensions_from_repo
-      become: "true"
       tags:
         - 320_install_mediawiki_extensions
 
@@ -22,7 +21,17 @@
         src: ../../ansible_templates/install_mediawiki_extensions.rb.j2
         dest: "{{ system_root }}/w/install_mediawiki_extensions.rb"
         mode: 0777
-      become: "true"
+      tags:
+        - 320_install_mediawiki_extensions
+    
+    - name: Change file ownership, group and permissions
+      file:
+        path: /home/dserver/system_root/w
+        owner: www-data
+        group: dserver
+        mode: 0777
+        recurse: yes
+      become: true
       tags:
         - 320_install_mediawiki_extensions
 
@@ -30,7 +39,6 @@
       shell: ruby install_mediawiki_extensions.rb
       args:
         chdir: "{{ system_root }}/w/"
-      become: "true"
       tags:
         - 320_install_mediawiki_extensions
 

@@ -43,7 +43,7 @@ printf "dserver backup: db.sql dump copied into mediawiki_root/w.\n"
 printf "dserver backup: Trying to restore db.sql...\n"
 sudo docker exec mediawiki bash -c \
   "mysql -h 127.0.0.1 -u mediawiki -pmediawikipass \
-  mediawiki < $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w/db.sql"
+  mediawiki < /var/www/html/w/db.sql"
 printf "dserver backup: db.sql restored.\n"
 
 ######
@@ -64,5 +64,5 @@ printf "dserver backup: Backed up images copied into mediawiki_root/w.\n"
 # STEP 6: Run maintenance scripts
 printf "dserver backup: Trying to run maintenance scripts...\n"
 sudo docker exec mediawiki bash -c \
-  "cd $SYSTEM_ROOT_FOLDER_IN_CONTAINER/w && php maintenance/update.php && php maintenance/runJobs.php && php extensions/SemanticMediaWiki/maintenance/rebuildData.php"
+  "cd /var/www/html/w && php maintenance/update.php && php maintenance/runJobs.php && php extensions/SemanticMediaWiki/maintenance/rebuildData.php"
 printf "dserver backup: Running maintenance scripts completed.\n"
