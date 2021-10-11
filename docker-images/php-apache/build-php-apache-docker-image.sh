@@ -1,8 +1,10 @@
 IMAGENAME=php-apache:7.4.16_211011
 
-echo "Building Docker image $IMAGENAME"
-sudo docker build -t dataspects/$IMAGENAME .
+ARCH=amd64
 
-echo "Pushing Docker image $IMAGENAME"
+echo "Building Docker image $IMAGENAME-$ARCH"
+sudo docker build -t dataspects/$IMAGENAME-$ARCH .
+
+echo "Pushing Docker image $IMAGENAME-$ARCH"
 sudo docker login
-sudo docker push dataspects/$IMAGENAME
+sudo docker push dataspects/$IMAGENAME-$ARCH
