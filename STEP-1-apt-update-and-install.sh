@@ -36,7 +36,7 @@ ssh -t -p 2222 dserver@localhost \
 VBoxManage controlvm $VMNAME poweroff
 
 sleep 10
-
+# On Linux distributions, shared folders are mounted with 770 file permissions with root user and vboxsf as the group.
 VBoxManage sharedfolder add $VMNAME -automount \
     --name "system_root" \
     --hostpath "/home/lex/dserver-system_root" \

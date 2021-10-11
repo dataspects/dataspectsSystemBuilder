@@ -19,7 +19,7 @@
         - 300_clone_mediawiki
     
     - name: Change file ownership, group and permissions
-      ansible.builtin.file:
+      file:
         path: /home/dserver/system_root/w
         owner: www-data
         group: dserver
