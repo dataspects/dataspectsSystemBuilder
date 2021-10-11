@@ -7,7 +7,7 @@
 # VBoxManage list ostypes
 
 if [[ -z "${VMNAME}" ]]; then
-  echo "VMNAME not set!"
+  echo "VMNAME not set! Prefix this command with VMNAME=XXX"
   exit
 fi
 

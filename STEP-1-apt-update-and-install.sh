@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [[ -z "${VMNAME}" ]]; then
-  echo "VMNAME not set!"
+  echo "VMNAME not set! Choose one:"
+  VBoxManage list vms
   exit
 fi
 
@@ -11,7 +12,9 @@ ssh -t -p 2222 dserver@localhost \
     | sudo apt-key add - && echo "deb https://dl.yarnpkg.com/debian/ stable main" \
     | sudo tee /etc/apt/sources.list.d/yarn.list \
     && sudo apt update && sudo apt -y upgrade \
-    && sudo apt -y install git tree curl ruby lynx restic net-tools sshfs wget pkg-config jq yarn virtualbox-guest-utils virtualbox-guest-additions-iso sqlite3 jq uidmap \
+    && sudo apt -y install git tree curl ruby lynx restic net-tools \
+        sshfs wget pkg-config jq yarn virtualbox-guest-utils \
+        virtualbox-guest-additions-iso sqlite3 jq uidmap \
     && sudo snap install go --classic \
     && sudo usermod -aG vboxsf $(whoami)'
 
@@ -26,9 +29,8 @@ ssh -t -p 2222 dserver@localhost \
     && sudo apt install docker-compose \
     && echo "export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock" >> ~/.profile'
 
-# sudo vi /etc/default/grub
-# GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"
-# sudo update-grub
+ssh -t -p 2222 dserver@localhost \
+    "sudo sed -i 's/GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"systemd.unified_cgroup_hierarchy=1\"/' /etc/default/grub && sudo update-grub"
 
 # # On host
 VBoxManage controlvm $VMNAME poweroff
@@ -39,10 +41,6 @@ VBoxManage sharedfolder add $VMNAME -automount \
     --name "system_root" \
     --hostpath "/home/lex/dserver-system_root" \
     --auto-mount-point "/home/dserver/system_root"
-VBoxManage sharedfolder add $VMNAME -automount \
-    --name "mediawiki-installer" \
-    --hostpath "/home/lex/mediawiki-installer" \
-    --auto-mount-point "/home/dserver/mediawiki-installer"
 VBoxManage sharedfolder add $VMNAME -automount \
     --name "mediawiki-cli" \
     --hostpath "/home/lex/mediawiki-cli" \
