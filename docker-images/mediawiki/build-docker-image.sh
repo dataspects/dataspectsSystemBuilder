@@ -17,6 +17,8 @@ for p in ${!packages[@]}
 do
     # mkdir --parents versions/${versions[$p]}
     # tar -xzf ${packages[$p]} -C versions/${versions[$p]}
+    cat require_customizations.sh >> ./versions/${versions[$p]}/LocalSettings.php
+    echo "Appended require_customizations.sh to ./versions/${versions[$p]}/LocalSettings.php"
     echo "Building Docker image $IMAGENAME:${versions[$p]}_$VERSION-$ARCH"
     docker build \
         -t dataspects/$IMAGENAME:${versions[$p]}_$VERSION-$ARCH \
@@ -30,7 +32,7 @@ done
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # # MWStake MediaWiki Manager
-# $mwmls = "../mwmLocalSettings.php";
+# $mwmls = "/var/www/config/mwmLocalSettings.php";
 # if(file_exists($mwmls)) {
 #       require_once($mwmls);
 # } else { 
