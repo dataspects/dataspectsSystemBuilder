@@ -20,7 +20,7 @@ do
     echo "Building Docker image $IMAGENAME:${versions[$p]}_$VERSION-$ARCH"
     docker build \
         -t dataspects/$IMAGENAME:${versions[$p]}_$VERSION-$ARCH \
-        --build-arg CURRENTW=versions/${versions[$p]} \
+        --build-arg CURRENTW=./versions/${versions[$p]} \
         --build-arg ARCH=$ARCH \
         .
     echo "Pushing Docker image $IMAGENAME:${versions[$p]}_$VERSION-$ARCH"
