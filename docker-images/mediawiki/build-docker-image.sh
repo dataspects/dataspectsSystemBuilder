@@ -10,7 +10,7 @@ versions=(
     "1.36.2-3.2.3"
 )
 
-ARCH=amd64
+ARCH=`arch`
 
 # rm -rf versions/*
 for p in ${!packages[@]}
@@ -21,6 +21,7 @@ do
     docker build \
         -t dataspects/$IMAGENAME:${versions[$p]}_$VERSION-$ARCH \
         --build-arg CURRENTW=versions/${versions[$p]} \
+        --build-arg ARCH=$ARCH \
         .
     echo "Pushing Docker image $IMAGENAME:${versions[$p]}_$VERSION-$ARCH"
     docker login
