@@ -19,6 +19,8 @@ do
     # tar -xzf ${packages[$p]} -C versions/${versions[$p]}
     cat require_customizations.sh >> ./versions/${versions[$p]}/LocalSettings.php
     echo "Appended require_customizations.sh to ./versions/${versions[$p]}/LocalSettings.php"
+    echo "{}" > ./versions/${versions[$p]}/composer.local.json
+    echo "{}" > ./versions/${versions[$p]}/composer.local.lock
     echo "Building Docker image $IMAGENAME:${versions[$p]}_$VERSION-$ARCH"
     docker build \
         -t dataspects/$IMAGENAME:${versions[$p]}_$VERSION-$ARCH \
@@ -29,12 +31,3 @@ do
     docker login
     docker push dataspects/$IMAGENAME:${versions[$p]}_$VERSION-$ARCH
 done
-
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# # MWStake MediaWiki Manager
-# $mwmls = "/var/www/config/mwmLocalSettings.php";
-# if(file_exists($mwmls)) {
-#       require_once($mwmls);
-# } else { 
-#       echo "ERROR: ../mwmLocalSettings.php include not loaded.";
-# }
