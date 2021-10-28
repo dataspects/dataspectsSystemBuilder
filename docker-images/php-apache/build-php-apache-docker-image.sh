@@ -1,3 +1,5 @@
+#!/bin/bash
+
 IMAGENAME=php-apache:7.4.16_211011
 
 ARCH=`arch`

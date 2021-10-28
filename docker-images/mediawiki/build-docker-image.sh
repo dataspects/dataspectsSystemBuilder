@@ -1,5 +1,7 @@
+#!/bin/bash
+
 IMAGENAME=mediawiki
-VERSION=211026
+VERSION=211028
 
 packages=(
     "dataspects-mediawiki-root-w-folder-1.36.2-3.2.3.tar.gz"
