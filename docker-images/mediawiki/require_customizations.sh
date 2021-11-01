@@ -15,3 +15,7 @@ if(file_exists($mwmls_manual)) {
       echo "ERROR: ../mwmLocalSettings_manual.php include not loaded.";
 }
 #######################################
+# FROM ENV
+$wgDBname = getenv('DATABASE_NAME');
+$wgDBuser = getenv('MYSQL_USER');
+$wgDBpassword = getenv('MYSQL_PASSWORD');
