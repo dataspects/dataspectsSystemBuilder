@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGENAME=php-apache:7.4.16_211011
+IMAGENAME=php-apache:7.4.26_211206
 
 ARCH=`arch`
 
